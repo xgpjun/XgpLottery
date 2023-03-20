@@ -1,0 +1,15 @@
+name: XgpLottery
+version: '${project.version}'
+main: cn.xgp.xgplottery.XgpLottery
+api-version: 1.13
+authors: [ 1badsobig ]
+description: A lottery plugin.
+commands:
+  xgplottery:
+    description: "XgpLottery's main command"
+    aliases:
+      - "xl"
+      - "lottery"
+    permission: "xgplottery.command"
+    permission-message: "You can't do this! :p"
+    usage: "/xgplottery"
