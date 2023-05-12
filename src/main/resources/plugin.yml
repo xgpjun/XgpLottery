@@ -4,6 +4,7 @@ main: cn.xgp.xgplottery.XgpLottery
 api-version: 1.13
 authors: [ 1badsobig ]
 description: A lottery plugin.
+softdepend: [ParticleLib,PlaceholderAPI]
 commands:
   xgplottery:
     description: "XgpLottery's main command"

@@ -1,14 +1,15 @@
-package cn.xgp.xgplottery.Utils;
+package cn.xgp.xgplottery.Gui;
 
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class GuiItem {
     private ItemStack item;
@@ -16,6 +17,10 @@ public class GuiItem {
 
     public GuiItem(Material material){
         item = new ItemStack(material);
+        itemMeta = item.getItemMeta();
+    }
+    public GuiItem(ItemStack item){
+        this.item = item.clone();
         itemMeta = item.getItemMeta();
     }
 
@@ -29,16 +34,30 @@ public class GuiItem {
         return this;
     }
 
-    public GuiItem addLore(String... lore){
-        List<String> oldLore = itemMeta.getLore();
-        if(oldLore == null||oldLore.size()==0){
+    public GuiItem insertLore(int index,String... lore){
+        if(lore==null)
+            return this;
+        List<String> rawLore = itemMeta.getLore();
+
+        if(rawLore == null||rawLore.size()==0){
             itemMeta.setLore(Arrays.asList(lore));
+        }
+        if(index<0){
+            index = rawLore.size()+index;
+        }
+        if(rawLore instanceof ArrayList || rawLore instanceof Vector || rawLore instanceof LinkedList){
+            rawLore.addAll(index, Arrays.asList(lore));
+            itemMeta.setLore(rawLore);
             return this;
         }
-        List<String> newLore = Arrays.asList(oldLore.toArray(new String[0]));
-        newLore.addAll(oldLore.size()-1, Arrays.asList(lore));
-        itemMeta.setLore(newLore);
+        List<String> properLore = Arrays.asList(rawLore.toArray(new String[0]));
+        properLore.addAll(index, Arrays.asList(lore));
+        itemMeta.setLore(properLore);
         return this;
+    }
+
+    public GuiItem addLore(String... lore){
+        return insertLore(-1,lore);
     }
 
     public GuiItem setAmount(int amount){
@@ -59,8 +78,6 @@ public class GuiItem {
         return this;
     }
 
-
-
     public ItemStack getItem() {
         item.setItemMeta(itemMeta);
         return item;
@@ -76,5 +93,11 @@ public class GuiItem {
 
     public void setItemMeta(ItemMeta itemMeta) {
         this.itemMeta = itemMeta;
+    }
+
+    public GuiItem addEnchant(){
+        itemMeta.addEnchant(Enchantment.ARROW_INFINITE,19,true);
+        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        return this;
     }
 }

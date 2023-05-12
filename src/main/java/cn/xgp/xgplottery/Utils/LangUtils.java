@@ -14,7 +14,7 @@ public class LangUtils {
         instance = this;
     }
 
-    public static void LoadLangFile(String fileName)
+    public static void loadLangFile(String fileName)
     {
         File LangConfigFile = new File(XgpLottery.instance.getDataFolder(),"lang\\"+fileName);
         FileConfiguration LangConfig = YamlConfiguration.loadConfiguration(LangConfigFile);
