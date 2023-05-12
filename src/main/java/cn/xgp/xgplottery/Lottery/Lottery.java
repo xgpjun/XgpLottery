@@ -124,16 +124,21 @@ public class Lottery {
         spWeights.add(1);
     }
 
-    public void delItem(ItemStack item){
-        int index = items.indexOf(item);
-        items.remove(index);
-        weights.remove(index);
+//    public void delItem(ItemStack item){
+//        int index = items.indexOf(item);
+//        items.remove(index);
+//        weights.remove(index);
+//    }
+    public void delItem(int index){
+            items.remove(index);
+            weights.remove(index);
     }
-    public void delSpItem(ItemStack item){
-        int index = spItems.indexOf(item);
+
+    public void delSpItem(int index){
         spItems.remove(index);
         spWeights.remove(index);
     }
+
 
     public int getAmount(){
         return items.size();
@@ -164,12 +169,20 @@ public class Lottery {
     }
 
     public int getWeightSum(){
+        return getCommonWeightSum()+getSpWeightSum();
+    }
+
+    public int getSpWeightSum(){
+        int addition=0;
+        if(spWeights!=null)
+            for(Integer weight : spWeights)
+                addition += weight;
+        return addition;
+    }
+    public int getCommonWeightSum(){
         int addition=0;
         if(weights!=null)
             for (Integer weight : weights)
-                addition += weight;
-        if(spWeights!=null)
-            for(Integer weight : spWeights)
                 addition += weight;
         return addition;
     }

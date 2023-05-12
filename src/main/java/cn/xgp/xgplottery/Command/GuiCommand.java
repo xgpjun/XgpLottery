@@ -75,7 +75,7 @@ public class GuiCommand implements CommandExecutor {
             String name = args[1];
             if(XgpLottery.lotteryList.containsKey(name)){
                 Lottery lottery = XgpLottery.lotteryList.get(name);
-                lottery.getCalculator().giveItem(lottery,player);
+                //lottery.getCalculator().giveItem(lottery,player);
             }else {
                 player.sendMessage(ChatColor.RED+"啊咧咧？ 没找到奖池呢~");
             }

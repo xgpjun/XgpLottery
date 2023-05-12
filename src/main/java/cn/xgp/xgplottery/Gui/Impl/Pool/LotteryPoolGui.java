@@ -37,9 +37,10 @@ public class LotteryPoolGui extends LotteryGui {
         if(lottery.getCalculator() instanceof Custom){
             DecimalFormat df = new DecimalFormat("0.00%");
             int index =0;
-            for(ItemStack item: lottery.getItems()) {
+            for(int i =0;i<lottery.getItems().size();i++) {
+                ItemStack item = lottery.getItems().get(i);
                 GuiItem guiItem = new GuiItem(item);
-                int weight = lottery.getItemWeight(item);
+                int weight = lottery.getWeights().get(i);
                 int sum = lottery.getWeightSum();
                 inv.setItem(index, guiItem
                         .setLore(ChatColor.GOLD +"权重/总权重："+ChatColor.GREEN+weight +"/"+sum)
@@ -47,6 +48,7 @@ public class LotteryPoolGui extends LotteryGui {
                         .getItem());
                 index++;
             }
+
             for (index = 45;index<=53;index++){
                 ItemStack borderGlass = new GuiItem(Material.GRAY_STAINED_GLASS_PANE)
                         .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")

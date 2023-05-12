@@ -15,10 +15,6 @@ public class Maximum extends ProbabilityCalculator {
         return "保底概率";
     }
 
-    @Override
-    public void giveItem(Lottery lottery, Player player) {
-
-    }
 
     @Override
     public ItemStack getAward(Lottery lottery,Player player) {

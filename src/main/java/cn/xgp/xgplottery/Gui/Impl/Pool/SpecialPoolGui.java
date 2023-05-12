@@ -36,9 +36,10 @@ public class SpecialPoolGui extends LotteryGui{
         if(lottery.getCalculator() instanceof Custom){
             int index =0;
             DecimalFormat df = new DecimalFormat("0.00%");
-            for(ItemStack item: lottery.getSpItems()) {
+            for(int i =0;i<lottery.getSpItems().size();i++) {
+                ItemStack item = lottery.getSpItems().get(i);
                 GuiItem guiItem = new GuiItem(item);
-                int weight = lottery.getSpItemWeight(item);
+                int weight = lottery.getSpWeights().get(i);
                 int sum = lottery.getWeightSum();
                 inv.setItem(index, guiItem
                         .setLore(ChatColor.GOLD +"权重/总权重："+ChatColor.GREEN+weight +"/"+sum)

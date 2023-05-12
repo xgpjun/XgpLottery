@@ -127,7 +127,7 @@ public class GuiListener implements Listener {
                     //删除物品
                     if(e.isShiftClick()&&e.isRightClick()&&itemStack!=null){
                         if(lottery.getItems().contains(itemStack)){
-                            lottery.delItem(itemStack);
+                            lottery.delItem(e.getRawSlot());
                             player.openInventory(new LotteryPoolGui(lottery).getInventory());
                             SerializeUtils.saveLotteryData();
                         }
@@ -180,7 +180,7 @@ public class GuiListener implements Listener {
                     //删除物品
                     if(e.isShiftClick()&&e.isRightClick()&&itemStack!=null){
                         if(lottery.getSpItems().contains(itemStack)){
-                            lottery.delSpItem(itemStack);
+                            lottery.delSpItem(e.getRawSlot());
                             player.openInventory(new SpecialPoolGui(lottery).getInventory());
                             SerializeUtils.saveLotteryData();
                         }

@@ -8,6 +8,5 @@ public abstract class ProbabilityCalculator {
     public static String[] calculatorList = {"Custom"};
     public abstract String getCalculatorType();
     public abstract String toLore();
-    public abstract void giveItem(Lottery lottery , Player player);
     public abstract ItemStack getAward(Lottery lottery,Player player);
 }
