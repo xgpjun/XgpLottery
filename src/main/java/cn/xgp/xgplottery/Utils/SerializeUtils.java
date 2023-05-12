@@ -78,7 +78,7 @@ public class SerializeUtils {
                     }
                 }
             }
-            XgpLottery.instance.getLogger().info("奖池文件读取完成 ");
+            XgpLottery.log("奖池文件读取完成 ");
         });
     }
     public static void saveLotteryData(){
@@ -222,7 +222,7 @@ public class SerializeUtils {
                         }
                     }
                 }
-            XgpLottery.instance.getLogger().info("抽奖总次数读取完成");
+            XgpLottery.log("抽奖总次数读取完成");
         });
 
     }
@@ -274,7 +274,7 @@ public class SerializeUtils {
                     }
                 }
             }
-            XgpLottery.instance.getLogger().info("玩家保底未中次数读取完成 ");
+            XgpLottery.log("玩家保底未中次数读取完成 ");
         });
 
     }

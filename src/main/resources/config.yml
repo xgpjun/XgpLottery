@@ -3,3 +3,9 @@ version: 1.0.0
 
 #语言文件
 lang: zh_CN.yml
+
+#是否向玩家展示概率
+ShowProbability: false
+
+#是否显示粒子特效
+EnableParticle: true

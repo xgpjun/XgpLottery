@@ -4,6 +4,7 @@ import cn.xgp.xgplottery.Gui.GuiItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.Impl.Custom;
+import cn.xgp.xgplottery.Utils.ConfigSetting;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,6 +12,8 @@ import org.bukkit.Material;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.text.DecimalFormat;
 
 
 public class LotteryPoolShow extends LotteryGui {
@@ -29,13 +32,25 @@ public class LotteryPoolShow extends LotteryGui {
     }
     @Override
     public LotteryGui loadGui() {
-        int index =0;
-        for(ItemStack item: lottery.getItems()) {
-            GuiItem guiItem = new GuiItem(item);
-            inv.setItem(index, guiItem.getItem());
-            index++;
+
+        if(ConfigSetting.showProbability){
+            DecimalFormat df = new DecimalFormat("0.00%");
+            for(int i =0;i<lottery.getItems().size();i++) {
+                ItemStack item = lottery.getItems().get(i);
+                GuiItem guiItem = new GuiItem(item);
+                int weight = lottery.getWeights().get(i);
+                int sum = lottery.getWeightSum();
+                guiItem.setLore(ChatColor.GOLD +"概率："+ChatColor.GREEN+df.format((double) weight/sum));
+                inv.setItem(i, guiItem.getItem());
+            }
+        }else {
+            for(int i =0;i<lottery.getItems().size();i++) {
+                GuiItem guiItem = new GuiItem(lottery.getItems().get(i));
+                inv.setItem(i, guiItem.getItem());
+            }
         }
-        for (index = 45;index<=53;index++){
+
+        for (int index = 45;index<=53;index++){
             ItemStack borderGlass = new GuiItem(Material.GRAY_STAINED_GLASS_PANE)
                     .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")
                     .setLore(ChatColor.GRAY+ "这是分界线捏，没有别的东西了~")

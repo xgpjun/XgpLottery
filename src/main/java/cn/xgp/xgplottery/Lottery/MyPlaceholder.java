@@ -1,5 +1,6 @@
 package cn.xgp.xgplottery.Lottery;
 
+import cn.xgp.xgplottery.Utils.ConfigSetting;
 import cn.xgp.xgplottery.XgpLottery;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
@@ -9,14 +10,15 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;
 
 public class MyPlaceholder extends PlaceholderExpansion {
 
-    private final XgpLottery plugin; // The instance is created in the constructor and won't be modified, so it can be final
+    private final JavaPlugin plugin; // The instance is created in the constructor and won't be modified, so it can be final
 
-    public MyPlaceholder(XgpLottery plugin) {
+    public MyPlaceholder(JavaPlugin plugin) {
         this.plugin = plugin;
     }
     @Override
@@ -31,7 +33,7 @@ public class MyPlaceholder extends PlaceholderExpansion {
 
     @Override
     public String getVersion() {
-        return XgpLottery.version;
+        return ConfigSetting.version;
     }
     @Override
     public boolean canRegister() {

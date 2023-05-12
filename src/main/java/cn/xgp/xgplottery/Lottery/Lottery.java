@@ -220,7 +220,7 @@ public class Lottery {
             }
         });
     }
-    public static void receiveWeight(Player player,Lottery lottery,ItemStack item,boolean isSpecial){
+    public static void receiveWeight(Player player,Lottery lottery,ItemStack item,int index,boolean isSpecial){
         List<ItemStack> items;
         if(isSpecial){
             items = lottery.getSpItems();
@@ -233,8 +233,7 @@ public class Lottery {
                 player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +"请输入新的权重,可以为0。输入‘cancel’取消：");
                 try{
                     String weight  = XgpLottery.getInput(player).get(15, TimeUnit.SECONDS);
-                    if(weight!=null&&Integer.parseInt(weight)>=0){
-                        int index = items.indexOf(item);
+                    if(weight!=null&&Integer.parseInt(weight)>=0){ ;
                         if(isSpecial)
                             lottery.changeSpWeight(index,Integer.parseInt(weight));
                         else

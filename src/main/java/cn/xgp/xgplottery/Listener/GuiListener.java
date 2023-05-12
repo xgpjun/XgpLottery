@@ -132,7 +132,7 @@ public class GuiListener implements Listener {
                             SerializeUtils.saveLotteryData();
                         }
                     }else if(!e.isShiftClick()&&e.isLeftClick()&&itemStack!=null){
-                        Lottery.receiveWeight(player,lottery,itemStack,false);
+                        Lottery.receiveWeight(player,lottery,itemStack,e.getRawSlot(),false);
                     }
                 }
                 //退出/添加物品
@@ -185,7 +185,7 @@ public class GuiListener implements Listener {
                             SerializeUtils.saveLotteryData();
                         }
                     }else if(!e.isShiftClick()&&e.isLeftClick()&&itemStack!=null){
-                        Lottery.receiveWeight(player,lottery,itemStack,true);
+                        Lottery.receiveWeight(player,lottery,itemStack,e.getRawSlot(),true);
                     }
                 }
                 //退出/添加物品

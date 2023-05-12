@@ -95,8 +95,6 @@ public class GuiCommand implements CommandExecutor {
             ItemStack award = new ItemStack(Material.DIAMOND);
             player.getInventory().addItem(award);
         }
-
-
         if(args.length==2&&args[0].equals("playsound")){
             Player player = (Player)  sender;
             Sound sound;
@@ -178,6 +176,10 @@ public class GuiCommand implements CommandExecutor {
             }else {
                 player.sendMessage(ChatColor.RED+"啊咧咧？ 没找到奖池呢~");
             }
+        }
+        if(args.length==1&&args[0].equals("reload")){
+            XgpLottery.reload();
+            sender.sendMessage(ChatColor.GREEN+"重载成功");
         }
 
         return true;

@@ -3,7 +3,7 @@ package cn.xgp.xgplottery.Gui.Impl.Pool;
 import cn.xgp.xgplottery.Gui.GuiItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
-import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.Impl.Custom;
+import cn.xgp.xgplottery.Utils.ConfigSetting;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -31,13 +31,24 @@ public class SpecialPoolShow extends LotteryGui {
     }
     @Override
     public LotteryGui loadGui() {
-        int index =0;
-        for(ItemStack item: lottery.getSpItems()) {
-            GuiItem guiItem = new GuiItem(item);
-            inv.setItem(index, guiItem.getItem());
-            index++;
+        if(ConfigSetting.showProbability){
+            DecimalFormat df = new DecimalFormat("0.00%");
+            for(int i =0;i<lottery.getSpItems().size();i++) {
+                ItemStack item = lottery.getSpItems().get(i);
+                GuiItem guiItem = new GuiItem(item);
+                int weight = lottery.getSpWeights().get(i);
+                int sum = lottery.getWeightSum();
+                guiItem.setLore(ChatColor.GOLD +"概率："+ChatColor.GREEN+df.format((double) weight/sum));
+                inv.setItem(i, guiItem.getItem());
+            }
+        }else {
+            for(int i =0;i<lottery.getSpItems().size();i++) {
+                GuiItem guiItem = new GuiItem(lottery.getSpItems().get(i));
+                inv.setItem(i, guiItem.getItem());
+            }
         }
-        for (index = 45;index<=53;index++){
+
+        for (int index = 45;index<=53;index++){
             ItemStack borderGlass = new GuiItem(Material.GRAY_STAINED_GLASS_PANE)
                     .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")
                     .setLore(ChatColor.GRAY+ "这是分界线捏，没有别的东西了~")
