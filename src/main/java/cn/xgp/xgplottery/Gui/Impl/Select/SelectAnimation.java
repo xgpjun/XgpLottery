@@ -1,7 +1,7 @@
 package cn.xgp.xgplottery.Gui.Impl.Select;
 
 
-import cn.xgp.xgplottery.Gui.GuiItem;
+import cn.xgp.xgplottery.Gui.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import org.bukkit.Bukkit;
@@ -21,7 +21,7 @@ public class SelectAnimation extends LotteryGui {
         setBorder(inv);
         int index = 0;
         for(String str: LotteryAnimation.animationList){
-            inv.setItem(slot[index],new GuiItem(Material.CHEST)
+            inv.setItem(slot[index],new MyItem(Material.CHEST)
                     .setDisplayName(str)
                     .getItem());
             index++;

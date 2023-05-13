@@ -15,18 +15,18 @@ public abstract class LotteryGui implements InventoryHolder {
     protected static int[] slot = {10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43};
     static int[] border = {1,2,3,4,5,6,7,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53};
     public void setBorder(Inventory gui){
-        ItemStack borderGlass = new GuiItem(Material.GRAY_STAINED_GLASS_PANE)
+        ItemStack borderGlass = new MyItem(Material.GRAY_STAINED_GLASS_PANE)
                 .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")
                 .setLore(ChatColor.GRAY+ "这是分界线捏，没有别的东西了~")
                 .getItem();
         for(int i:border){
             gui.setItem(i,borderGlass);
         }
-        gui.setItem(0,new GuiItem(Material.COMPASS)
+        gui.setItem(0,new MyItem(Material.COMPASS)
                 .setDisplayName(ChatColor.GREEN+"返回上一层")
                 .setLore(ChatColor.GOLD+ "反悔了！我要去上一层菜单~")
                 .getItem());
-        gui.setItem(8,new GuiItem(Material.BARRIER)
+        gui.setItem(8,new MyItem(Material.BARRIER)
                 .setDisplayName(ChatColor.RED+"退出")
                 .setLore(ChatColor.GOLD+ "好了！我要关闭菜单了~")
                 .getItem());

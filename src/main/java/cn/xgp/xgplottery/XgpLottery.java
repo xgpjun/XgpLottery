@@ -57,7 +57,9 @@ public final class XgpLottery extends JavaPlugin {
         log(LangUtils.EnableMessage);
         //注册命令
 
-        Objects.requireNonNull(Bukkit.getPluginCommand("xgplottery")).setExecutor(new GuiCommand());
+//        Objects.requireNonNull(Bukkit.getPluginCommand("xgplottery")).setExecutor(new GuiCommand());
+        Objects.requireNonNull(Bukkit.getPluginCommand("xgplottery")).setExecutor(new XgpLotteryCommand());
+
         //注册监听器
         Bukkit.getPluginManager().registerEvents(new GuiListener(),this);
         Bukkit.getPluginManager().registerEvents(new LotteryListener(),this);

@@ -42,7 +42,7 @@ public class LotteryListener implements Listener {
                             player.sendMessage(ChatColor.RED+"奖池现在还是空的！");
                             return;
                         }else{
-                            lottery.getAnimation(player,lottery).playAnimation();
+                            lottery.open(player,false);
                         }
                     }else {
                         //显示奖池
@@ -79,7 +79,7 @@ public class LotteryListener implements Listener {
                                 if(lottery.getWeightSum()<=0){
                                     player.sendMessage(ChatColor.RED+"奖池现在还是空的！");
                                 }else {
-                                    lottery.getAnimation(player,lottery).playAnimation();
+                                    lottery.open(player,false);
                                 }
                             }else {
                                 player.sendMessage(ChatColor.RED+"这个好像不是该宝箱的钥匙~");

@@ -1,6 +1,6 @@
 package cn.xgp.xgplottery.Command;
 
-import cn.xgp.xgplottery.Gui.GuiItem;
+import cn.xgp.xgplottery.Gui.MyItem;
 import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryMenuGui;
 import cn.xgp.xgplottery.Listener.SelectBoxListener;
 import cn.xgp.xgplottery.Lottery.BoxParticle;
@@ -86,7 +86,7 @@ public class GuiCommand implements CommandExecutor {
             String name = args[1];
             if(XgpLottery.lotteryList.containsKey(name)){
                 Lottery lottery = XgpLottery.lotteryList.get(name);
-                lottery.getAnimation(player,lottery).playAnimation();
+                lottery.open(player,false);
             }else {
                 player.sendMessage(ChatColor.RED+"啊咧咧？ 没找到奖池呢~");
             }
@@ -116,7 +116,7 @@ public class GuiCommand implements CommandExecutor {
                 Lottery lottery = XgpLottery.lotteryList.get(name);
                 ItemStack item = player.getInventory().getItemInMainHand();
                 if(item.getType()!=Material.AIR){
-                    GuiItem guiItem = new GuiItem(item);
+                    MyItem guiItem = new MyItem(item);
                     guiItem.setDisplayName(ChatColor.GOLD+lottery.getName()+"-抽奖券")
                             .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"右键以抽奖"+ChatColor.GOLD+"✦").addEnchant();
                     player.getInventory().setItemInMainHand(guiItem.getItem());
@@ -169,7 +169,7 @@ public class GuiCommand implements CommandExecutor {
                 Lottery lottery = XgpLottery.lotteryList.get(name);
                 ItemStack item = player.getInventory().getItemInMainHand();
                 if(item.getType()!=Material.AIR){
-                    GuiItem guiItem = new GuiItem(item);
+                    MyItem guiItem = new MyItem(item);
                     guiItem.setDisplayName(ChatColor.GOLD+lottery.getName()+"-抽奖箱钥匙")
                             .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"使用方法：手持右键抽奖箱"+ChatColor.GOLD+"✦")
                             .addEnchant();

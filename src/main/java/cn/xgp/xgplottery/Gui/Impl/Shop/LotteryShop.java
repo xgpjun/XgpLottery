@@ -1,6 +1,6 @@
 package cn.xgp.xgplottery.Gui.Impl.Shop;
 
-import cn.xgp.xgplottery.Gui.GuiItem;
+import cn.xgp.xgplottery.Gui.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.XgpLottery;
@@ -27,7 +27,7 @@ public class LotteryShop extends LotteryGui {
             int maxTime = lottery.getMaxTime();
             String mt = maxTime>0? String.valueOf(maxTime) :"未设置保底次数";
             String sellType = lottery.isPoint()?ChatColor.AQUA+"点券":ChatColor.AQUA+"金币";
-            inv.setItem(slot[index],new GuiItem(Material.CHEST)
+            inv.setItem(slot[index],new MyItem(Material.CHEST)
                     .setDisplayName(ChatColor.BLUE+"奖池 :"+ChatColor.AQUA + lottery.getName())
                     .setLore(ChatColor.GOLD+"保底次数："+ChatColor.RESET+""+ChatColor.GREEN +mt,
                             ChatColor.GOLD+"价格："+ChatColor.AQUA+lottery.getValue(),
@@ -41,7 +41,7 @@ public class LotteryShop extends LotteryGui {
         }
 
         setBorder(inv);
-        inv.setItem(0,new GuiItem(Material.GRAY_STAINED_GLASS_PANE)
+        inv.setItem(0,new MyItem(Material.GRAY_STAINED_GLASS_PANE)
                 .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")
                 .setLore(ChatColor.GRAY+ "这是分界线捏，没有别的东西了~")
                 .getItem());

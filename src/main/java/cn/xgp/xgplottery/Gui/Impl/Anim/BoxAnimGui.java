@@ -1,6 +1,6 @@
 package cn.xgp.xgplottery.Gui.Impl.Anim;
 
-import cn.xgp.xgplottery.Gui.GuiItem;
+import cn.xgp.xgplottery.Gui.MyItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,7 +19,7 @@ public class BoxAnimGui extends AnimHolder {
 
     @Override
     public AnimHolder loadGui() {
-        ItemStack borderGlass = new GuiItem(Material.GRAY_STAINED_GLASS_PANE)
+        ItemStack borderGlass = new MyItem(Material.GRAY_STAINED_GLASS_PANE)
                 .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")
                 .setLore(ChatColor.GRAY+ "这是分界线捏，没有别的东西了~")
                 .getItem();
@@ -28,7 +28,7 @@ public class BoxAnimGui extends AnimHolder {
             if(i==8)
                 i=17;
         }
-        ItemStack selectGlass = new GuiItem(Material.ORANGE_STAINED_GLASS_PANE)
+        ItemStack selectGlass = new MyItem(Material.ORANGE_STAINED_GLASS_PANE)
                 .setDisplayName(ChatColor.GOLD+"看看抽到了啥！")
                 .setLore(ChatColor.GRAY+ "看看抽到了啥！")
                 .getItem();

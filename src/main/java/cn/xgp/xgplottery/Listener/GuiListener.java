@@ -3,11 +3,12 @@ package cn.xgp.xgplottery.Listener;
 import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryCreateGui;
 import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryManageGui;
 import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryMenuGui;
-import cn.xgp.xgplottery.Gui.GuiItem;
+import cn.xgp.xgplottery.Gui.MyItem;
 import cn.xgp.xgplottery.Gui.Impl.Pool.LotteryPoolGui;
 import cn.xgp.xgplottery.Gui.Impl.Pool.LotteryPoolShow;
 import cn.xgp.xgplottery.Gui.Impl.Pool.SpecialPoolGui;
 import cn.xgp.xgplottery.Gui.Impl.Pool.SpecialPoolShow;
+import cn.xgp.xgplottery.Gui.Impl.Shop.LotteryShop;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
@@ -35,7 +36,7 @@ public class GuiListener implements Listener {
                 switch (e.getRawSlot()){
                     //上一层
                     case 0:{
-                        e.getInventory().setItem(0,new GuiItem(Material.COMPASS)
+                        e.getInventory().setItem(0,new MyItem(Material.COMPASS)
                                 .setDisplayName(ChatColor.GRAY+"返回上一层")
                                 .setLore(ChatColor.RED+ "你不能再返回上一层辣！ 没有辣！")
                                 .getItem());
@@ -75,11 +76,11 @@ public class GuiListener implements Listener {
     //奖池管理
     @EventHandler
     public void ManageGui(InventoryClickEvent e){
-        Player player = (Player) e.getWhoClicked();
         if(e.getInventory().getHolder()==null)
             return;
         if(e.getInventory().getHolder() instanceof LotteryManageGui){
             if(e.getRawSlot()>=0&&e.getRawSlot()<=53){
+                Player player = (Player) e.getWhoClicked();
                 e.setCancelled(true);
                 switch (e.getRawSlot()){
                     //上一层
@@ -240,6 +241,31 @@ public class GuiListener implements Listener {
             if(e.isLeftClick()&&e.getRawSlot()==49){
                 Lottery lottery = ((SpecialPoolShow) e.getInventory().getHolder()).getLottery();
                 player.openInventory(new LotteryPoolShow(lottery).getInventory());
+            }
+        }
+    }
+
+    //商店页面
+    @EventHandler
+    public void shopGui(InventoryClickEvent e){
+        if(e.getInventory().getHolder()==null)
+            return;
+        if(e.getInventory().getHolder() instanceof LotteryShop){
+            e.setCancelled(true);
+            Player player = (Player) e.getWhoClicked();
+            if(e.getRawSlot()==8){
+                player.getOpenInventory().close();
+            }else{
+                ItemStack item = e.getCurrentItem();
+                if(item !=null&&item.getType().equals(Material.CHEST)){
+                    ItemMeta mata = item.getItemMeta();
+                    if(mata!=null) {
+                        Lottery lottery = XgpLottery.lotteryList.get(mata.getDisplayName().split("§b")[1]);
+                        if (e.isLeftClick() && !e.isShiftClick()) {
+                            //TODO 购买物品的逻辑
+                        }
+                    }
+                }
             }
         }
     }

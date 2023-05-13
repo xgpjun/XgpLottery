@@ -1,5 +1,6 @@
 package cn.xgp.xgplottery.Command;
 
+import cn.xgp.xgplottery.Command.SubCmd.GiveCommand;
 import cn.xgp.xgplottery.Command.SubCmd.HelpCommand;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -11,10 +12,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class XgpLotteryCommand implements CommandExecutor{
-    private Map<String, CommandExecutor> subCommands = new HashMap<>();
+    private final Map<String, CommandExecutor> subCommands = new HashMap<>();
 
     public XgpLotteryCommand(){
         registerSubCommand("help",new HelpCommand());
+        registerSubCommand("give",new GiveCommand());
     }
 
     public void registerSubCommand(String subCommand, CommandExecutor executor) {
@@ -35,7 +37,6 @@ public class XgpLotteryCommand implements CommandExecutor{
 
         // Handle the main command logic here
         // ...
-
         sender.sendMessage(ChatColor.RED+"使用/xgplottery help查看帮助");
         return true;
     }

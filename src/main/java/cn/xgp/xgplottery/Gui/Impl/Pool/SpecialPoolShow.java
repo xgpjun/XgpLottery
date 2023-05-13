@@ -1,6 +1,6 @@
 package cn.xgp.xgplottery.Gui.Impl.Pool;
 
-import cn.xgp.xgplottery.Gui.GuiItem;
+import cn.xgp.xgplottery.Gui.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Utils.ConfigSetting;
@@ -35,7 +35,7 @@ public class SpecialPoolShow extends LotteryGui {
             DecimalFormat df = new DecimalFormat("0.00%");
             for(int i =0;i<lottery.getSpItems().size();i++) {
                 ItemStack item = lottery.getSpItems().get(i);
-                GuiItem guiItem = new GuiItem(item);
+                MyItem guiItem = new MyItem(item);
                 int weight = lottery.getSpWeights().get(i);
                 int sum = lottery.getWeightSum();
                 guiItem.setLore(ChatColor.GOLD +"概率："+ChatColor.GREEN+df.format((double) weight/sum));
@@ -43,19 +43,19 @@ public class SpecialPoolShow extends LotteryGui {
             }
         }else {
             for(int i =0;i<lottery.getSpItems().size();i++) {
-                GuiItem guiItem = new GuiItem(lottery.getSpItems().get(i));
+                MyItem guiItem = new MyItem(lottery.getSpItems().get(i));
                 inv.setItem(i, guiItem.getItem());
             }
         }
 
         for (int index = 45;index<=53;index++){
-            ItemStack borderGlass = new GuiItem(Material.GRAY_STAINED_GLASS_PANE)
+            ItemStack borderGlass = new MyItem(Material.GRAY_STAINED_GLASS_PANE)
                     .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")
                     .setLore(ChatColor.GRAY+ "这是分界线捏，没有别的东西了~")
                     .getItem();
             inv.setItem(index,borderGlass);
         }
-        inv.setItem(49,new GuiItem(Material.CHEST)
+        inv.setItem(49,new MyItem(Material.CHEST)
                 .setDisplayName(ChatColor.YELLOW+"点击切换")
                 .setLore(ChatColor.AQUA+"点击切换到普通物品")
                 .getItem());

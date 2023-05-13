@@ -1,6 +1,6 @@
 package cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl;
 
-import cn.xgp.xgplottery.Gui.GuiItem;
+import cn.xgp.xgplottery.Gui.MyItem;
 import cn.xgp.xgplottery.Gui.Impl.Anim.BoxAnimGui;
 import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
@@ -62,7 +62,7 @@ public class BoxAnimation extends LotteryAnimation {
             @Override
             public void run() {
                 for (int i = 9; i < 18; i++) {
-                    GuiItem guiitem = new GuiItem(showItemList.get(i-9+j));
+                    MyItem guiitem = new MyItem(showItemList.get(i-9+j));
                     if(i==13)
                         inventory.setItem(i,guiitem.addEnchant().getItem());
                     else

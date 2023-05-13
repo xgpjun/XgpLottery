@@ -12,4 +12,4 @@ commands:
     aliases:
       - "xl"
       - "lottery"
-    usage: "/xgplottery"
+    usage: "§c use /xgplottery help for help"

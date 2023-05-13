@@ -1,6 +1,5 @@
 package cn.xgp.xgplottery.Gui;
 
-import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
@@ -11,30 +10,30 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.*;
 
-public class GuiItem {
+public class MyItem {
     private ItemStack item;
     private ItemMeta itemMeta;
 
-    public GuiItem(Material material){
+    public MyItem(Material material){
         item = new ItemStack(material);
         itemMeta = item.getItemMeta();
     }
-    public GuiItem(ItemStack item){
+    public MyItem(ItemStack item){
         this.item = item.clone();
         itemMeta = item.getItemMeta();
     }
 
-    public GuiItem setDisplayName(String DisplayName){
+    public MyItem setDisplayName(String DisplayName){
         itemMeta.setDisplayName(DisplayName);
         return this;
     }
 
-    public GuiItem setLore(String... lore){
+    public MyItem setLore(String... lore){
         itemMeta.setLore(Arrays.asList(lore));
         return this;
     }
 
-    public GuiItem insertLore(int index,String... lore){
+    public MyItem insertLore(int index, String... lore){
         if(lore==null)
             return this;
         List<String> rawLore = itemMeta.getLore();
@@ -56,24 +55,24 @@ public class GuiItem {
         return this;
     }
 
-    public GuiItem addLore(String... lore){
+    public MyItem addLore(String... lore){
         return insertLore(-1,lore);
     }
 
-    public GuiItem setAmount(int amount){
+    public MyItem setAmount(int amount){
         item.setAmount(amount);
         return this;
     }
 
-    public GuiItem setEnchants(int level, Enchantment enchantment){
+    public MyItem setEnchants(int level, Enchantment enchantment){
         itemMeta.addEnchant(enchantment,level,true);
         return this;
     }
-    public GuiItem removeEnchants(Enchantment enchantment){
+    public MyItem removeEnchants(Enchantment enchantment){
         itemMeta.removeEnchant(enchantment);
         return this;
     }
-    public GuiItem setAttributeModifier(Attribute attribute, AttributeModifier attributeModifier){
+    public MyItem setAttributeModifier(Attribute attribute, AttributeModifier attributeModifier){
         itemMeta.addAttributeModifier(attribute,attributeModifier);
         return this;
     }
@@ -95,7 +94,7 @@ public class GuiItem {
         this.itemMeta = itemMeta;
     }
 
-    public GuiItem addEnchant(){
+    public MyItem addEnchant(){
         itemMeta.addEnchant(Enchantment.ARROW_INFINITE,19,true);
         itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         return this;

@@ -2,7 +2,7 @@ package cn.xgp.xgplottery.Gui.Impl.Manage;
 
 
 import cn.xgp.xgplottery.Gui.LotteryGui;
-import cn.xgp.xgplottery.Gui.GuiItem;
+import cn.xgp.xgplottery.Gui.MyItem;
 import org.bukkit.Material;
 import org.jetbrains.annotations.NotNull;
 import org.bukkit.Bukkit;
@@ -29,13 +29,13 @@ public class LotteryMenuGui extends LotteryGui {
     public LotteryGui loadGui(){
         setBorder(Menu);
         //管理奖池
-        GuiItem manageButton = new GuiItem(Material.COMMAND_BLOCK);
+        MyItem manageButton = new MyItem(Material.COMMAND_BLOCK);
         Menu.setItem(20,manageButton
                 .setDisplayName(ChatColor.RED+"管理奖池")
                 .setLore(ChatColor.YELLOW+"点击此处进入奖池管理页面")
                 .getItem());
         //新建奖池
-        GuiItem createButton = new GuiItem(Material.ANVIL);
+        MyItem createButton = new MyItem(Material.ANVIL);
         Menu.setItem(22,createButton
                 .setDisplayName(ChatColor.RED+"创建奖池")
                 .setLore(ChatColor.YELLOW+"点击此处创建奖池")

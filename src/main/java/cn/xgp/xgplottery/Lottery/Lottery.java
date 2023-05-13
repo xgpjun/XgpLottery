@@ -10,7 +10,6 @@ import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import lombok.Data;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -84,21 +83,19 @@ public class Lottery {
         return lottery;
     }
 
-    public LotteryAnimation getAnimation(Player player,Lottery lottery) {
-        //添加一次抽奖次数
-        LotteryTimes.addTimes(player,lottery.getName());
+    public LotteryAnimation getAnimation(Player player,Lottery lottery,boolean isCmd) {
         switch (animation){
             case "BoxAnimation":
-            default: return new BoxAnimation(player,lottery);
+            default: return new BoxAnimation(player,lottery,isCmd);
         }
     }
 
-    public String getAnimationType(){
-        switch (animation){
-            case "BoxAnimation":
-            default: return "物品滚动动画";
-        }
+    public void open(Player player,boolean isCmd){
+        LotteryTimes.addTimes(player,getName());
+        getAnimation(player,this,isCmd).playAnimation();
     }
+
+
 
     public ProbabilityCalculator getCalculator() {
         return new Custom();
@@ -121,11 +118,6 @@ public class Lottery {
         spWeights.add(1);
     }
 
-//    public void delItem(ItemStack item){
-//        int index = items.indexOf(item);
-//        items.remove(index);
-//        weights.remove(index);
-//    }
     public void delItem(int index){
             items.remove(index);
             weights.remove(index);
