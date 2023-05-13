@@ -52,7 +52,6 @@ public class Custom extends ProbabilityCalculator{
             //抽奖次数未到达保底次数
             else {
                 int randomWeight = new Random().nextInt(weightSum)+1;
-                player.sendMessage("random = "+randomWeight);
                 //抽到保底物品
                 if(randomWeight<=spWeight){
                     player.sendMessage(ChatColor.GOLD+"[抽奖小助手]"+ChatColor.GREEN+"这是你的第"+ LotteryTimes.getCurrentTimes(player.getUniqueId(),lottery.getName()) +"次抽奖！");

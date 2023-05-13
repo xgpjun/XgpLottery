@@ -1,4 +1,4 @@
-package cn.xgp.xgplottery.Gui.Impl;
+package cn.xgp.xgplottery.Gui.Impl.Manage;
 
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Gui.GuiItem;

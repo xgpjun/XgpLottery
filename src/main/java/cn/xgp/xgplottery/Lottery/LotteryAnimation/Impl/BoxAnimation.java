@@ -1,14 +1,12 @@
 package cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl;
 
 import cn.xgp.xgplottery.Gui.GuiItem;
-import cn.xgp.xgplottery.Gui.Impl.BoxAnimGui;
+import cn.xgp.xgplottery.Gui.Impl.Anim.BoxAnimGui;
 import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
-import cn.xgp.xgplottery.Lottery.LotteryTimes;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -46,7 +44,7 @@ public class BoxAnimation extends LotteryAnimation {
     public void playAnimation() {
 
 
-        Inventory inventory = new BoxAnimGui(lottery).loadGui().getInventory();
+        Inventory inventory = new BoxAnimGui().loadGui().getInventory();
         List<ItemStack> showItemList = new ArrayList<>();
         initItemList(showItemList, lottery);
         //get award

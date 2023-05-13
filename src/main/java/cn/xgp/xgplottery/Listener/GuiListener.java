@@ -1,8 +1,8 @@
 package cn.xgp.xgplottery.Listener;
 
-import cn.xgp.xgplottery.Gui.Impl.LotteryCreateGui;
-import cn.xgp.xgplottery.Gui.Impl.LotteryManageGui;
-import cn.xgp.xgplottery.Gui.Impl.LotteryMenuGui;
+import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryCreateGui;
+import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryManageGui;
+import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryMenuGui;
 import cn.xgp.xgplottery.Gui.GuiItem;
 import cn.xgp.xgplottery.Gui.Impl.Pool.LotteryPoolGui;
 import cn.xgp.xgplottery.Gui.Impl.Pool.LotteryPoolShow;
@@ -14,7 +14,6 @@ import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -22,8 +21,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryDragEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.Objects;
 
 public class GuiListener implements Listener {
 
@@ -99,9 +96,11 @@ public class GuiListener implements Listener {
                         //设置保底数
                         if(e.isShiftClick()&&e.isLeftClick()){
                             Lottery.setMaxTime(player,lottery);
-                        }else if(e.isLeftClick()){
+                        }else if(e.isShiftClick()&&e.isRightClick()){
+
+                        } else if(e.isLeftClick()&&!e.isShiftClick()){
                             player.openInventory(new LotteryPoolGui(lottery).getInventory());
-                        }else if(e.isRightClick()){
+                        }else if(e.isRightClick()&&!e.isShiftClick()){
                             player.openInventory(new SpecialPoolGui(lottery).getInventory());
                         }
                     }

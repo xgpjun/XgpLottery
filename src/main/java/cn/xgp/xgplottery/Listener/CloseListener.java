@@ -1,6 +1,6 @@
 package cn.xgp.xgplottery.Listener;
 
-import cn.xgp.xgplottery.Gui.AnimHolder;
+import cn.xgp.xgplottery.Gui.Impl.Anim.AnimHolder;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.BoxAnimation;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;

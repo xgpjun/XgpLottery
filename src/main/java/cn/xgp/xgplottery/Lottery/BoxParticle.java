@@ -20,16 +20,10 @@ public class BoxParticle {
     public void createParticle(){
         cube.setPeriod(1L)
                 .setColor(Color.WHITE)
-                .alwaysShowAsync();
+//                .alwaysShowAsync();
+                .alwaysShow();
         XgpLottery.boxParticleList.add(this);
     }
-
-//    @Deprecated
-//    public void playParticle(){
-//        cube.setPeriod(1L)
-//                .setColor(Color.WHITE)
-//                .alwaysShowAsync();
-//    }
 
     public void clearParticle(){
         cube.turnOffTask();

@@ -3,9 +3,6 @@ package cn.xgp.xgplottery.Utils;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryBox;
 import cn.xgp.xgplottery.Lottery.LotteryTimes;
-import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.Impl.Custom;
-import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.Impl.Maximum;
-import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
@@ -30,14 +27,6 @@ public class SerializeUtils {
         SerializeUtils.loadLotteryBoxData();
         loadCurrentLotteryTimes();
         SerializeUtils.loadTotalLotteryTimes();
-    }
-
-    public static ProbabilityCalculator readCalculator(String calculator){
-        switch (calculator){
-            case "Maximum": return new Maximum();
-            case "Custom":
-            default: return new Custom();
-        }
     }
 
     public static void createLotteryFolder(){

@@ -1,19 +1,18 @@
 package cn.xgp.xgplottery.Lottery;
 
-import cn.xgp.xgplottery.Gui.Impl.LotteryManageGui;
+import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryManageGui;
 import cn.xgp.xgplottery.Gui.Impl.Pool.LotteryPoolGui;
 import cn.xgp.xgplottery.Gui.Impl.Pool.SpecialPoolGui;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.BoxAnimation;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.Impl.Custom;
-import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.Impl.Maximum;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import lombok.Data;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -29,28 +28,30 @@ public class Lottery {
 
     private String name = "默认名称";           //奖池名称
     private String animation;                 //抽奖显示动画
-    private String calculator;             //抽奖计算方法
     private int maxTime;                    //保底次数
     private List<ItemStack> items;                       //储存奖池物品
     private List<Integer> weights;
     private List<ItemStack> spItems;
     private List<Integer> spWeights;
+    private double value;
+    private boolean isPoint;
 
 
-    public Lottery(@NotNull String animation, @NotNull String calculator, List<ItemStack> items,List<ItemStack> spItems) {
-        this(animation,calculator,items,-1,spItems);
+    public Lottery(@NotNull String animation, List<ItemStack> items,List<ItemStack> spItems,boolean isPoint,double value) {
+        this(animation,items,-1,spItems,isPoint,value);
     }
 
-    public Lottery(@NotNull String animation, @NotNull String calculator, List<ItemStack> items,int maxTime,List<ItemStack> spItems) {
+    public Lottery(@NotNull String animation, List<ItemStack> items,int maxTime,List<ItemStack> spItems,boolean isPoint,double value) {
         this.animation = animation;
-        this.calculator = calculator;
         this.items = items;
         this.maxTime = maxTime;
         this.spItems = spItems;
+        this.isPoint = isPoint;
+        this.value = value;
     }
 
     public static Lottery getDefaultLottery(String name){
-        Lottery lottery = new Lottery("default", "default", new ArrayList<>(),-1,new ArrayList<>());
+        Lottery lottery = new Lottery("default", new ArrayList<>(),-1,new ArrayList<>(),true,0);
         lottery.setName(name);
         return lottery;
     }
@@ -60,12 +61,13 @@ public class Lottery {
     public Map<String, Object> serialize() {
         Map<String, Object> map =new HashMap<>();
         map.put("animation",animation);
-        map.put("calculator",calculator);
         map.put("pool",items);
         map.put("weights",weights);
         map.put("spWeights",spWeights);
         map.put("maxTime",maxTime);
         map.put("spItem",spItems);
+        map.put("isPoint",isPoint);
+        map.put("value",value);
         return map;
     }
 
@@ -76,8 +78,7 @@ public class Lottery {
             items = (ArrayList<ItemStack>) map.get("pool");
         if(map.get("spItem")!=null)
             spItems = (ArrayList<ItemStack>) map.get("spItem");
-        Lottery lottery = new Lottery((String)map.get("animation"), (String)map.get("calculator"),
-                items, (int) map.get("maxTime"), spItems);
+        Lottery lottery = new Lottery((String)map.get("animation"), items, (int) map.get("maxTime"), spItems,(boolean)map.get("isPoint"),(double)map.get("value"));
         lottery.setWeights((ArrayList<Integer>) map.get("weights"));
         lottery.setSpWeights((ArrayList<Integer>) map.get("spWeights"));
         return lottery;
@@ -100,11 +101,7 @@ public class Lottery {
     }
 
     public ProbabilityCalculator getCalculator() {
-        switch (calculator){
-            case "Maximum": return new Maximum();
-            case "Custom":
-            default: return new Custom();
-        }
+        return new Custom();
     }
 
     public void addItem(ItemStack item){
@@ -298,5 +295,36 @@ public class Lottery {
         });
     }
 
+    public static void setValue(Player player,Lottery lottery){
+        player.closeInventory();
+        Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
+            try{
+                player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +"请输入新的价格,输入0为取消售卖。输入‘cancel’取消");
+                try{
+                    String times  = XgpLottery.getInput(player).get(15, TimeUnit.SECONDS);
+                    if(times!=null){
+                        lottery.setMaxTime(Integer.parseInt(times));
+                        player.sendMessage(ChatColor.GREEN+"成功将保底次数修改为"+times+"!");
+                        new BukkitRunnable(){
+                            @Override
+                            public void run(){
+                                Inventory inventory = new LotteryManageGui().getInventory();
+                                Bukkit.getScheduler().runTask(XgpLottery.instance,()->player.openInventory(inventory));
+                            }
+                        }.runTaskAsynchronously(XgpLottery.instance);
+                        SerializeUtils.saveLotteryData();
+                    }else{
+                        player.sendMessage(ChatColor.RED+"你好像输错了哦~");
+                    }
+                }catch (TimeoutException e){
+                    player.sendMessage(ChatColor.RED+"给你输入的时间已经过了，已取消");
+                }catch (NumberFormatException e){
+                    player.sendMessage(ChatColor.RED+"错误的格式/已取消");
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        });
+    }
 }
 

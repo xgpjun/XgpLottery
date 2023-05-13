@@ -7,13 +7,13 @@ import cn.xgp.xgplottery.XgpLottery;
 public class BoxParticleUtils {
     public static void addBox(LotteryBox lotteryBox){
         XgpLottery.lotteryBoxList.add(lotteryBox);
-        if(XgpLottery.hasParticleLib){
+        if(ConfigSetting.enableParticle){
             new BoxParticle(lotteryBox.getLocation()).createParticle();
         }
     }
     public static void removeBox(LotteryBox lotteryBox){
         XgpLottery.lotteryBoxList.remove(lotteryBox);
-        if(XgpLottery.hasParticleLib){
+        if(ConfigSetting.enableParticle){
             BoxParticle target=null;
             for(BoxParticle boxParticle:XgpLottery.boxParticleList){
                 if(boxParticle.location.equals(lotteryBox.getLocation())){

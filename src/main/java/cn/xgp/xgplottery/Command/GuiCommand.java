@@ -1,11 +1,12 @@
 package cn.xgp.xgplottery.Command;
 
 import cn.xgp.xgplottery.Gui.GuiItem;
-import cn.xgp.xgplottery.Gui.Impl.LotteryMenuGui;
+import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryMenuGui;
 import cn.xgp.xgplottery.Listener.SelectBoxListener;
 import cn.xgp.xgplottery.Lottery.BoxParticle;
 import cn.xgp.xgplottery.Lottery.Lottery;
 
+import cn.xgp.xgplottery.Utils.ConfigSetting;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -117,7 +118,7 @@ public class GuiCommand implements CommandExecutor {
                 if(item.getType()!=Material.AIR){
                     GuiItem guiItem = new GuiItem(item);
                     guiItem.setDisplayName(ChatColor.GOLD+lottery.getName()+"-抽奖券")
-                            .setLore(ChatColor.AQUA+"右键以抽奖").addEnchant();
+                            .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"右键以抽奖"+ChatColor.GOLD+"✦").addEnchant();
                     player.getInventory().setItemInMainHand(guiItem.getItem());
                 }else {
                     player.sendMessage("没找到手上有物品捏");
@@ -148,7 +149,10 @@ public class GuiCommand implements CommandExecutor {
             }
         }
         if(args.length==1&&args[0].equals("loadall")){
-            BoxParticle.playAllParticle();
+            if(ConfigSetting.enableParticle)
+                BoxParticle.playAllParticle();
+            else
+                sender.sendMessage(ChatColor.RED+"未启用粒子特效，请在config.yml中修改");
         }
         if(args.length==1&&args[0].equals("clearall")){
             BoxParticle.clearAllParticle();
@@ -167,7 +171,7 @@ public class GuiCommand implements CommandExecutor {
                 if(item.getType()!=Material.AIR){
                     GuiItem guiItem = new GuiItem(item);
                     guiItem.setDisplayName(ChatColor.GOLD+lottery.getName()+"-抽奖箱钥匙")
-                            .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"手持右键以开启抽奖箱"+ChatColor.GOLD+"✦")
+                            .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"使用方法：手持右键抽奖箱"+ChatColor.GOLD+"✦")
                             .addEnchant();
                     player.getInventory().setItemInMainHand(guiItem.getItem());
                 }else {

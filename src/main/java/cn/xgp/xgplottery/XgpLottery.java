@@ -1,6 +1,7 @@
 package cn.xgp.xgplottery;
 
 import cn.xgp.xgplottery.Command.GuiCommand;
+import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Listener.GetNameListener;
 import cn.xgp.xgplottery.Listener.GuiListener;
 import cn.xgp.xgplottery.Listener.LotteryListener;
@@ -30,7 +31,7 @@ public final class XgpLottery extends JavaPlugin {
     public static List<LotteryBox> lotteryBoxList = new Vector<>();
     public static List<Location> locations = new Vector<>();
     //正在产生粒子的方块
-    public static List<BoxParticle> boxParticleList;
+    public static List<BoxParticle> boxParticleList = new Vector<>();
     //记录次数
     public static List<LotteryTimes> lotteryTimesList = new Vector<>();
     //未保底次数
@@ -53,8 +54,9 @@ public final class XgpLottery extends JavaPlugin {
         //启动相关依赖
         enableDepend();
 
-        log("§a"+LangUtils.EnableMessage);
+        log(LangUtils.EnableMessage);
         //注册命令
+
         Objects.requireNonNull(Bukkit.getPluginCommand("xgplottery")).setExecutor(new GuiCommand());
         //注册监听器
         Bukkit.getPluginManager().registerEvents(new GuiListener(),this);
@@ -68,7 +70,6 @@ public final class XgpLottery extends JavaPlugin {
         instance.getLogger().info(LangUtils.DisableMessage);
         BoxParticle.clearAllParticle();
         saveConfig();
-
         SerializeUtils.save();
     }
 
@@ -91,12 +92,11 @@ public final class XgpLottery extends JavaPlugin {
     }
 
     public static void log(String message) {
-        Bukkit.getConsoleSender().sendMessage("§6[XgpLottery] " + message);
+        Bukkit.getConsoleSender().sendMessage("§6[XgpLottery] " +"§a"+ message);
     }
 
     static void enableDepend(){
-        if (ConfigSetting.showProbability&&Bukkit.getPluginManager().getPlugin("ParticleLib") != null){
-            boxParticleList = new Vector<>();
+        if (false&&instance.getConfig().getBoolean("EnableParticle")&&Bukkit.getPluginManager().getPlugin("ParticleLib") != null){
             BoxParticle.playAllParticle();
         }
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {

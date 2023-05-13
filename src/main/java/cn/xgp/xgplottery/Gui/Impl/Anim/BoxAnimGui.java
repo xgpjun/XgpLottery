@@ -1,9 +1,6 @@
-package cn.xgp.xgplottery.Gui.Impl;
+package cn.xgp.xgplottery.Gui.Impl.Anim;
 
-import cn.xgp.xgplottery.Gui.AnimHolder;
 import cn.xgp.xgplottery.Gui.GuiItem;
-import cn.xgp.xgplottery.Gui.LotteryGui;
-import cn.xgp.xgplottery.Lottery.Lottery;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -19,9 +16,6 @@ public class BoxAnimGui extends AnimHolder {
         return inv;
     }
 
-    public BoxAnimGui(Lottery lottery){
-
-    }
 
     @Override
     public AnimHolder loadGui() {

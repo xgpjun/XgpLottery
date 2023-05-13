@@ -1,4 +1,4 @@
-package cn.xgp.xgplottery.Gui;
+package cn.xgp.xgplottery.Gui.Impl.Anim;
 
 import org.bukkit.inventory.InventoryHolder;
 

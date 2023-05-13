@@ -9,3 +9,7 @@ ShowProbability: false
 
 #是否显示粒子特效
 EnableParticle: true
+
+#商店是否给与玩家奖券，如果为false则直接进行抽奖。
+dontGiveLottery: true
+  giveKey: true
