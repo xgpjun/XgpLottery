@@ -32,15 +32,15 @@ public class Lottery {
     private List<Integer> weights;
     private List<ItemStack> spItems;
     private List<Integer> spWeights;
-    private double value;
+    private int value;
     private boolean isPoint;
 
 
-    public Lottery(@NotNull String animation, List<ItemStack> items,List<ItemStack> spItems,boolean isPoint,double value) {
+    public Lottery(@NotNull String animation, List<ItemStack> items,List<ItemStack> spItems,boolean isPoint,int value) {
         this(animation,items,-1,spItems,isPoint,value);
     }
 
-    public Lottery(@NotNull String animation, List<ItemStack> items,int maxTime,List<ItemStack> spItems,boolean isPoint,double value) {
+    public Lottery(@NotNull String animation, List<ItemStack> items,int maxTime,List<ItemStack> spItems,boolean isPoint,int value) {
         this.animation = animation;
         this.items = items;
         this.maxTime = maxTime;
@@ -77,7 +77,7 @@ public class Lottery {
             items = (ArrayList<ItemStack>) map.get("pool");
         if(map.get("spItem")!=null)
             spItems = (ArrayList<ItemStack>) map.get("spItem");
-        Lottery lottery = new Lottery((String)map.get("animation"), items, (int) map.get("maxTime"), spItems,(boolean)map.get("isPoint"),(double)map.get("value"));
+        Lottery lottery = new Lottery((String)map.get("animation"), items, (int) map.get("maxTime"), spItems,(boolean)map.get("isPoint"),(int)map.get("value"));
         lottery.setWeights((ArrayList<Integer>) map.get("weights"));
         lottery.setSpWeights((ArrayList<Integer>) map.get("spWeights"));
         return lottery;
@@ -147,15 +147,6 @@ public class Lottery {
         this.weights.add(index,weight);
     }
 
-    public int getItemWeight(ItemStack item){
-        int index = items.indexOf(item);
-        return weights.get(index);
-    }
-
-    public int getSpItemWeight(ItemStack item){
-        int index = spItems.indexOf(item);
-        return spWeights.get(index);
-    }
 
     public int getWeightSum(){
         return getCommonWeightSum()+getSpWeightSum();
@@ -176,6 +167,17 @@ public class Lottery {
         return addition;
     }
 
+    public List<Integer> getSpWeights() {
+        if(spWeights==null)
+            spWeights = new ArrayList<>();
+        return spWeights;
+    }
+
+    public List<Integer> getWeights() {
+        if(weights==null)
+            weights = new ArrayList<>();
+        return weights;
+    }
 
     public Lottery setAnimation(String  animation){
         this.animation = animation;
@@ -293,10 +295,10 @@ public class Lottery {
             try{
                 player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +"请输入新的价格,输入0为取消售卖。输入‘cancel’取消");
                 try{
-                    String times  = XgpLottery.getInput(player).get(15, TimeUnit.SECONDS);
-                    if(times!=null){
-                        lottery.setMaxTime(Integer.parseInt(times));
-                        player.sendMessage(ChatColor.GREEN+"成功将保底次数修改为"+times+"!");
+                    String value  = XgpLottery.getInput(player).get(15, TimeUnit.SECONDS);
+                    if(value!=null){
+                        lottery.setValue(Integer.parseInt(value));
+                        player.sendMessage(ChatColor.GREEN+"成功将价格次数修改为"+value+"!");
                         new BukkitRunnable(){
                             @Override
                             public void run(){

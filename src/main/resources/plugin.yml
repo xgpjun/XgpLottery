@@ -5,11 +5,23 @@ api-version: 1.13
 authors: [ 1badsobig ]
 description: A lottery plugin.
 
-softdepend: [ParticleLib,PlaceholderAPI]
+softdepend:
+  - PlaceholderAPI
+  - ParticleLib
+  - PlayerPoints
+  - Vault
 commands:
   xgplottery:
     description: "XgpLottery's main command"
     aliases:
       - "xl"
       - "lottery"
-    usage: "§c use /xgplottery help for help"
+    usage: "§cuse /xgplottery help for help"
+
+permissions:
+  xgplottery.manager:
+    description: "allow to manage the plugin"
+    default: op
+  xgplottery.shop:
+    description: "allow to open shop GUI"
+    default: not op

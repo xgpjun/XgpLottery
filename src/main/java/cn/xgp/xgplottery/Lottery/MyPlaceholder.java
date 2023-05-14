@@ -2,6 +2,7 @@ package cn.xgp.xgplottery.Lottery;
 
 import cn.xgp.xgplottery.Utils.ConfigSetting;
 import cn.xgp.xgplottery.XgpLottery;
+import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -44,7 +45,12 @@ public class MyPlaceholder extends PlaceholderExpansion {
     public String onRequest(OfflinePlayer player, String params) {
         String[] args = params.split("_");
         if(args.length==2){
-            String playerName = args[0];
+            String playerName;
+            if(args[0].equals("{player}")){
+                playerName = PlaceholderAPI.setPlaceholders(player,"%player_name%");
+            }else {
+                playerName = args[0];
+            }
             String lotteryName = args[1];
             UUID uuid = Bukkit.getOfflinePlayer(playerName).getUniqueId();
             return Integer.toString(LotteryTimes.getTimes(uuid,lotteryName));

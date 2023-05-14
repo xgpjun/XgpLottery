@@ -1,9 +1,6 @@
 package cn.xgp.xgplottery.Listener;
 
-import cn.xgp.xgplottery.Lottery.Lottery;
-import cn.xgp.xgplottery.Lottery.LotteryBox;
 import cn.xgp.xgplottery.Utils.BoxParticleUtils;
-import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,27 +17,25 @@ import org.bukkit.inventory.EquipmentSlot;
 
 import java.util.Objects;
 import java.util.UUID;
-
 @Data
 @AllArgsConstructor
-public class SelectBoxListener implements Listener {
-
+public class RemoveBoxListener implements Listener {
     private UUID uuid;
-    private Lottery lottery;
+
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void playerSelectBoxEvent(PlayerInteractEvent e){
+    public void playerRemoveBoxEvent(PlayerInteractEvent e){
         Player player = e.getPlayer();
         if(player.getUniqueId().equals(uuid)&&e.getHand().equals(EquipmentSlot.HAND)){
             e.setCancelled(true);
             if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
                 Location location = Objects.requireNonNull(e.getClickedBlock()).getLocation();
-                if(XgpLottery.getLotteryBoxByLocation(location)!=null){
-                    player.sendMessage("这个方块已经是"+XgpLottery.getLotteryBoxByLocation(location).getLotteryName()+"的抽奖箱了！");
+                if(XgpLottery.lotteryBoxList.contains(XgpLottery.getLotteryBoxByLocation(location))){
+                    BoxParticleUtils.removeBox(XgpLottery.getLotteryBoxByLocation(location));
+                    //delete location
+                    XgpLottery.locations.remove(location);
                 }else{
-                    BoxParticleUtils.addBox(new LotteryBox(lottery.getName(),location));
-                    XgpLottery.locations.add(location);
-                    SerializeUtils.saveLotteryBoxData();
+                    e.getPlayer().sendMessage(ChatColor.RED+"这个方块好像并不是抽奖箱");
                 }
                 HandlerList.unregisterAll(this);
             }

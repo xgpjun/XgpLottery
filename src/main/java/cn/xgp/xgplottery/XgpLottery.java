@@ -1,6 +1,5 @@
 package cn.xgp.xgplottery;
 
-import cn.xgp.xgplottery.Command.GuiCommand;
 import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Listener.GetNameListener;
 import cn.xgp.xgplottery.Listener.GuiListener;
@@ -10,12 +9,13 @@ import cn.xgp.xgplottery.Utils.ConfigSetting;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 
+import net.milkbowl.vault.economy.Economy;
+import org.black_ixx.playerpoints.PlayerPoints;
+import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
@@ -27,6 +27,8 @@ import java.util.concurrent.Future;
 public final class XgpLottery extends JavaPlugin {
 
     public static JavaPlugin instance;
+    public static PlayerPointsAPI ppAPI;
+    public static Economy eco;
     public static Map<String,Lottery> lotteryList = new ConcurrentHashMap<>();
     public static List<LotteryBox> lotteryBoxList = new Vector<>();
     public static List<Location> locations = new Vector<>();
@@ -57,7 +59,6 @@ public final class XgpLottery extends JavaPlugin {
         log(LangUtils.EnableMessage);
         //注册命令
 
-//        Objects.requireNonNull(Bukkit.getPluginCommand("xgplottery")).setExecutor(new GuiCommand());
         Objects.requireNonNull(Bukkit.getPluginCommand("xgplottery")).setExecutor(new XgpLotteryCommand());
 
         //注册监听器
@@ -98,13 +99,23 @@ public final class XgpLottery extends JavaPlugin {
     }
 
     static void enableDepend(){
-        if (false&&instance.getConfig().getBoolean("EnableParticle")&&Bukkit.getPluginManager().getPlugin("ParticleLib") != null){
+        if (instance.getConfig().getBoolean("EnableParticle")&&Bukkit.getPluginManager().getPlugin("ParticleLib") != null){
             BoxParticle.playAllParticle();
         }
         if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
             // 创建占位符扩展并注册
             new MyPlaceholder(XgpLottery.instance).register();
         }
+        if (Bukkit.getPluginManager().isPluginEnabled("PlayerPoints")) {
+            ppAPI = PlayerPoints.getInstance().getAPI();
+        }
+        if(Bukkit.getPluginManager().isPluginEnabled("Vault")){
+            RegisteredServiceProvider<Economy> rsp = instance.getServer().getServicesManager().getRegistration(Economy.class);
+            if (rsp != null) {
+                eco =rsp.getProvider();
+            }
+        }
+
     }
 
     public static void reload(){

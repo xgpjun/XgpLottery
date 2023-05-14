@@ -54,6 +54,14 @@
     </build>
 
     <repositories>
+<!--        <repository>-->
+<!--            <id>jitpack.io</id>-->
+<!--            <url>https://www.jitpack.io</url>-->
+<!--        </repository>-->
+        <repository>
+            <id>rosewood-repo</id>
+            <url>https://repo.rosewooddev.io/repository/public/</url>
+        </repository>
         <repository>
             <id>minecraft</id>
             <url>https://lss233.littleservice.cn/repositories/minecraft</url>
@@ -98,7 +106,19 @@
             <groupId>com.github.602723113</groupId>
             <artifactId>ParticleLib</artifactId>
             <version>1.5.0</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.black_ixx</groupId>
+            <artifactId>playerpoints</artifactId>
+            <version>3.2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.MilkBowl</groupId>
+            <artifactId>VaultAPI</artifactId>
+            <version>1.7</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
-
 </project>

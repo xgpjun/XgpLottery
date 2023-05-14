@@ -20,8 +20,8 @@ public class BoxParticle {
     public void createParticle(){
         cube.setPeriod(1L)
                 .setColor(Color.WHITE)
-//                .alwaysShowAsync();
-                .alwaysShow();
+                .alwaysShowAsync();
+//                .alwaysShow();
         XgpLottery.boxParticleList.add(this);
     }
 

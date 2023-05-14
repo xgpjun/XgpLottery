@@ -11,8 +11,11 @@ import cn.xgp.xgplottery.Gui.Impl.Pool.SpecialPoolShow;
 import cn.xgp.xgplottery.Gui.Impl.Shop.LotteryShop;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
+import cn.xgp.xgplottery.Utils.GiveUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.XgpLottery;
+import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -98,7 +101,7 @@ public class GuiListener implements Listener {
                         if(e.isShiftClick()&&e.isLeftClick()){
                             Lottery.setMaxTime(player,lottery);
                         }else if(e.isShiftClick()&&e.isRightClick()){
-
+                            Lottery.setValue(player,lottery);
                         } else if(e.isLeftClick()&&!e.isShiftClick()){
                             player.openInventory(new LotteryPoolGui(lottery).getInventory());
                         }else if(e.isRightClick()&&!e.isShiftClick()){
@@ -123,7 +126,7 @@ public class GuiListener implements Listener {
                     Lottery lottery = ((LotteryPoolGui) e.getInventory().getHolder()).getLottery();
                     //被点击的物品
                     int index = e.getSlot();
-                    ItemStack itemStack = lottery.getItems().get(index);;
+                    ItemStack itemStack = lottery.getItems().get(index);
                     //删除物品
                     if(e.isShiftClick()&&e.isRightClick()&&itemStack!=null){
                         if(lottery.getItems().contains(itemStack)){
@@ -262,13 +265,40 @@ public class GuiListener implements Listener {
                     if(mata!=null) {
                         Lottery lottery = XgpLottery.lotteryList.get(mata.getDisplayName().split("§b")[1]);
                         if (e.isLeftClick() && !e.isShiftClick()) {
-                            //TODO 购买物品的逻辑
+                            //未开启售卖
+                            int value = lottery.getValue();
+                            if(value<=0){
+                                player.sendMessage(ChatColor.GOLD+"[温馨提示]"+ChatColor.GREEN+ "这个奖池暂未开启售卖");
+                            }else {
+                                if(lottery.isPoint()&& XgpLottery.ppAPI!=null){
+                                    if(XgpLottery.ppAPI.take(player.getUniqueId(),value)){
+                                        GiveUtils.giveLottery(player,lottery.getName());
+                                        player.openInventory(new LotteryShop(player).getInventory());
+                                    }else if(!lottery.isPoint() ) {
+                                        player.closeInventory();
+                                        player.sendMessage(ChatColor.RED+"您的点券余额不足");
+                                    }
+                                }else {
+                                    if(XgpLottery.eco ==null){
+                                        player.sendMessage(ChatColor.RED+"本服务器未加载经济系统，请联系管理员");
+                                        return;
+                                    }
+                                    Economy econ = XgpLottery.eco;
+                                    EconomyResponse r = econ.withdrawPlayer(player, value);
+                                    if(r.transactionSuccess()) {
+                                        player.sendMessage(String.format(ChatColor.GREEN+"成功购买！你还有"+ChatColor.AQUA+" %s", econ.format(r.balance)));
+                                    } else {
+                                        player.sendMessage(String.format(ChatColor.RED+"你的钱不够，你只有"+ChatColor.AQUA+"%s",r.balance));
+                                    }
+                                }
+                            }
                         }
                     }
                 }
             }
         }
     }
+
     @EventHandler
     public void dragItem(InventoryDragEvent e){
         Player player = (Player) e.getWhoClicked();
