@@ -1,29 +1,40 @@
 package cn.xgp.xgplottery.Command.SubCmd;
 
+import cn.xgp.xgplottery.Command.XgpLotteryCommand;
+import cn.xgp.xgplottery.Lottery.BoxParticle;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryBox;
+import cn.xgp.xgplottery.Lottery.LotteryTimes;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.command.TabExecutor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
-public class DeleteCommand implements CommandExecutor {
+public class DeleteCommand implements TabExecutor {
 
+    /*
+    //记录次数
+    public static List<LotteryTimes> lotteryTimesList = new CopyOnWriteArrayList<>();
+    //未保底次数
+    public static List<LotteryTimes> currentTime = new CopyOnWriteArrayList<>();
+     */
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(args.length!=2){
             sender.sendMessage(ChatColor.RED+"输入格式有误");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery delete [奖池名称]\n" + ChatColor.GREEN + "删除指定奖池，本命令会自动重载插件，并清除掉相关数据");
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery delete [奖池名称]\n" + ChatColor.GREEN + "删除指定奖池，本命令会并清除掉相关数据");
             return true;
         }
         String name = args[1];
@@ -33,37 +44,75 @@ public class DeleteCommand implements CommandExecutor {
             return true;
         }
 
+        //删除lotteryList
         File folder =new File(XgpLottery.instance.getDataFolder(), "Lottery");
         String fileName=name+".yml";
         File file=new File(folder,fileName);
         file.delete();
-
         XgpLottery.lotteryList.remove(name);
+        //删除lotteryBoxList
         List<LotteryBox> delList = new ArrayList<>();
         for(LotteryBox lotteryBox:XgpLottery.lotteryBoxList) {
             if(lotteryBox.getLotteryName().equals(name)){
                 delList.add(lotteryBox);
             }
         }
+        List<Location> locationList = new ArrayList<>();
         for(LotteryBox lotteryBox:delList){
             XgpLottery.lotteryBoxList.remove(lotteryBox);
-            XgpLottery.locations.remove(lotteryBox.getLocation());
+            locationList.add(lotteryBox.getLocation());
         }
-        SerializeUtils.saveLotteryBoxData();
-
-        file = new File(XgpLottery.instance.getDataFolder(), "lotteryTimes.yml");
-        FileConfiguration config = YamlConfiguration.loadConfiguration(file);
-        config.set("total."+name,null);
-        config.set("current."+name,null);
-        try {
-            config.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
+        //获取获得的location位置的粒子特效
+        List<BoxParticle> boxParticles = new ArrayList<>();
+        for(BoxParticle boxParticle :XgpLottery.boxParticleList){
+            for(Location location : locationList){
+                if(boxParticle.location.equals(location)){
+                    boxParticles.add(boxParticle);
+                }
+            }
+        }
+        //删除boxParticle
+        for (BoxParticle boxParticle:boxParticles){
+            boxParticle.clearParticle();
+            XgpLottery.boxParticleList.remove(boxParticle);
+        }
+        //删除locations
+        for(Location location:locationList){
+            XgpLottery.locations.remove(location);
+        }
+        //删除lotteryTime
+        List<LotteryTimes> times = new ArrayList<>();
+        for(LotteryTimes lotteryTimes: XgpLottery.totalTime){
+            if(lotteryTimes.getLotteryName().equals(name)){
+                times.add(lotteryTimes);
+            }
+        }
+        for(LotteryTimes lotteryTimes:times){
+            XgpLottery.totalTime.remove(lotteryTimes);
+        }
+        List<LotteryTimes> cTimes = new ArrayList<>();
+        for(LotteryTimes lotteryTimes: XgpLottery.currentTime){
+            if(lotteryTimes.getLotteryName().equals(name)){
+                cTimes.add(lotteryTimes);
+            }
+        }
+        for(LotteryTimes lotteryTimes:cTimes){
+            XgpLottery.currentTime.remove(lotteryTimes);
         }
 
-        XgpLottery.reload();
-
-
+        SerializeUtils.save();
         return true;
+    }
+    @Nullable
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if(!sender.hasPermission("xgplottery.manager")){
+            return null;
+        }
+        if(args.length == 2){
+            List<String> strings = new ArrayList<>(XgpLottery.lotteryList.keySet());
+            return XgpLotteryCommand.filter(strings,args);
+        }
+        return null;
     }
 }

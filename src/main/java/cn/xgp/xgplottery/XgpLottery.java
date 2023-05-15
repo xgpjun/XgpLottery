@@ -22,7 +22,10 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
+
+
 
 public final class XgpLottery extends JavaPlugin {
 
@@ -30,14 +33,14 @@ public final class XgpLottery extends JavaPlugin {
     public static PlayerPointsAPI ppAPI;
     public static Economy eco;
     public static Map<String,Lottery> lotteryList = new ConcurrentHashMap<>();
-    public static List<LotteryBox> lotteryBoxList = new Vector<>();
-    public static List<Location> locations = new Vector<>();
+    public static List<LotteryBox> lotteryBoxList = new ArrayList<>();
+    public static List<Location> locations = new ArrayList<>();
     //正在产生粒子的方块
-    public static List<BoxParticle> boxParticleList = new Vector<>();
+    public static List<BoxParticle> boxParticleList = new ArrayList<>();
     //记录次数
-    public static List<LotteryTimes> lotteryTimesList = new Vector<>();
+    public static List<LotteryTimes> totalTime = new CopyOnWriteArrayList<>();
     //未保底次数
-    public static List<LotteryTimes> currentTime = new Vector<>();
+    public static List<LotteryTimes> currentTime = new CopyOnWriteArrayList<>();
 
     @Override
     public void onLoad() {
@@ -71,6 +74,7 @@ public final class XgpLottery extends JavaPlugin {
     public void onDisable() {
         // Plugin shutdown logic
         instance.getLogger().info(LangUtils.DisableMessage);
+        Bukkit.getScheduler().cancelTask(SerializeUtils.saveTaskId);
         BoxParticle.clearAllParticle();
         saveConfig();
         SerializeUtils.save();
@@ -86,6 +90,8 @@ public final class XgpLottery extends JavaPlugin {
     }
 
     public static LotteryBox getLotteryBoxByLocation(Location targetLocation) {
+        if(lotteryBoxList==null)
+            return null;
         for (LotteryBox lotteryBox : lotteryBoxList) {
             if (lotteryBox.getLocation().equals(targetLocation)) {
                 return lotteryBox;

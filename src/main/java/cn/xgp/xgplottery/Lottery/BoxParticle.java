@@ -31,7 +31,7 @@ public class BoxParticle {
 
     public static void playAllParticle(){
         XgpLottery.boxParticleList.clear();
-        if(!XgpLottery.lotteryBoxList.isEmpty()){
+        if(XgpLottery.lotteryBoxList!=null&&!XgpLottery.lotteryBoxList.isEmpty()){
             for (LotteryBox lotteryBox: XgpLottery.lotteryBoxList) {
                 new BoxParticle(lotteryBox.getLocation()).createParticle();
 
@@ -39,7 +39,7 @@ public class BoxParticle {
         }
     }
     public static void clearAllParticle(){
-        if(!XgpLottery.boxParticleList.isEmpty()){
+        if(XgpLottery.lotteryBoxList!=null&&!XgpLottery.boxParticleList.isEmpty()){
             for(BoxParticle boxParticle:XgpLottery.boxParticleList){
                 boxParticle.clearParticle();
             }

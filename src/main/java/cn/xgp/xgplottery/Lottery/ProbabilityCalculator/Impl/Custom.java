@@ -39,8 +39,7 @@ public class Custom extends ProbabilityCalculator{
                 int randomWeight = new Random().nextInt(spWeight)+1;
                 player.sendMessage(ChatColor.GOLD+"[抽奖小助手]"+ChatColor.GREEN+"这是你的第"+ LotteryTimes.getCurrentTimes(player.getUniqueId(),lottery.getName()) +"次抽奖！");
                 player.sendMessage(ChatColor.GOLD+"你抽到了保底物品！");
-                lotteryTimes.clearTimes(0,player);
-                lotteryTimes.clearTimes(0,player);
+                lotteryTimes.setTimes(0);
                 for(int i =0;i<spItems.size();i++){
                     randomWeight -=spWeights.get(i);
                     if(randomWeight<=0){
@@ -56,7 +55,7 @@ public class Custom extends ProbabilityCalculator{
                 if(randomWeight<=spWeight){
                     player.sendMessage(ChatColor.GOLD+"[抽奖小助手]"+ChatColor.GREEN+"这是你的第"+ LotteryTimes.getCurrentTimes(player.getUniqueId(),lottery.getName()) +"次抽奖！");
                     player.sendMessage(ChatColor.GOLD+"你抽到了保底物品！");
-                    lotteryTimes.clearTimes(0,player);
+                    lotteryTimes.setTimes(0);
                     for(int i =0;i<spItems.size();i++){
                         randomWeight -=spWeights.get(i);
                         if(randomWeight<=0){

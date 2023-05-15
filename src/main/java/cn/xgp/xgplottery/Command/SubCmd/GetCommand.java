@@ -1,5 +1,6 @@
 package cn.xgp.xgplottery.Command.SubCmd;
 
+import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryMenuGui;
 import cn.xgp.xgplottery.Gui.MyItem;
 import cn.xgp.xgplottery.Lottery.Lottery;
@@ -9,11 +10,18 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class GetCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class GetCommand implements TabExecutor {
 
     /***
      * /xl get ticket 123
@@ -27,9 +35,7 @@ public class GetCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED+"你没有权限这么做！");
             return true;
         }
-        String option = args[1];
-
-        if(args.length!=3||(!option.equals("ticket")&&!option.equals("key"))){
+        if(args.length!=3||(!args[1].equals("ticket")&&!args[1].equals("key"))){
             sender.sendMessage(ChatColor.RED+"输入格式有误");
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery get ticket [奖池名称]\n" + ChatColor.GREEN + "把手中的物品设置为指定奖池的抽奖券");
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery get key [奖池名称]\n" + ChatColor.GREEN + "把手中的物品设置为指定奖池的抽奖箱钥匙");
@@ -48,7 +54,7 @@ public class GetCommand implements CommandExecutor {
             return true;
         }
         MyItem guiItem = new MyItem(item);
-        if(option.equals("ticket")){
+        if(args[1].equals("ticket")){
             guiItem.setDisplayName(ChatColor.GOLD+name+"-抽奖券")
                     .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"右键以抽奖"+ChatColor.GOLD+"✦")
                     .addEnchant();
@@ -60,5 +66,19 @@ public class GetCommand implements CommandExecutor {
         player.getInventory().setItemInMainHand(guiItem.getItem());
         return true;
     }
-
+    @Nullable
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if(!sender.hasPermission("xgplottery.manager")){
+            return null;
+        }
+        if(args.length == 2){
+            return XgpLotteryCommand.filter(new ArrayList<>(Arrays.asList("key", "ticket")),args);
+        }
+        if(args.length == 3){
+            List<String> strings = new ArrayList<>(XgpLottery.lotteryList.keySet());
+            return XgpLotteryCommand.filter(strings,args);
+        }
+        return null;
+    }
 }

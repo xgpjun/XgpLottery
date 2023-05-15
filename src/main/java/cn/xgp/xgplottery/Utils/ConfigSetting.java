@@ -11,14 +11,18 @@ public class ConfigSetting {
     public static boolean giveLottery;
     public static boolean giveKey;
     public static boolean shop;
+    public static long autoSaveTime;
+    public static boolean autoSaveMsg;
 
     public static void loadConfig(Configuration config){
         version = config.getString("version");
-        showProbability = config.getBoolean("ShowProbability");
-        enableParticle = config.getBoolean("EnableParticle");
-        giveLottery = config.getBoolean("GiveLottery");
-        giveKey = config.getBoolean("giveKey");
-        shop = config.getBoolean("Shop");
+        showProbability = config.getBoolean("ShowProbability",false);
+        enableParticle = config.getBoolean("EnableParticle",true);
+        giveLottery = config.getBoolean("GiveLottery",true);
+        giveKey = config.getBoolean("giveKey",false);
+        shop = config.getBoolean("Shop",true);
+        autoSaveTime = config.getLong("autoSaveTime",120L)*20;
+        autoSaveMsg = config.getBoolean("autoSaveMsg",true);
         LangUtils.loadLangFile(config.getString("lang"));
     }
 

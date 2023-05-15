@@ -17,3 +17,7 @@ Shop: true
 GiveLottery: true
 #giveKey：当上面为true时，true为给与玩家抽奖箱钥匙，false为给与玩家奖券
 giveKey: true
+#自动保存的秒数
+autoSaveTime: 120
+#是否输出自动保存的信息
+autoSaveMsg: true

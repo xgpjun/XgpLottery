@@ -7,7 +7,6 @@ import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -40,7 +39,6 @@ public class SelectBoxListener implements Listener {
                 }else{
                     BoxParticleUtils.addBox(new LotteryBox(lottery.getName(),location));
                     XgpLottery.locations.add(location);
-                    SerializeUtils.saveLotteryBoxData();
                 }
                 HandlerList.unregisterAll(this);
             }

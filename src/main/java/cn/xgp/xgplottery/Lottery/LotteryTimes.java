@@ -1,6 +1,5 @@
 package cn.xgp.xgplottery.Lottery;
 
-import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,17 +19,14 @@ public class LotteryTimes {
         this(uuid,0,lotteryName);
     }
 
-
-    public void clearTimes(int times,Player player) {
+    public void setTimes(int times) {
         this.times = times;
-        SerializeUtils.savePlayerCurrentLotteryTimes(player,lotteryName);
-
     }
 
     public static LotteryTimes getLotteryTimes(UUID uuid , String lotteryName){
         LotteryTimes result =null;
-        if(!XgpLottery.lotteryTimesList.isEmpty())
-            for(LotteryTimes lotteryTimes: XgpLottery.lotteryTimesList){
+        if(!XgpLottery.totalTime.isEmpty())
+            for(LotteryTimes lotteryTimes: XgpLottery.totalTime){
                 if(lotteryTimes.getUuid().equals(uuid)&&lotteryTimes.getLotteryName().equals(lotteryName)){
                     result = lotteryTimes;
                 }
@@ -69,7 +65,7 @@ public class LotteryTimes {
         LotteryTimes lotteryTimes = getLotteryTimes(player.getUniqueId(), lotteryName);
         if (lotteryTimes == null){
             lotteryTimes = new LotteryTimes(player.getUniqueId(), lotteryName);
-            XgpLottery.lotteryTimesList.add(lotteryTimes);
+            XgpLottery.totalTime.add(lotteryTimes);
         }
         LotteryTimes currentTimes = getCurrentLotteryTimes(player.getUniqueId(), lotteryName);
         if (currentTimes == null){
@@ -78,8 +74,6 @@ public class LotteryTimes {
         }
         currentTimes.setTimes(currentTimes.getTimes() + 1);
         lotteryTimes.setTimes(lotteryTimes.getTimes() + 1);
-        SerializeUtils.savePlayerTotalLotteryTimes(player,lotteryName);
-        SerializeUtils.savePlayerCurrentLotteryTimes(player,lotteryName);
     }
 
 }

@@ -4,41 +4,48 @@ import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryBox;
 import cn.xgp.xgplottery.Lottery.LotteryTimes;
 import cn.xgp.xgplottery.XgpLottery;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.TypeAdapter;
+import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonWriter;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Player;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SerializeUtils {
 
+    public static int saveTaskId;
+
     public static void save(){
         saveLotteryData();
-        saveLotteryBoxData();
-        saveLotteryTimes();
+        saveJsonData();
     }
 
     public static void load(){
-        SerializeUtils.createLotteryFolder();
-        SerializeUtils.loadLotteryData();
-        SerializeUtils.loadLotteryBoxData();
-        loadCurrentLotteryTimes();
-        SerializeUtils.loadTotalLotteryTimes();
+        createLotteryFolder();
+
+        loadLotteryData();
+        loadJsonData();
+        saveTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(XgpLottery.instance, () -> {
+            if(ConfigSetting.autoSaveMsg)
+                XgpLottery.log("正在自动保存数据");
+            save();
+        }, ConfigSetting.autoSaveTime, ConfigSetting.autoSaveTime);
     }
 
     public static void createLotteryFolder(){
         File folder =new File(XgpLottery.instance.getDataFolder(), "Lottery");
         if(!folder.exists()){
-            folder.mkdir();
-        }
-        File file1 =new File(folder,"default.yml");
-        try{
-            file1.createNewFile();
-        }catch (IOException e){
-            e.printStackTrace();
+            if(folder.mkdir()){
+                XgpLottery.log("创建奖池文件夹成功");
+            }
         }
     }
 
@@ -56,6 +63,7 @@ public class SerializeUtils {
                             try {
                                 // 使用deserialize方法将YAML配置文件中的Map转换为Lottery对象
                                 ConfigurationSection section = yamlConfig.getConfigurationSection("data");
+                                assert section != null;
                                 Lottery lottery = Lottery.deserialize(section.getValues(false));
                                 lottery.setName(file.getName().split("\\.")[0]);
                                 XgpLottery.lotteryList.put(lottery.getName(),lottery);
@@ -73,7 +81,9 @@ public class SerializeUtils {
     public static void saveLotteryData(){
         File folder = new File(XgpLottery.instance.getDataFolder(), "Lottery");
         if(!folder.exists()){
-            folder.mkdirs();
+            if(folder.mkdirs()){
+                XgpLottery.log("创建奖池文件夹成功");
+            }
         }
         for(Lottery lottery:XgpLottery.lotteryList.values()){
             String fileName=lottery.getName()+".yml";
@@ -88,184 +98,146 @@ public class SerializeUtils {
             }
         }
     }
-    public static void saveLotteryBoxData() {
-        // 创建保存数据的文件
-        File file = new File(XgpLottery.instance.getDataFolder(), "lotteryBox.yml");
-        // 创建新的配置文件
-        YamlConfiguration yml = new YamlConfiguration();
-        for (int i = 0; i < XgpLottery.lotteryBoxList.size(); i++) {
-            LotteryBox lotteryBox = XgpLottery.lotteryBoxList.get(i);
-            // 生成唯一的数据路径，例如 data.0、data.1、data.2，以便区分每个 LotteryBox 对象
-            String dataPath = "data." + i;
-            // 将 LotteryBox 对象序列化后存入配置文件的相应路径下
-            yml.set(dataPath, lotteryBox.serialize());
-        }
 
-        // 保存配置文件到指定的文件路径
-        try {
-            yml.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-    public static void loadLotteryBoxData() {
-        // 创建保存数据的文件
-        File file = new File(XgpLottery.instance.getDataFolder(), "lotteryBox.yml");
-
-        // 检查文件是否存在
-        if (file.exists()) {
-            // 从文件加载配置
-            YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
-
-            // 清空现有的 lotteryBoxList
-            XgpLottery.lotteryBoxList.clear();
-
-            // 获取所有数据路径，例如 data.0、data.1、data.2
-            ConfigurationSection dataSection = yml.getConfigurationSection("data");
-            if (dataSection != null) {
-                Set<String> dataPaths = dataSection.getKeys(false);
-
-                // 遍历所有数据路径
-                for (String dataPath : dataPaths) {
-                    // 根据数据路径获取 LotteryBox 对象的序列化数据
-                    Map<String, Object> serializedData = yml.getConfigurationSection("data." + dataPath).getValues(false);
-
-                    // 反序列化为 LotteryBox 对象并添加到 lotteryBoxList 中
-                    LotteryBox lotteryBox = LotteryBox.deserialize(serializedData);
-                    XgpLottery.lotteryBoxList.add(lotteryBox);
-                    XgpLottery.locations.add(lotteryBox.getLocation());
-                }
+    public static void loadJsonData(){
+        File file = new File(XgpLottery.instance.getDataFolder(), "lotteryData.dat");
+        if (!file.exists())
+            return;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            StringBuilder jsonBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonBuilder.append(line);
             }
+            String jsonData = jsonBuilder.toString();
+            dataFromJson(jsonData);
+            XgpLottery.log("读取数据成功");
+        }catch (Exception e) {
+            XgpLottery.log("读取 JSON 文件时发生错误：" + e.getMessage());
         }
-
     }
-    public static void saveLotteryTimes(){
-        File file = new File(XgpLottery.instance.getDataFolder(), "lotteryTimes.yml");
-        // 创建新的配置文件
-        YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
-        for(LotteryTimes lotteryTimes :XgpLottery.lotteryTimesList){
-            String lottery = lotteryTimes.getLotteryName();
-            UUID uuid = lotteryTimes.getUuid();
-            int times = lotteryTimes.getTimes();
-            String dataPath = "total."+lottery+"."+uuid.toString();
-            yml.set(dataPath,times);
-        }
-        for(LotteryTimes lotteryTimes :XgpLottery.currentTime){
-            String lottery = lotteryTimes.getLotteryName();
-            UUID uuid = lotteryTimes.getUuid();
-            int times = lotteryTimes.getTimes();
-            String dataPath = "current."+lottery+"."+uuid.toString();
-            yml.set(dataPath,times);
-        }
-        // 保存配置文件到指定的文件路径
-        try {
-            yml.save(file);
+
+    public static void saveJsonData(){
+        File file = new File(XgpLottery.instance.getDataFolder(), "lotteryData.dat");
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(dataToJson());
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
-    public static void savePlayerTotalLotteryTimes(Player player,String lotteryName){
-        File file = new File(XgpLottery.instance.getDataFolder(), "lotteryTimes.yml");
-        LotteryTimes lotteryTimes = LotteryTimes.getLotteryTimes(player.getUniqueId(),lotteryName);
-        String dataPath =  "total."+lotteryName+"."+player.getUniqueId();
-        YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
-        yml.set(dataPath,lotteryTimes.getTimes());
-        try {
-            yml.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static String dataToJson(){
+        DataContainer data = new DataContainer();
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Location.class, new LocationAdapter())
+                .create();
+        return gson.toJson(data);
+    }
+    public static void dataFromJson(String json){
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Location.class, new LocationAdapter())
+                .create();
+        DataContainer data = gson.fromJson(json, new TypeToken<DataContainer>(){}.getType());
+        List<LotteryTimes> lotteryTimesList = new CopyOnWriteArrayList<>();
+        List<LotteryTimes> currentTime = new CopyOnWriteArrayList<>();
+        List<LotteryBox> lotteryBoxList = new ArrayList<>();
+
+
+        if(data.lotteryBoxList!=null)
+            lotteryBoxList= data.lotteryBoxList;
+        if(data.currentTime!=null)
+            currentTime = data.currentTime;
+        if(data.lotteryTimesList!=null)
+            lotteryTimesList = data.lotteryTimesList;
+
+        for(LotteryBox lotteryBox :lotteryBoxList){
+            XgpLottery.locations.add(lotteryBox.getLocation());
+
+        }
+
+        XgpLottery.lotteryBoxList = lotteryBoxList;
+        XgpLottery.currentTime = currentTime;
+        XgpLottery.totalTime = lotteryTimesList;
+    }
+
+    static class DataContainer{
+        public List<LotteryTimes> lotteryTimesList;
+        public List<LotteryTimes> currentTime;
+        public List<LotteryBox> lotteryBoxList;
+
+        public DataContainer(){
+            this.lotteryTimesList = XgpLottery.totalTime;
+            this.currentTime = XgpLottery.currentTime;
+            this.lotteryBoxList = XgpLottery.lotteryBoxList;
         }
     }
-
-    public static void loadTotalLotteryTimes(){
-        Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance, () -> {
-            File file = new File(XgpLottery.instance.getDataFolder(), "lotteryTimes.yml");
-            YamlConfiguration y = YamlConfiguration.loadConfiguration(file);
-            if (!y.contains("total")) {
-                // 配置文件中不存在"total"部分
+    static class LocationAdapter extends TypeAdapter<Location> {
+        @Override
+        public void write(JsonWriter json, Location location) throws IOException {
+            if (location == null) {
+                json.nullValue();
                 return;
             }
-            ConfigurationSection yml = y.getConfigurationSection("total");
-            // 遍历第一层（奖池名称）
-            if(yml!=null)
-                for (String lottery : yml.getKeys(false)) {
-                    ConfigurationSection lotterySection = yml.getConfigurationSection(lottery);
-                    if (lotterySection != null) {
-                        // 遍历第二层（玩家 UUID）
-                        for (String uuid : lotterySection.getKeys(false)) {
-                            UUID playerUUID;
-                            try {
-                                // 将 UUID 字符串解析为 UUID 对象
-                                playerUUID = UUID.fromString(uuid);
-                            } catch (IllegalArgumentException e) {
-                                // UUID 字符串无效，跳过该键
-                                continue;
-                            }
-                            // 获取玩家的抽奖次数值
-                            int times = lotterySection.getInt(uuid);
-                            LotteryTimes lotteryTimes = new LotteryTimes(playerUUID,times,lottery);
-                            XgpLottery.lotteryTimesList.add(lotteryTimes);
-                            // 在这里处理你的逻辑，使用 `lottery`、`playerUUID` 和 `times` 数据进行操作
-                            // 例如创建一个 `LotteryTimes` 对象，并添加到适当的列表中
-                        }
-                    }
+            json.beginObject();
+            json.name("world").value(Objects.requireNonNull(location.getWorld()).getName());
+            json.name("x").value(location.getX());
+            json.name("y").value(location.getY());
+            json.name("z").value(location.getZ());
+            json.name("yaw").value(location.getYaw());
+            json.name("pitch").value(location.getPitch());
+            json.endObject();
+        }
+
+        @Override
+        public Location read(JsonReader json) throws IOException {
+            if (json.peek() == null) {
+                return null;
+            }
+            json.beginObject();
+            String worldName = null;
+            double x = 0;
+            double y = 0;
+            double z = 0;
+            float yaw = 0;
+            float pitch = 0;
+
+            while (json.hasNext()) {
+                String name = json.nextName();
+                switch (name) {
+                    case "world":
+                        worldName = json.nextString();
+                        break;
+                    case "x":
+                        x = json.nextDouble();
+                        break;
+                    case "y":
+                        y = json.nextDouble();
+                        break;
+                    case "z":
+                        z = json.nextDouble();
+                        break;
+                    case "yaw":
+                        yaw = (float) json.nextDouble();
+                        break;
+                    case "pitch":
+                        pitch = (float) json.nextDouble();
+                        break;
+                    default:
+                        json.skipValue();
+                        break;
                 }
-            XgpLottery.log("抽奖总次数读取完成");
-        });
+            }
+            json.endObject();
+            if (worldName != null) {
+                return new Location(Bukkit.getWorld(worldName), x, y, z, yaw, pitch);
+            }
 
-    }
-
-    public static void savePlayerCurrentLotteryTimes(Player player,String lotteryName){
-        File file = new File(XgpLottery.instance.getDataFolder(), "lotteryTimes.yml");
-        LotteryTimes lotteryTimes = LotteryTimes.getCurrentLotteryTimes(player.getUniqueId(),lotteryName);
-        String dataPath =  "current."+lotteryName+"."+player.getUniqueId();
-        YamlConfiguration yml = YamlConfiguration.loadConfiguration(file);
-        yml.set(dataPath,lotteryTimes.getTimes());
-        try {
-            yml.save(file);
-        } catch (IOException e) {
-            e.printStackTrace();
+            return null;
         }
     }
-
-    public static void loadCurrentLotteryTimes(){
-
-        Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance, () -> {
-            File file = new File(XgpLottery.instance.getDataFolder(), "lotteryTimes.yml");
-
-            YamlConfiguration y = YamlConfiguration.loadConfiguration(file);
-            if (!y.contains("current")) {
-                // 配置文件中不存在"current"部分
-                return;
-            }
-            ConfigurationSection yml = y.getConfigurationSection("current");
-            // 遍历第一层（奖池名称）
-            if(yml!=null) {
-                for (String lottery : yml.getKeys(false)) {
-                    ConfigurationSection lotterySection = yml.getConfigurationSection(lottery);
-                    if (lotterySection != null) {
-                        // 遍历第二层（玩家 UUID）
-                        for (String uuid : lotterySection.getKeys(false)) {
-                            UUID playerUUID;
-                            try {
-                                // 将 UUID 字符串解析为 UUID 对象
-                                playerUUID = UUID.fromString(uuid);
-                            } catch (IllegalArgumentException e) {
-                                // UUID 字符串无效，跳过该键
-                                continue;
-                            }
-                            // 获取玩家的抽奖次数值
-                            int times = lotterySection.getInt(uuid);
-                            LotteryTimes lotteryTimes = new LotteryTimes(playerUUID, times, lottery);
-                            XgpLottery.currentTime.add(lotteryTimes);
-                        }
-                    }
-                }
-            }
-            XgpLottery.log("玩家保底未中次数读取完成 ");
-        });
-
-    }
-
 }
+
+
+
+

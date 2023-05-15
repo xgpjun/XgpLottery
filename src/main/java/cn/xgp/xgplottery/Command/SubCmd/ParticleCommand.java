@@ -1,5 +1,6 @@
 package cn.xgp.xgplottery.Command.SubCmd;
 
+import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryMenuGui;
 import cn.xgp.xgplottery.Lottery.BoxParticle;
 import cn.xgp.xgplottery.Utils.ConfigSetting;
@@ -7,10 +8,17 @@ import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-public class ParticleCommand implements CommandExecutor {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
+public class ParticleCommand implements TabExecutor {
 
     /***
      * /xl particle show
@@ -27,19 +35,30 @@ public class ParticleCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED+"本服未开启粒子特效，请在config.yml中更改”enableParticle“");
             return true;
         }
-        String option = args[1];
-        if(args.length!=2||(!option.equals("show")&&!option.equals("clear"))){
+
+        if(args.length!=2||(!args[1].equals("show")&&!args[1].equals("clear"))){
             sender.sendMessage(ChatColor.RED+"输入格式有误");
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery particle show\n" + ChatColor.GREEN + "启用所有粒子特效");
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery particle clear\n" + ChatColor.GREEN + "关闭所有粒子特效");
             return true;
         }
-
-        if(option.equals("show"))
+        if(args[1].equals("show"))
             BoxParticle.playAllParticle();
         else
             BoxParticle.clearAllParticle();
 
         return true;
+    }
+
+    @Nullable
+    @Override
+    public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if(!sender.hasPermission("xgplottery.manager")){
+            return null;
+        }
+        if(args.length == 2){
+            return XgpLotteryCommand.filter(new ArrayList<>(Arrays.asList("show", "clear")),args);
+        }
+        return null;
     }
 }
