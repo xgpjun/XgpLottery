@@ -1,12 +1,15 @@
 package cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl;
 
-import cn.xgp.xgplottery.Gui.MyItem;
+import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Gui.Impl.Anim.BoxAnimGui;
 import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
+import cn.xgp.xgplottery.Utils.nmsUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -21,6 +24,16 @@ public class BoxAnimation extends LotteryAnimation {
     private final Lottery lottery;
     public boolean stop = false;
     private final boolean isCommand;
+    static Sound sound;
+
+    static
+    {
+        if(nmsUtils.versionToInt<13){
+            sound = Sound.valueOf("BLOCK_NOTE_PLING");
+        }else {
+            sound = Sound.BLOCK_NOTE_BLOCK_HARP;
+        }
+    }
 
     public BoxAnimation(Player player,Lottery lottery){
         this(player,lottery,false);
@@ -48,7 +61,7 @@ public class BoxAnimation extends LotteryAnimation {
         List<ItemStack> showItemList = new ArrayList<>();
         initItemList(showItemList, lottery);
         //get award
-        ItemStack award = lottery.getCalculator().getAward(lottery,player);
+        ItemStack award = lottery.getCalculatorObject().getAward(lottery,player);
 
         showItemList.set(20,award);
         player.openInventory(inventory);
@@ -76,7 +89,7 @@ public class BoxAnimation extends LotteryAnimation {
                     stop = true;
                 }
                 float pitch = (float) Math.pow(2.0, j / 18.0);
-                player.playSound(player.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP,1.0f,pitch);
+                player.playSound(player.getLocation(), sound,1.0f,pitch);
                 if (stop) {
                     // 停止循环
                     Bukkit.getScheduler().cancelTasks(XgpLottery.instance);

@@ -4,6 +4,7 @@ import cn.xgp.xgplottery.Gui.Impl.Pool.LotteryPoolShow;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryBox;
 import cn.xgp.xgplottery.Lottery.LotteryTimes;
+import cn.xgp.xgplottery.Utils.TimesUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -95,7 +96,6 @@ public class LotteryListener implements Listener {
                 }
             }else if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
                 sendTextBox(player,lottery);
-                player.sendMessage();
             }
         }
     }
@@ -106,7 +106,11 @@ public class LotteryListener implements Listener {
         str[1] = ChatColor.GOLD+"[温馨提示]"+ChatColor.GREEN+"shift+右键打开奖池预览";
         str[2] = ChatColor.GOLD+"[奖池信息]"+ChatColor.GREEN+"奖池名称："+ChatColor.AQUA+lottery.getName();
         if(lottery.getMaxTime()>0){
-            str[3] = ChatColor.GOLD+"[奖池信息]"+ChatColor.GREEN+"奖池保底数："+ChatColor.AQUA+lottery.getMaxTime()+ChatColor.GREEN+"您当前未保底抽数："+ ChatColor.AQUA+ LotteryTimes.getCurrentLotteryTimes(player.getUniqueId(),lottery.getName()).getTimes();
+            int times = 0;
+            if(TimesUtils.getCurrentLotteryTimes(player.getUniqueId(),lottery.getName())!=null)
+                times = TimesUtils.getCurrentLotteryTimes(player.getUniqueId(),lottery.getName()).getTimes();
+
+            str[3] = ChatColor.GOLD+"[奖池信息]"+ChatColor.GREEN+"奖池保底数："+ChatColor.AQUA+lottery.getMaxTime()+ChatColor.GREEN+"您当前未保底抽数："+ ChatColor.AQUA+ times;
         }else
             str[3] = ChatColor.GOLD+"[奖池信息] 当前奖池未开启保底机制";
         int maxLength = 0;

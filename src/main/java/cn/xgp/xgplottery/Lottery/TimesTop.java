@@ -10,26 +10,34 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TimesTop {
-    public List<String> top = new ArrayList<>();
-    public List<LotteryTimes> times = new CopyOnWriteArrayList<>();
+    public List<String> topString = new ArrayList<>();
+    private final List<LotteryTimes> times = new CopyOnWriteArrayList<>();
     public TimesTop(boolean isTotal,String lotteryName){
         List<LotteryTimes> allTimes = isTotal? XgpLottery.totalTime:XgpLottery.currentTime;
         if(XgpLottery.lotteryList.containsKey(lotteryName)){
             for(LotteryTimes lotteryTimes :allTimes){
                 if(lotteryTimes.getLotteryName().equals(lotteryName)){
                     this.times.add(lotteryTimes);
-                    createTop();
+                    createTopString();
                 }
             }
         }
     }
 
-    private void createTop(){
+    public LotteryTimes getTimesByRank(int rank){
+        if(rank<=times.size())
+            return times.get(rank-1);
+        else
+            return null;
+    }
+
+
+    private void createTopString(){
         if(times.isEmpty())
             return;
         times.sort(new LotteryTimesComparator());
         for(LotteryTimes lotteryTimes:times){
-            top.add(ChatColor.GOLD+"玩家 "+Bukkit.getOfflinePlayer(lotteryTimes.getUuid()).getName()+" : "+ChatColor.AQUA+lotteryTimes.getTimes());
+            topString.add(ChatColor.GOLD+"玩家 "+Bukkit.getOfflinePlayer(lotteryTimes.getUuid()).getName()+" : "+ChatColor.AQUA+lotteryTimes.getTimes());
         }
     }
 

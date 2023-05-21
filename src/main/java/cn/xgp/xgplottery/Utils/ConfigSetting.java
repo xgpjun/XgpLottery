@@ -13,6 +13,7 @@ public class ConfigSetting {
     public static boolean shop;
     public static long autoSaveTime;
     public static boolean autoSaveMsg;
+    public static long autoUpdateTopTime;
 
     public static void loadConfig(Configuration config){
         version = config.getString("version");
@@ -22,6 +23,7 @@ public class ConfigSetting {
         giveKey = config.getBoolean("giveKey",false);
         shop = config.getBoolean("Shop",true);
         autoSaveTime = config.getLong("autoSaveTime",120L)*20;
+        autoUpdateTopTime = config.getLong("autoUpdateTopTime",120L)*20;
         autoSaveMsg = config.getBoolean("autoSaveMsg",true);
         LangUtils.loadLangFile(config.getString("lang"));
     }

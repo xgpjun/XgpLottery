@@ -9,6 +9,8 @@ import cn.xgp.xgplottery.Utils.ConfigSetting;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 
+import cn.xgp.xgplottery.Utils.TimesUtils;
+import cn.xgp.xgplottery.bStats.Metrics;
 import net.milkbowl.vault.economy.Economy;
 import org.black_ixx.playerpoints.PlayerPoints;
 import org.black_ixx.playerpoints.PlayerPointsAPI;
@@ -26,14 +28,13 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 
 
-
 public final class XgpLottery extends JavaPlugin {
 
     public static JavaPlugin instance;
     public static PlayerPointsAPI ppAPI;
     public static Economy eco;
     public static Map<String,Lottery> lotteryList = new ConcurrentHashMap<>();
-    public static List<LotteryBox> lotteryBoxList = new ArrayList<>();
+    public static List<LotteryBox> lotteryBoxList = new CopyOnWriteArrayList<>();
     public static List<Location> locations = new ArrayList<>();
     //正在产生粒子的方块
     public static List<BoxParticle> boxParticleList = new ArrayList<>();
@@ -41,6 +42,8 @@ public final class XgpLottery extends JavaPlugin {
     public static List<LotteryTimes> totalTime = new CopyOnWriteArrayList<>();
     //未保底次数
     public static List<LotteryTimes> currentTime = new CopyOnWriteArrayList<>();
+    //总次数
+    public static List<LotteryTimes> allTimes = new CopyOnWriteArrayList<>();
 
     @Override
     public void onLoad() {
@@ -52,10 +55,12 @@ public final class XgpLottery extends JavaPlugin {
     @Override
     public void onEnable() {
         instance=this;
+        Metrics.enable();
+
         //读取配置文件
         ConfigSetting.loadConfig(getConfig());
         SerializeUtils.load();
-
+        TimesUtils.autoLoadTop();
         //启动相关依赖
         enableDepend();
 
@@ -73,8 +78,9 @@ public final class XgpLottery extends JavaPlugin {
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        instance.getLogger().info(LangUtils.DisableMessage);
+        log(LangUtils.DisableMessage);
         Bukkit.getScheduler().cancelTask(SerializeUtils.saveTaskId);
+        Bukkit.getScheduler().cancelTask(TimesUtils.taskId);
         BoxParticle.clearAllParticle();
         saveConfig();
         SerializeUtils.save();
@@ -113,7 +119,11 @@ public final class XgpLottery extends JavaPlugin {
             new MyPlaceholder(XgpLottery.instance).register();
         }
         if (Bukkit.getPluginManager().isPluginEnabled("PlayerPoints")) {
-            ppAPI = PlayerPoints.getInstance().getAPI();
+            try{
+                ppAPI = PlayerPoints.getInstance().getAPI();
+            }catch (Exception e){
+                XgpLottery.instance.getLogger().warning("加载PlayerPoints依赖失败，请尝试更新到最新版本");
+            }
         }
         if(Bukkit.getPluginManager().isPluginEnabled("Vault")){
             RegisteredServiceProvider<Economy> rsp = instance.getServer().getServicesManager().getRegistration(Economy.class);

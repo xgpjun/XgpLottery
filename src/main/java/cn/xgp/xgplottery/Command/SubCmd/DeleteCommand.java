@@ -101,18 +101,16 @@ public class DeleteCommand implements TabExecutor {
         }
 
         SerializeUtils.save();
+        sender.sendMessage(ChatColor.GREEN+"删除成功！");
         return true;
     }
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(!sender.hasPermission("xgplottery.manager")){
-            return null;
-        }
         if(args.length == 2){
             List<String> strings = new ArrayList<>(XgpLottery.lotteryList.keySet());
             return XgpLotteryCommand.filter(strings,args);
         }
-        return null;
+        return new ArrayList<>();
     }
 }

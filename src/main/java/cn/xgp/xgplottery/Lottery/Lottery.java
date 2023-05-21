@@ -8,7 +8,9 @@ import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.Impl.Custom;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
+import cn.xgp.xgplottery.Utils.TimesUtils;
 import cn.xgp.xgplottery.XgpLottery;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -23,6 +25,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 @Data
+@AllArgsConstructor
 public class Lottery {
 
     private String name = "默认名称";           //奖池名称
@@ -55,35 +58,7 @@ public class Lottery {
         return lottery;
     }
 
-
-    @NotNull
-    public Map<String, Object> serialize() {
-        Map<String, Object> map =new HashMap<>();
-        map.put("animation",animation);
-        map.put("pool",items);
-        map.put("weights",weights);
-        map.put("spWeights",spWeights);
-        map.put("maxTime",maxTime);
-        map.put("spItem",spItems);
-        map.put("isPoint",isPoint);
-        map.put("value",value);
-        return map;
-    }
-
-    public static Lottery deserialize(Map<String, Object> map) {
-        List<ItemStack> items = new ArrayList<>();
-        List<ItemStack> spItems = new ArrayList<>();
-        if(map.get("pool")!=null)
-            items = (ArrayList<ItemStack>) map.get("pool");
-        if(map.get("spItem")!=null)
-            spItems = (ArrayList<ItemStack>) map.get("spItem");
-        Lottery lottery = new Lottery((String)map.get("animation"), items, (int) map.get("maxTime"), spItems,(boolean)map.get("isPoint"),(int)map.get("value"));
-        lottery.setWeights((ArrayList<Integer>) map.get("weights"));
-        lottery.setSpWeights((ArrayList<Integer>) map.get("spWeights"));
-        return lottery;
-    }
-
-    public LotteryAnimation getAnimation(Player player,Lottery lottery,boolean isCmd) {
+    public LotteryAnimation getAnimationObject(Player player, Lottery lottery, boolean isCmd) {
         switch (animation){
             case "BoxAnimation":
             default: return new BoxAnimation(player,lottery,isCmd);
@@ -91,13 +66,13 @@ public class Lottery {
     }
 
     public void open(Player player,boolean isCmd){
-        LotteryTimes.addTimes(player,getName());
-        getAnimation(player,this,isCmd).playAnimation();
+        TimesUtils.addTimes(player,getName());
+        getAnimationObject(player,this,isCmd).playAnimation();
     }
 
 
 
-    public ProbabilityCalculator getCalculator() {
+    public ProbabilityCalculator getCalculatorObject() {
         return new Custom();
     }
 
@@ -179,11 +154,6 @@ public class Lottery {
         return weights;
     }
 
-    public Lottery setAnimation(String  animation){
-        this.animation = animation;
-        return this;
-    }
-
 
     public static void createLottery(Player player){
         player.closeInventory();
@@ -211,20 +181,14 @@ public class Lottery {
             }
         });
     }
-    public static void receiveWeight(Player player,Lottery lottery,ItemStack item,int index,boolean isSpecial){
-        List<ItemStack> items;
-        if(isSpecial){
-            items = lottery.getSpItems();
-        }else {
-            items = lottery.getItems();
-        }
+    public static void receiveWeight(Player player,Lottery lottery,int index,boolean isSpecial){
         player.closeInventory();
         Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
             try{
                 player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +"请输入新的权重,可以为0。输入‘cancel’取消：");
                 try{
                     String weight  = XgpLottery.getInput(player).get(15, TimeUnit.SECONDS);
-                    if(weight!=null&&Integer.parseInt(weight)>=0){ ;
+                    if(weight!=null&&Integer.parseInt(weight)>=0){
                         if(isSpecial)
                             lottery.changeSpWeight(index,Integer.parseInt(weight));
                         else

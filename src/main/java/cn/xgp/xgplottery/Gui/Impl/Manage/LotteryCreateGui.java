@@ -1,10 +1,13 @@
 package cn.xgp.xgplottery.Gui.Impl.Manage;
 
 import cn.xgp.xgplottery.Gui.LotteryGui;
-import cn.xgp.xgplottery.Gui.MyItem;
+import cn.xgp.xgplottery.Lottery.Lottery;
+import cn.xgp.xgplottery.Lottery.MyItem;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 //创建奖池GUI
@@ -29,5 +32,15 @@ public class LotteryCreateGui extends LotteryGui {
                 .getItem());
         return this;
     }
-
+    public void handleClick(InventoryClickEvent e){
+        Player player = (Player) e.getWhoClicked();
+        switch (e.getRawSlot()){
+            //上一层
+            case 0: player.openInventory(new LotteryMenuGui().getInventory());break;
+            //退出
+            case 8: player.getOpenInventory().close();break;
+            case 22: Lottery.createLottery(player); break;
+            default:
+        }
+    }
 }

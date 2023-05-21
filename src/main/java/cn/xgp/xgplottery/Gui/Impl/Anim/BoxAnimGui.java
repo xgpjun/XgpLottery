@@ -1,9 +1,11 @@
 package cn.xgp.xgplottery.Gui.Impl.Anim;
 
-import cn.xgp.xgplottery.Gui.MyItem;
+import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.nmsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -16,24 +18,36 @@ public class BoxAnimGui extends AnimHolder {
         return inv;
     }
 
+    static ItemStack selectGlass;
+
+    static {
+        if(nmsUtils.versionToInt<13){
+            Material select = Material.valueOf("STAINED_GLASS_PANE");
+            selectGlass = new MyItem(select,1,(byte)1)
+                    .setDisplayName(ChatColor.GOLD+"看看抽到了啥！")
+                    .setLore(ChatColor.GRAY+ "看看抽到了啥！")
+                    .getItem();
+        }else {
+            selectGlass = new MyItem(Material.ORANGE_STAINED_GLASS_PANE)
+                    .setDisplayName(ChatColor.GOLD+"看看抽到了啥！")
+                    .setLore(ChatColor.GRAY+ "看看抽到了啥！")
+                    .getItem();
+        }
+    }
 
     @Override
     public AnimHolder loadGui() {
-        ItemStack borderGlass = new MyItem(Material.GRAY_STAINED_GLASS_PANE)
-                .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")
-                .setLore(ChatColor.GRAY+ "这是分界线捏，没有别的东西了~")
-                .getItem();
         for(int i =0;i<27;i++){
             inv.setItem(i,borderGlass);
             if(i==8)
                 i=17;
         }
-        ItemStack selectGlass = new MyItem(Material.ORANGE_STAINED_GLASS_PANE)
-                .setDisplayName(ChatColor.GOLD+"看看抽到了啥！")
-                .setLore(ChatColor.GRAY+ "看看抽到了啥！")
-                .getItem();
+
         inv.setItem(4,selectGlass);
         inv.setItem(22,selectGlass);
         return this;
+    }
+    public void handleClick(InventoryClickEvent e){
+
     }
 }

@@ -6,10 +6,8 @@ import cn.xgp.xgplottery.Lottery.TimesTop;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -41,7 +39,7 @@ public class TopCommand implements TabExecutor {
             TimesTop top = new TimesTop(true,lottery.getName());
             sender.sendMessage(ChatColor.GREEN + "---这是该奖池的总抽奖次数排行榜---");
             int i =1;
-            for(String str: top.top){
+            for(String str: top.topString){
                 sender.sendMessage(ChatColor.GREEN+Integer.toString(i)+" "+ str);
                 i++;
                 if(i>=10)
@@ -51,7 +49,7 @@ public class TopCommand implements TabExecutor {
             TimesTop top = new TimesTop(false,lottery.getName());
             sender.sendMessage(ChatColor.GREEN + "---这是该奖池的当前未保底次数排行榜---");
             int i =1;
-            for(String str: top.top){
+            for(String str: top.topString){
                 sender.sendMessage(ChatColor.GREEN+Integer.toString(i)+" "+ str);
                 i++;
                 if(i>=10)
@@ -65,10 +63,6 @@ public class TopCommand implements TabExecutor {
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(!sender.hasPermission("xgplottery.manager")){
-            return null;
-        }
-
         if(args.length == 2){
             List<String> strings = new ArrayList<>(XgpLottery.lotteryList.keySet());
             return XgpLotteryCommand.filter(strings,args);
@@ -76,7 +70,7 @@ public class TopCommand implements TabExecutor {
         if(args.length == 3){
             return Collections.singletonList("current");
         }
-        return null;
+        return new ArrayList<>();
     }
 
 

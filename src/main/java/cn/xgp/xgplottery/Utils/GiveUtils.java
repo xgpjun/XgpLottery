@@ -1,7 +1,6 @@
 package cn.xgp.xgplottery.Utils;
 
-import cn.xgp.xgplottery.Command.SubCmd.GiveCommand;
-import cn.xgp.xgplottery.Gui.MyItem;
+import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;

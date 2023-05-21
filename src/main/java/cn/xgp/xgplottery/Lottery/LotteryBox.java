@@ -16,10 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class LotteryBox{
     @Getter
@@ -48,7 +45,7 @@ public class LotteryBox{
         Map<String, Object> map = new HashMap<>();
         map.put("lotteryName", lotteryName);
 
-        map.put("world",location.getWorld().getName());
+        map.put("world", Objects.requireNonNull(location.getWorld()).getName());
         map.put("x",location.getX());
         map.put("y", location.getY());
         map.put("z", location.getZ());

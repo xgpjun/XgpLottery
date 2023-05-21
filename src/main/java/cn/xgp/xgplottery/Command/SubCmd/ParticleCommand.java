@@ -53,12 +53,9 @@ public class ParticleCommand implements TabExecutor {
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(!sender.hasPermission("xgplottery.manager")){
-            return null;
-        }
         if(args.length == 2){
             return XgpLotteryCommand.filter(new ArrayList<>(Arrays.asList("show", "clear")),args);
         }
-        return null;
+        return new ArrayList<>();
     }
 }

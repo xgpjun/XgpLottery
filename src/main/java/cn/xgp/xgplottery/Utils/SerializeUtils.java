@@ -2,6 +2,7 @@ package cn.xgp.xgplottery.Utils;
 
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryBox;
+import cn.xgp.xgplottery.Lottery.LotteryNbtConverter;
 import cn.xgp.xgplottery.Lottery.LotteryTimes;
 import cn.xgp.xgplottery.XgpLottery;
 import com.google.gson.Gson;
@@ -12,8 +13,7 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 import java.io.*;
 import java.util.*;
@@ -24,20 +24,22 @@ public class SerializeUtils {
     public static int saveTaskId;
 
     public static void save(){
-        saveLotteryData();
-        saveJsonData();
+        if(!XgpLottery.lotteryList.isEmpty()){
+            saveLotteryData();
+        }
+        saveData();
     }
 
     public static void load(){
         createLotteryFolder();
 
         loadLotteryData();
-        loadJsonData();
-        saveTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(XgpLottery.instance, () -> {
+        loadData();
+        saveTaskId = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, () -> {
             if(ConfigSetting.autoSaveMsg)
                 XgpLottery.log("正在自动保存数据");
             save();
-        }, ConfigSetting.autoSaveTime, ConfigSetting.autoSaveTime);
+        }, ConfigSetting.autoSaveTime*3, ConfigSetting.autoSaveTime).getTaskId();
     }
 
     public static void createLotteryFolder(){
@@ -49,128 +51,193 @@ public class SerializeUtils {
         }
     }
 
-    //读取Lottery文件夹里的所有yml文件
-    public static void loadLotteryData(){
-        Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance, () -> {
-            File folder =new File(XgpLottery.instance.getDataFolder(), "Lottery");
-            if(folder.isDirectory()){
-                File[] files = folder.listFiles((dir, name) -> name.toLowerCase().endsWith(".yml"));
-                if (files != null) {
-                    for (File file : files) {
-                        // 读取YML文件中已序列化的对象信息
-                        YamlConfiguration yamlConfig = YamlConfiguration.loadConfiguration(file);
-                        if(yamlConfig.contains("isLottery")&&yamlConfig.getBoolean("isLottery")){
-                            try {
-                                // 使用deserialize方法将YAML配置文件中的Map转换为Lottery对象
-                                ConfigurationSection section = yamlConfig.getConfigurationSection("data");
-                                assert section != null;
-                                Lottery lottery = Lottery.deserialize(section.getValues(false));
-                                lottery.setName(file.getName().split("\\.")[0]);
-                                XgpLottery.lotteryList.put(lottery.getName(),lottery);
-                            } catch (Exception e) {
-                                // 如果反序列化失败，则在控制台上记录错误消息
-                                XgpLottery.instance.getLogger().warning("读取文件失败： " + file.getName());
-                            }
-                        }
-                    }
-                }
-            }
-            XgpLottery.log("奖池文件读取完成 ");
-        });
-    }
-    public static void saveLotteryData(){
-        File folder = new File(XgpLottery.instance.getDataFolder(), "Lottery");
+    public static void saveData(){
+        File folder = new File(XgpLottery.instance.getDataFolder(), "Data");
         if(!folder.exists()){
             if(folder.mkdirs()){
-                XgpLottery.log("创建奖池文件夹成功");
+                XgpLottery.log("创建数据文件夹成功");
             }
         }
-        for(Lottery lottery:XgpLottery.lotteryList.values()){
-            String fileName=lottery.getName()+".yml";
-            File file=new File(folder,fileName);
-            YamlConfiguration yamlConfig =new YamlConfiguration();
-            yamlConfig.set("isLottery",true);
-            yamlConfig.set("data",lottery.serialize());
-            try{
-                yamlConfig.save(file);
-            }catch (IOException e){
-                e.printStackTrace();
-            }
+        File file1 = new File(folder, "box.dat");
+        try (FileWriter writer = new FileWriter(file1)) {
+            writer.write(boxToJson(XgpLottery.lotteryBoxList));
+        } catch (IOException e) {
+            XgpLottery.log("储存文件时发生错误：" + e.getMessage());
+        }
+        File file2 = new File(folder, "current.dat");
+        try (FileWriter writer = new FileWriter(file2)) {
+            writer.write(timesToJson(XgpLottery.currentTime));
+        } catch (IOException e) {
+            XgpLottery.log("储存文件时发生错误：" + e.getMessage());
+        }
+        File file3 = new File(folder, "total.dat");
+        try (FileWriter writer = new FileWriter(file3)) {
+            writer.write(timesToJson(XgpLottery.totalTime));
+        } catch (IOException e) {
+            XgpLottery.log("储存文件时发生错误：" + e.getMessage());
+        }
+        File file4 = new File(folder,"all.dat");
+        try (FileWriter writer = new FileWriter(file4)) {
+            writer.write(timesToJson(XgpLottery.allTimes));
+        } catch (IOException e) {
+            XgpLottery.log("储存文件时发生错误：" + e.getMessage());
         }
     }
 
-    public static void loadJsonData(){
-        File file = new File(XgpLottery.instance.getDataFolder(), "lotteryData.dat");
-        if (!file.exists())
+    public static void loadData(){
+        File folder = new File(XgpLottery.instance.getDataFolder(), "Data");
+        if(!folder.exists()){
             return;
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+        }
+        File file1 = new File(folder, "box.dat");
+        File file2 = new File(folder, "current.dat");
+        File file3 = new File(folder, "total.dat");
+        File file4 = new File(folder,"all.dat");
+        try (BufferedReader reader = new BufferedReader(new FileReader(file1))) {
             StringBuilder jsonBuilder = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
                 jsonBuilder.append(line);
             }
             String jsonData = jsonBuilder.toString();
-            dataFromJson(jsonData);
-            XgpLottery.log("读取数据成功");
+            XgpLottery.lotteryBoxList = boxFromJson(jsonData);
+            if(XgpLottery.lotteryBoxList==null)
+                XgpLottery.lotteryBoxList = new CopyOnWriteArrayList<>();
+            XgpLottery.log("读取抽奖箱数据成功");
+        }catch (Exception e) {
+            XgpLottery.log("读取 JSON 文件时发生错误：" + e.getMessage());
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file2))) {
+            StringBuilder jsonBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonBuilder.append(line);
+            }
+            String jsonData = jsonBuilder.toString();
+            XgpLottery.currentTime = timesFromJson(jsonData);
+            if(XgpLottery.currentTime==null)
+                XgpLottery.currentTime = new CopyOnWriteArrayList<>();
+            XgpLottery.log("读取抽奖次数数据成功");
+        }catch (Exception e) {
+            XgpLottery.log("读取 JSON 文件时发生错误：" + e.getMessage());
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file3))) {
+            StringBuilder jsonBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonBuilder.append(line);
+            }
+            String jsonData = jsonBuilder.toString();
+            XgpLottery.totalTime = timesFromJson(jsonData);
+            if(XgpLottery.totalTime==null)
+                XgpLottery.totalTime = new CopyOnWriteArrayList<>();
+            XgpLottery.log("读取当前抽奖次数数据成功");
+        }catch (Exception e) {
+            XgpLottery.log("读取 JSON 文件时发生错误：" + e.getMessage());
+        }
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file4))) {
+            StringBuilder jsonBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonBuilder.append(line);
+            }
+            String jsonData = jsonBuilder.toString();
+            XgpLottery.allTimes = timesFromJson(jsonData);
+            if(XgpLottery.allTimes==null)
+                XgpLottery.allTimes = new CopyOnWriteArrayList<>();
+            XgpLottery.log("读取总抽奖次数数据成功");
+        }catch (Exception e) {
+            XgpLottery.log("读取 JSON 文件时发生错误：" + e.getMessage());
+        }
+
+        for(LotteryBox lotteryBox :XgpLottery.lotteryBoxList){
+            XgpLottery.locations.add(lotteryBox.getLocation());
+        }
+    }
+
+    public static void saveLotteryData(){
+        List<LotteryNbtConverter> dataList = new ArrayList<>();
+        for(Lottery lottery:XgpLottery.lotteryList.values()){
+            dataList.add(new LotteryNbtConverter(lottery));
+        }
+        File folder = new File(XgpLottery.instance.getDataFolder(), "Data");
+        if(!folder.exists()){
+            if(folder.mkdirs()){
+                XgpLottery.log("创建数据文件夹成功");
+            }
+        }
+        File file = new File(folder, "lottery.dat");
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(lotteryToJson(dataList));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void loadLotteryData(){
+        File folder = new File(XgpLottery.instance.getDataFolder(), "Data");
+        if(!folder.exists()){
+            return;
+        }
+        File file = new File(folder, "lottery.dat");
+        if(!file.exists())
+            return;
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            
+            StringBuilder jsonBuilder = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                jsonBuilder.append(line);
+            }
+            String jsonData = jsonBuilder.toString();
+            List<LotteryNbtConverter> dataList = lotteryFromJson(jsonData);
+            for(LotteryNbtConverter lotteryNbtConverter:dataList){
+                XgpLottery.lotteryList.put(lotteryNbtConverter.getName(),lotteryNbtConverter.toLottery());
+            }
+            XgpLottery.log("读取奖池数据成功");
         }catch (Exception e) {
             XgpLottery.log("读取 JSON 文件时发生错误：" + e.getMessage());
         }
     }
 
-    public static void saveJsonData(){
-        File file = new File(XgpLottery.instance.getDataFolder(), "lotteryData.dat");
-        try (FileWriter writer = new FileWriter(file)) {
-            writer.write(dataToJson());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
+
+
+    public static String timesToJson(List<LotteryTimes> lotteryTimesList){
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .create();
+        return gson.toJson(lotteryTimesList);
     }
-
-    public static String dataToJson(){
-        DataContainer data = new DataContainer();
+    public static List<LotteryTimes> timesFromJson(String json){
+        Gson gson = new Gson();
+        return gson.fromJson(json, new TypeToken<List<LotteryTimes>>() {}.getType());
+    }
+    public static String boxToJson(List<LotteryBox> lotteryBoxList){
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Location.class, new LocationAdapter())
+                .setPrettyPrinting()
+                .create();
+        return gson.toJson(lotteryBoxList);
+    }
+    public static List<LotteryBox> boxFromJson(String json){
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Location.class, new LocationAdapter())
                 .create();
-        return gson.toJson(data);
+        return gson.fromJson(json, new TypeToken<List<LotteryBox>>() {}.getType());
     }
-    public static void dataFromJson(String json){
+
+    public static String lotteryToJson(List<LotteryNbtConverter> list){
         Gson gson = new GsonBuilder()
-                .registerTypeAdapter(Location.class, new LocationAdapter())
+                .setPrettyPrinting()
                 .create();
-        DataContainer data = gson.fromJson(json, new TypeToken<DataContainer>(){}.getType());
-        List<LotteryTimes> lotteryTimesList = new CopyOnWriteArrayList<>();
-        List<LotteryTimes> currentTime = new CopyOnWriteArrayList<>();
-        List<LotteryBox> lotteryBoxList = new ArrayList<>();
-
-
-        if(data.lotteryBoxList!=null)
-            lotteryBoxList= data.lotteryBoxList;
-        if(data.currentTime!=null)
-            currentTime = data.currentTime;
-        if(data.lotteryTimesList!=null)
-            lotteryTimesList = data.lotteryTimesList;
-
-        for(LotteryBox lotteryBox :lotteryBoxList){
-            XgpLottery.locations.add(lotteryBox.getLocation());
-
-        }
-
-        XgpLottery.lotteryBoxList = lotteryBoxList;
-        XgpLottery.currentTime = currentTime;
-        XgpLottery.totalTime = lotteryTimesList;
+        return gson.toJson(list);
     }
-
-    static class DataContainer{
-        public List<LotteryTimes> lotteryTimesList;
-        public List<LotteryTimes> currentTime;
-        public List<LotteryBox> lotteryBoxList;
-
-        public DataContainer(){
-            this.lotteryTimesList = XgpLottery.totalTime;
-            this.currentTime = XgpLottery.currentTime;
-            this.lotteryBoxList = XgpLottery.lotteryBoxList;
-        }
+    public static List<LotteryNbtConverter> lotteryFromJson(String json){
+        Gson gson = new Gson();
+        return gson.fromJson(json,new TypeToken<List<LotteryNbtConverter>>() {}.getType());
     }
     static class LocationAdapter extends TypeAdapter<Location> {
         @Override
@@ -235,7 +302,9 @@ public class SerializeUtils {
 
             return null;
         }
+
     }
+
 }
 
 

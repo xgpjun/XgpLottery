@@ -1,6 +1,7 @@
 package cn.xgp.xgplottery.Listener;
 
 import cn.xgp.xgplottery.Utils.BoxParticleUtils;
+import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,6 +35,7 @@ public class RemoveBoxListener implements Listener {
                     BoxParticleUtils.removeBox(XgpLottery.getLotteryBoxByLocation(location));
                     //delete location
                     XgpLottery.locations.remove(location);
+                    SerializeUtils.saveData();
                 }else{
                     e.getPlayer().sendMessage(ChatColor.RED+"这个方块好像并不是抽奖箱");
                 }

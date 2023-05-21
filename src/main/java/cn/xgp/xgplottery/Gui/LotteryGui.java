@@ -1,7 +1,10 @@
 package cn.xgp.xgplottery.Gui;
 
+import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.nmsUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -14,11 +17,24 @@ public abstract class LotteryGui implements InventoryHolder {
     public abstract LotteryGui loadGui();
     protected static int[] slot = {10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43};
     static int[] border = {1,2,3,4,5,6,7,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53};
+    protected static ItemStack borderGlass;
+    static {
+        if(nmsUtils.versionToInt<13){
+            Material stainedGlassPane = Material.valueOf("STAINED_GLASS_PANE");
+            borderGlass = new MyItem(stainedGlassPane,1,(byte)7)
+                    .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")
+                    .setLore(ChatColor.GRAY+ "这是分界线捏，没有别的东西了~")
+                    .getItem();
+        }else {
+            borderGlass = new MyItem(Material.GRAY_STAINED_GLASS_PANE)
+                    .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")
+                    .setLore(ChatColor.GRAY+ "这是分界线捏，没有别的东西了~")
+                    .getItem();
+        }
+    }
+
     public void setBorder(Inventory gui){
-        ItemStack borderGlass = new MyItem(Material.GRAY_STAINED_GLASS_PANE)
-                .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")
-                .setLore(ChatColor.GRAY+ "这是分界线捏，没有别的东西了~")
-                .getItem();
+
         for(int i:border){
             gui.setItem(i,borderGlass);
         }
@@ -31,4 +47,5 @@ public abstract class LotteryGui implements InventoryHolder {
                 .setLore(ChatColor.GOLD+ "好了！我要关闭菜单了~")
                 .getItem());
     }
+    public abstract void handleClick(InventoryClickEvent e);
 }

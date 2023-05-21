@@ -58,12 +58,11 @@ public class HelpCommand implements TabExecutor {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
+        if(!sender.hasPermission("xgplottery.manager"))
+            return new ArrayList<>();
         if(args.length == 2){
-            if(sender.hasPermission("xgplottery.manager")){
-                return XgpLotteryCommand.filter(new ArrayList<>(Arrays.asList("<页数>", "1","2","3")),args);
-            }
-
+            return XgpLotteryCommand.filter(new ArrayList<>(Arrays.asList("<页数>", "1","2","3")),args);
         }
-        return null;
+        return new ArrayList<>();
     }
 }

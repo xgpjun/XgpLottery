@@ -62,6 +62,7 @@ public class AddCommand implements TabExecutor {
                 return true;
             }
             lottery.addSpItem(item.clone());
+            System.out.println(item.getClass());
             player.sendMessage(ChatColor.GREEN+"向"+name+"添加保底物品成功！");
         }
         SerializeUtils.saveLotteryData();
@@ -70,9 +71,6 @@ public class AddCommand implements TabExecutor {
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(!sender.hasPermission("xgplottery.manager")){
-            return null;
-        }
         if(args.length == 2){
             return XgpLotteryCommand.filter(new ArrayList<>(Arrays.asList("item", "award")),args);
         }
@@ -80,6 +78,6 @@ public class AddCommand implements TabExecutor {
             List<String> strings = new ArrayList<>(XgpLottery.lotteryList.keySet());
             return XgpLotteryCommand.filter(strings,args);
         }
-        return null;
+        return new ArrayList<>();
     }
 }

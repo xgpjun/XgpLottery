@@ -1,8 +1,7 @@
-package cn.xgp.xgplottery.Gui;
+package cn.xgp.xgplottery.Lottery;
 
+import cn.xgp.xgplottery.Utils.nmsUtils;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -12,7 +11,12 @@ import java.util.*;
 
 public class MyItem {
     private ItemStack item;
-    private ItemMeta itemMeta;
+    private final ItemMeta itemMeta;
+
+    public MyItem(Material material,int amount,byte damage){
+        item = new ItemStack(material,amount,damage);
+        itemMeta = item.getItemMeta();
+    }
 
     public MyItem(Material material){
         item = new ItemStack(material);
@@ -34,25 +38,23 @@ public class MyItem {
     }
 
     public MyItem insertLore(int index, String... lore){
-        if(lore==null)
-            return this;
-        List<String> rawLore = itemMeta.getLore();
+        List<String> loreList = getLoreList();
 
-        if(rawLore == null||rawLore.size()==0){
+        if(loreList.isEmpty()){
             itemMeta.setLore(Arrays.asList(lore));
+        }else {
+            if(index<0){
+                index = loreList.size()+index;
+            }
+            loreList.addAll(index, Arrays.asList(lore));
+            itemMeta.setLore(loreList);
         }
-        if(index<0){
-            index = rawLore.size()+index;
-        }
-        if(rawLore instanceof ArrayList || rawLore instanceof Vector || rawLore instanceof LinkedList){
-            rawLore.addAll(index, Arrays.asList(lore));
-            itemMeta.setLore(rawLore);
-            return this;
-        }
-        List<String> properLore = Arrays.asList(rawLore.toArray(new String[0]));
-        properLore.addAll(index, Arrays.asList(lore));
-        itemMeta.setLore(properLore);
         return this;
+    }
+
+    private List<String> getLoreList() {
+        List<String> rawLore = itemMeta.getLore();
+        return (rawLore != null) ? new ArrayList<>(rawLore) : new ArrayList<>();
     }
 
     public MyItem addLore(String... lore){
@@ -64,18 +66,6 @@ public class MyItem {
         return this;
     }
 
-    public MyItem setEnchants(int level, Enchantment enchantment){
-        itemMeta.addEnchant(enchantment,level,true);
-        return this;
-    }
-    public MyItem removeEnchants(Enchantment enchantment){
-        itemMeta.removeEnchant(enchantment);
-        return this;
-    }
-    public MyItem setAttributeModifier(Attribute attribute, AttributeModifier attributeModifier){
-        itemMeta.addAttributeModifier(attribute,attributeModifier);
-        return this;
-    }
 
     public ItemStack getItem() {
         item.setItemMeta(itemMeta);
@@ -86,13 +76,6 @@ public class MyItem {
         this.item = item;
     }
 
-    public ItemMeta getItemMeta() {
-        return itemMeta;
-    }
-
-    public void setItemMeta(ItemMeta itemMeta) {
-        this.itemMeta = itemMeta;
-    }
 
     public MyItem addEnchant(){
         itemMeta.addEnchant(Enchantment.ARROW_INFINITE,19,true);

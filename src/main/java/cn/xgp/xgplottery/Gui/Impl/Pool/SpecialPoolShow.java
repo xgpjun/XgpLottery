@@ -1,6 +1,6 @@
 package cn.xgp.xgplottery.Gui.Impl.Pool;
 
-import cn.xgp.xgplottery.Gui.MyItem;
+import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Utils.ConfigSetting;
@@ -8,11 +8,14 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
+import java.util.Objects;
 
 public class SpecialPoolShow extends LotteryGui {
     private final Inventory inv ;
@@ -49,10 +52,6 @@ public class SpecialPoolShow extends LotteryGui {
         }
 
         for (int index = 45;index<=53;index++){
-            ItemStack borderGlass = new MyItem(Material.GRAY_STAINED_GLASS_PANE)
-                    .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")
-                    .setLore(ChatColor.GRAY+ "这是分界线捏，没有别的东西了~")
-                    .getItem();
             inv.setItem(index,borderGlass);
         }
         inv.setItem(49,new MyItem(Material.CHEST)
@@ -60,6 +59,12 @@ public class SpecialPoolShow extends LotteryGui {
                 .setLore(ChatColor.AQUA+"点击切换到普通物品")
                 .getItem());
         return this;
+    }
+    public void handleClick(InventoryClickEvent e){
+        if(e.isLeftClick()&&e.getRawSlot()==49){
+            Lottery lottery = ((SpecialPoolShow) Objects.requireNonNull(e.getInventory().getHolder())).getLottery();
+            e.getWhoClicked().openInventory(new LotteryPoolShow(lottery).getInventory());
+        }
     }
 
 }

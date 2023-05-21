@@ -1,14 +1,11 @@
 package cn.xgp.xgplottery.Command.SubCmd;
 
 import cn.xgp.xgplottery.Command.XgpLotteryCommand;
-import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryMenuGui;
-import cn.xgp.xgplottery.Gui.MyItem;
-import cn.xgp.xgplottery.Lottery.Lottery;
+import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
@@ -18,7 +15,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class GetCommand implements TabExecutor {
@@ -69,9 +65,6 @@ public class GetCommand implements TabExecutor {
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(!sender.hasPermission("xgplottery.manager")){
-            return null;
-        }
         if(args.length == 2){
             return XgpLotteryCommand.filter(new ArrayList<>(Arrays.asList("key", "ticket")),args);
         }
@@ -79,6 +72,6 @@ public class GetCommand implements TabExecutor {
             List<String> strings = new ArrayList<>(XgpLottery.lotteryList.keySet());
             return XgpLotteryCommand.filter(strings,args);
         }
-        return null;
+        return new ArrayList<>();
     }
 }

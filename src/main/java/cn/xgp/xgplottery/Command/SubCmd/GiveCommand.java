@@ -1,15 +1,12 @@
 package cn.xgp.xgplottery.Command.SubCmd;
 
 import cn.xgp.xgplottery.Command.XgpLotteryCommand;
-import cn.xgp.xgplottery.Gui.MyItem;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Utils.GiveUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
@@ -88,7 +85,7 @@ public class GiveCommand implements TabExecutor {
     @Nullable
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(!sender.hasPermission("xgplottery.manager")){
+        if(args.length == 2){
             return null;
         }
         if(args.length == 3){
@@ -101,7 +98,7 @@ public class GiveCommand implements TabExecutor {
         if(args.length==5&&(args[3].equals("key")||args[3].equals("ticket"))){
             return Collections.singletonList("<数量>");
         }
-        return null;
+        return new ArrayList<>();
     }
 
 }

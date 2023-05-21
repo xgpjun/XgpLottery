@@ -30,15 +30,16 @@ public class SelectBoxListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void playerSelectBoxEvent(PlayerInteractEvent e){
         Player player = e.getPlayer();
-        if(player.getUniqueId().equals(uuid)&&e.getHand().equals(EquipmentSlot.HAND)){
+        if(player.getUniqueId().equals(uuid)&& Objects.equals(e.getHand(), EquipmentSlot.HAND)){
             e.setCancelled(true);
             if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
                 Location location = Objects.requireNonNull(e.getClickedBlock()).getLocation();
                 if(XgpLottery.getLotteryBoxByLocation(location)!=null){
-                    player.sendMessage("这个方块已经是"+XgpLottery.getLotteryBoxByLocation(location).getLotteryName()+"的抽奖箱了！");
+                    player.sendMessage("这个方块已经是"+ Objects.requireNonNull(XgpLottery.getLotteryBoxByLocation(location)).getLotteryName()+"的抽奖箱了！");
                 }else{
                     BoxParticleUtils.addBox(new LotteryBox(lottery.getName(),location));
                     XgpLottery.locations.add(location);
+                    SerializeUtils.saveData();
                 }
                 HandlerList.unregisterAll(this);
             }
