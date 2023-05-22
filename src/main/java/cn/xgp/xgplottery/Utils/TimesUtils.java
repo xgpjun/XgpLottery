@@ -15,9 +15,12 @@ public class TimesUtils {
     private static List<LotteryTimes> allTimesTop;
     public static void setAllTimesTop(){
         allTimesTop = new CopyOnWriteArrayList<>(XgpLottery.allTimes);
-        allTimesTop.sort(Comparator.comparingInt(LotteryTimes::getTimes));
+        allTimesTop.sort(Comparator.comparingInt(LotteryTimes::getTimes).reversed());
     }
     public static LotteryTimes getAllTimesTop(int rank){
+        if(allTimesTop==null)
+            return null;
+        allTimesTop.sort(Comparator.comparingInt(LotteryTimes::getTimes).reversed());
         if(allTimesTop.size()>=rank)
             return allTimesTop.get(rank-1);
         return null;

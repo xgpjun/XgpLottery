@@ -81,7 +81,7 @@ public final class XgpLottery extends JavaPlugin {
         log(LangUtils.DisableMessage);
         Bukkit.getScheduler().cancelTask(SerializeUtils.saveTaskId);
         Bukkit.getScheduler().cancelTask(TimesUtils.taskId);
-        BoxParticle.clearAllParticle();
+
         saveConfig();
         SerializeUtils.save();
     }

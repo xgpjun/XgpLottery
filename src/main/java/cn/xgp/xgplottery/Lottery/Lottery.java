@@ -39,6 +39,7 @@ public class Lottery {
     private boolean isPoint;
 
 
+
     public Lottery(@NotNull String animation, List<ItemStack> items,List<ItemStack> spItems,boolean isPoint,int value) {
         this(animation,items,-1,spItems,isPoint,value);
     }
@@ -170,6 +171,7 @@ public class Lottery {
                         XgpLottery.lotteryList.put(name,getDefaultLottery(name));
                         player.sendMessage(ChatColor.YELLOW+"创建了名称是："+name+"的奖池，请打开管理页面编辑");
                         SerializeUtils.saveLotteryData();
+                        Bukkit.getScheduler().runTask(XgpLottery.instance,()-> player.openInventory(new LotteryManageGui().getInventory()));
                     }else{
                         player.sendMessage(ChatColor.RED+"我怎么啥也没收到捏~");
                     }

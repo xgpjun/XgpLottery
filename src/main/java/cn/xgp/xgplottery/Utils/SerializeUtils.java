@@ -1,9 +1,6 @@
 package cn.xgp.xgplottery.Utils;
 
-import cn.xgp.xgplottery.Lottery.Lottery;
-import cn.xgp.xgplottery.Lottery.LotteryBox;
-import cn.xgp.xgplottery.Lottery.LotteryNbtConverter;
-import cn.xgp.xgplottery.Lottery.LotteryTimes;
+import cn.xgp.xgplottery.Lottery.*;
 import cn.xgp.xgplottery.XgpLottery;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -156,6 +153,7 @@ public class SerializeUtils {
         for(LotteryBox lotteryBox :XgpLottery.lotteryBoxList){
             XgpLottery.locations.add(lotteryBox.getLocation());
         }
+        BoxParticle.clearAllParticle();
     }
 
     public static void saveLotteryData(){

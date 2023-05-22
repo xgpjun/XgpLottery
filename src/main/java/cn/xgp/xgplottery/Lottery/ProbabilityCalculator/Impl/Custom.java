@@ -32,7 +32,7 @@ public class Custom extends ProbabilityCalculator{
         List<Integer> spWeights = new ArrayList<>(lottery.getSpWeights()) ;
 
         //拥有保底机制
-        if(maxTime>0){
+        if(maxTime>0&&lottery.getSpItems().size()>0){
             LotteryTimes lotteryTimes = TimesUtils.getCurrentLotteryTimes(player.getUniqueId(),lottery.getName());
             int currentTime = lotteryTimes.getTimes();
             //抽奖次数大于等于保底次数

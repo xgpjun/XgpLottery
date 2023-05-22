@@ -60,9 +60,11 @@ public class LotteryPoolGui extends LotteryGui {
             inv.setItem(49,new MyItem(Material.ANVIL)
                     .setDisplayName(ChatColor.YELLOW+"操作指南")
                     .setLore(ChatColor.RED+"空手左键点击本物品返回列表")
+                    .addLore(ChatColor.RED+"右键点击本物品切换售卖方式")
+                    .addLore(ChatColor.GOLD+"出售方式："+ChatColor.AQUA+(lottery.isPoint()?"点券":"金币"))
                     .addLore(ChatColor.GOLD+"拖动物品点击加入物品")
                     .addLore(ChatColor.GOLD+"shift+右键点击删除物品")
-                    .addLore(ChatColor.GOLD+"左键点击设置权重（越小概率越低）")
+                    .addLore(ChatColor.GOLD+"左键物品点击设置权重（越小概率越低）")
                     .getItem());
         }
 
@@ -88,12 +90,12 @@ public class LotteryPoolGui extends LotteryGui {
             }
         }
         //退出/添加物品
-        else if(e.isLeftClick()&&e.getRawSlot()==49){
+        if(e.isLeftClick()&&e.getRawSlot()==49){
             if (e.getCursor() != null && e.getCursor().getType() != Material.AIR) {
                 // 玩家拿起了物品，执行相关操作
                 ItemStack item = e.getCursor().clone();
                 // 把玩家拿起的物品放入背包
-                player.setItemOnCursor(item);
+//                player.setItemOnCursor(item);
                 Lottery lottery = ((LotteryPoolGui) Objects.requireNonNull(e.getInventory().getHolder())).getLottery();
                 if(lottery.getItems().size()<45){
                     lottery.addItem(item);
@@ -108,6 +110,11 @@ public class LotteryPoolGui extends LotteryGui {
                 // 玩家没有拿起物品，处理点击铁砧返回
                 player.openInventory(new LotteryManageGui().getInventory());
             }
+        }
+        if(e.isRightClick()&&e.getRawSlot()==49){
+            lottery.setPoint(!lottery.isPoint());
+            player.openInventory(new LotteryPoolGui(lottery).getInventory());
+            SerializeUtils.saveLotteryData();
         }
     }
 

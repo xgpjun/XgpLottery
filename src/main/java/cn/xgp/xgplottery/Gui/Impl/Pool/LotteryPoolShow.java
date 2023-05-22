@@ -63,6 +63,13 @@ public class LotteryPoolShow extends LotteryGui {
     }
     public void handleClick(InventoryClickEvent e){
         if(e.isLeftClick()&&e.getRawSlot()==49){
+            if(lottery.getSpItems().size()==0){
+                inv.setItem(49,new MyItem(Material.CHEST)
+                        .setDisplayName(ChatColor.RED+"不可以捏")
+                        .setLore(ChatColor.RED+"本奖池还不存在保底物品")
+                        .getItem());
+                return;
+            }
             Lottery lottery = ((LotteryPoolShow) Objects.requireNonNull(e.getInventory().getHolder())).getLottery();
             e.getWhoClicked().openInventory(new SpecialPoolShow(lottery).getInventory());
         }

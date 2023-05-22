@@ -1,5 +1,6 @@
 package cn.xgp.xgplottery.Command.SubCmd;
 
+import cn.xgp.xgplottery.XgpLottery;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -17,6 +18,8 @@ import java.util.List;
 public class PapiCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if(XgpLottery.ppAPI==null)
+            sender.sendMessage(ChatColor.RED+ "未检测到PlaceHolderAPI");
         if(args.length==2&&args[0].equals("papi")){
             String str = args[1];
             str = PlaceholderAPI.setPlaceholders((Player) sender,str);
