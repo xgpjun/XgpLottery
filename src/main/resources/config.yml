@@ -4,7 +4,7 @@ version: ${project.version}
 #是否向玩家展示概率
 showProbability: false
 #是否显示粒子特效
-enableParticle: false
+enableParticle: true
 
 #是否启用商店
 shop: true
