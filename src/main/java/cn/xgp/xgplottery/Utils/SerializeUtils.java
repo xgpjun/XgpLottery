@@ -32,11 +32,7 @@ public class SerializeUtils {
 
         loadLotteryData();
         loadData();
-        saveTaskId = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, () -> {
-            if(ConfigSetting.autoSaveMsg)
-                XgpLottery.log("正在自动保存数据");
-            save();
-        }, ConfigSetting.autoSaveTime*3, ConfigSetting.autoSaveTime).getTaskId();
+        saveTaskId = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, SerializeUtils::save, ConfigSetting.autoSaveTime*3, ConfigSetting.autoSaveTime).getTaskId();
     }
 
     public static void createLotteryFolder(){

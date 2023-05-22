@@ -12,7 +12,7 @@ import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 //创建奖池GUI
 public class LotteryCreateGui extends LotteryGui {
-    private final Inventory inv = Bukkit.createInventory(this,6*9,"创建奖池");
+    private final Inventory inv = Bukkit.createInventory(this,6*9,ChatColor.GOLD+"创建奖池");
 
 
     @Override

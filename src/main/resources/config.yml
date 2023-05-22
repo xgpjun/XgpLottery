@@ -1,29 +1,20 @@
 #版本号
-version: 1.0.0
-#语言文件
-lang: zh_CN.yml
+version: ${project.version}
 
 #是否向玩家展示概率
-ShowProbability: false
+showProbability: false
 #是否显示粒子特效
-EnableParticle: false
+enableParticle: false
 
 #是否启用商店
-Shop: true
+shop: true
 #商店是否给与玩家奖券，如果为false则直接进行抽奖。
-GiveLottery: true
+giveLottery: true
 #giveKey：当上面为true时，true为给与玩家抽奖箱钥匙，false为给与玩家奖券
 giveKey: true
 
 #自动保存的秒数
 autoSaveTime: 120
-#是否输出自动保存的信息
-autoSaveMsg: false
 
 #排行榜更新秒数
 autoUpdateTopTime: 120
-
-#是否保底为线性提升概率
-linear: false
-#线性提升的次数 取 0-1.0 例：保底设置为
-ratio:

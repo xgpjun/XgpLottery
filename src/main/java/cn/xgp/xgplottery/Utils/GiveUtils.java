@@ -21,7 +21,7 @@ public class GiveUtils {
     }
 
     public static void giveKey(Player player ,String lotteryName,int amount){
-        MyItem key = new MyItem(Material.BLAZE_ROD)
+        MyItem key = new MyItem(Material.BONE)
                 .setDisplayName(ChatColor.GOLD+lotteryName+"-抽奖箱钥匙")
                 .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"使用方法：手持右键抽奖箱"+ChatColor.GOLD+"✦")
                 .addEnchant()

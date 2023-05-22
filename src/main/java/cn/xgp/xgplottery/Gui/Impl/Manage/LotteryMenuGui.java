@@ -14,7 +14,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
 //输入menu之后显示的管理菜单
 public class LotteryMenuGui extends LotteryGui {
-    private final Inventory Menu = Bukkit.createInventory(this,6*9,"XgpLottery管理菜单");
+    private final Inventory Menu = Bukkit.createInventory(this,6*9,ChatColor.GOLD+ "XgpLottery管理菜单");
 
     @Override
     @NotNull

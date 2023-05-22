@@ -35,16 +35,11 @@ public class TimesTop {
     private void createTopString(){
         if(times.isEmpty())
             return;
-        times.sort(new LotteryTimesComparator());
+        times.sort(Comparator.comparingInt(LotteryTimes::getTimes).reversed());
         for(LotteryTimes lotteryTimes:times){
             topString.add(ChatColor.GOLD+"玩家 "+Bukkit.getOfflinePlayer(lotteryTimes.getUuid()).getName()+" : "+ChatColor.AQUA+lotteryTimes.getTimes());
         }
     }
 
-    static class LotteryTimesComparator implements Comparator<LotteryTimes> {
-        @Override
-        public int compare(LotteryTimes l1, LotteryTimes l2) {
-            return Integer.compare(l1.getTimes(), l2.getTimes());
-        }
-    }
+
 }

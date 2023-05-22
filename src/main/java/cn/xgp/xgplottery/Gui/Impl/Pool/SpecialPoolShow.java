@@ -41,7 +41,8 @@ public class SpecialPoolShow extends LotteryGui {
                 MyItem guiItem = new MyItem(item);
                 int weight = lottery.getSpWeights().get(i);
                 int sum = lottery.getWeightSum();
-                guiItem.setLore(ChatColor.GOLD +"概率："+ChatColor.GREEN+df.format((double) weight/sum));
+                guiItem.setLore(ChatColor.GOLD +"概率："+ChatColor.GREEN+df.format((double) weight/sum))
+                        .addLore(ChatColor.GOLD+"占保底物品概率："+ChatColor.GREEN+df.format((double) weight/ lottery.getSpWeightSum()));
                 inv.setItem(i, guiItem.getItem());
             }
         }else {

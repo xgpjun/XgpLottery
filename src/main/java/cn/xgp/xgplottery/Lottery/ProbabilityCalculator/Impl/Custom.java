@@ -36,7 +36,7 @@ public class Custom extends ProbabilityCalculator{
             LotteryTimes lotteryTimes = TimesUtils.getCurrentLotteryTimes(player.getUniqueId(),lottery.getName());
             int currentTime = lotteryTimes.getTimes();
             //抽奖次数大于等于保底次数
-            if(currentTime>=maxTime){
+            if(currentTime>=maxTime-1){
                 int randomWeight = new Random().nextInt(spWeight)+1;
                 player.sendMessage(ChatColor.GOLD+"[抽奖小助手]"+ChatColor.GREEN+"这是你的第"+ TimesUtils.getCurrentTimes(player.getUniqueId(),lottery.getName()) +"次抽奖！");
                 player.sendMessage(ChatColor.GOLD+"你抽到了保底物品！");

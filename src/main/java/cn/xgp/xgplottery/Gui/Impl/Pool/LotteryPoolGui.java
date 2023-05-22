@@ -93,9 +93,11 @@ public class LotteryPoolGui extends LotteryGui {
         if(e.isLeftClick()&&e.getRawSlot()==49){
             if (e.getCursor() != null && e.getCursor().getType() != Material.AIR) {
                 // 玩家拿起了物品，执行相关操作
-                ItemStack item = e.getCursor().clone();
+                ItemStack cursorItem = e.getCursor();
+                ItemStack item = cursorItem.clone();
                 // 把玩家拿起的物品放入背包
-//                player.setItemOnCursor(item);
+                player.setItemOnCursor(null);
+                player.getInventory().addItem(cursorItem);
                 Lottery lottery = ((LotteryPoolGui) Objects.requireNonNull(e.getInventory().getHolder())).getLottery();
                 if(lottery.getItems().size()<45){
                     lottery.addItem(item);

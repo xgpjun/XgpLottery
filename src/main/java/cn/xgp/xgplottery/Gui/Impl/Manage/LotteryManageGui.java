@@ -17,7 +17,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 //管理奖池GUI
 public class LotteryManageGui extends LotteryGui {
-    private final Inventory inv = Bukkit.createInventory(this,6*9,"奖池管理");
+    private final Inventory inv = Bukkit.createInventory(this,6*9,ChatColor.GOLD+"奖池管理");
 
     @Override
     public @NotNull Inventory getInventory() {

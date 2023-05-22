@@ -49,6 +49,7 @@ public class SpecialPoolGui extends LotteryGui{
                 inv.setItem(index, guiItem
                         .setLore(ChatColor.GOLD +"权重/总权重："+ChatColor.GREEN+weight +"/"+sum)
                         .addLore(ChatColor.GOLD +"概率："+ChatColor.GREEN+df.format((double) weight/sum))
+                        .addLore(ChatColor.GOLD+"占保底物品概率："+ChatColor.GREEN+df.format((double) weight/ lottery.getSpWeightSum()))
                         .getItem());
                 index++;
             }
@@ -93,9 +94,11 @@ public class SpecialPoolGui extends LotteryGui{
         if(e.isLeftClick()&&e.getRawSlot()==49){
             if (e.getCursor() != null && e.getCursor().getType() != Material.AIR) {
                 // 玩家拿起了物品，执行相关操作
-                ItemStack item = e.getCursor().clone();
+                ItemStack cursorItem = e.getCursor();
+                ItemStack item = cursorItem.clone();
                 // 把玩家拿起的物品放入背包
-                player.setItemOnCursor(item);
+                player.setItemOnCursor(null);
+                player.getInventory().addItem(cursorItem);
                 Lottery lottery = ((SpecialPoolGui) Objects.requireNonNull(e.getInventory().getHolder())).getLottery();
                 if(lottery.getSpItems().size()<45){
                     lottery.addSpItem(item);

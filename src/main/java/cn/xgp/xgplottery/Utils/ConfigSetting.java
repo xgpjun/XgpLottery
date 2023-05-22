@@ -17,15 +17,15 @@ public class ConfigSetting {
 
     public static void loadConfig(Configuration config){
         version = config.getString("version");
-        showProbability = config.getBoolean("ShowProbability",false);
-        enableParticle = config.getBoolean("EnableParticle",true);
-        giveLottery = config.getBoolean("GiveLottery",true);
+        showProbability = config.getBoolean("showProbability",false);
+        enableParticle = config.getBoolean("enableParticle",true);
+        giveLottery = config.getBoolean("giveLottery",true);
         giveKey = config.getBoolean("giveKey",false);
-        shop = config.getBoolean("Shop",true);
+        shop = config.getBoolean("shop",true);
         autoSaveTime = config.getLong("autoSaveTime",120L)*20;
         autoUpdateTopTime = config.getLong("autoUpdateTopTime",120L)*20;
         autoSaveMsg = config.getBoolean("autoSaveMsg",true);
-        LangUtils.loadLangFile(config.getString("lang"));
+        LangUtils.loadLangFile(config.getString("lang","zh_CN.yml"));
     }
 
 
