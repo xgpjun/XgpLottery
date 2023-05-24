@@ -24,7 +24,6 @@ public class LotteryPoolGui extends LotteryGui {
     private final Inventory inv ;
     @Getter
     private final Lottery lottery;
-    //TODO 文本自定义
 
 
     public LotteryPoolGui(Lottery lottery){

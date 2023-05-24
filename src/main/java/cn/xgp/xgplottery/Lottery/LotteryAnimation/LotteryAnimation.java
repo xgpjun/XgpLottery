@@ -1,12 +1,10 @@
 package cn.xgp.xgplottery.Lottery.LotteryAnimation;
 
 
-import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
 import cn.xgp.xgplottery.Utils.nmsUtils;
 import lombok.Getter;
 import org.bukkit.Sound;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public abstract class LotteryAnimation {

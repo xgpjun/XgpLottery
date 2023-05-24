@@ -1,6 +1,5 @@
 package cn.xgp.xgplottery.Lottery;
 
-import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.Utils.nmsUtils;
 import lombok.Data;
 import org.bukkit.inventory.ItemStack;

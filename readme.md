@@ -1,7 +1,7 @@
 # XgpLottery 
 
 仅仅是一款抽奖插件捏~
-
+MCBBS:[XgpLottery - (mcbbs.net)](https://www.mcbbs.net/thread-1445345-1-1.html)
 ## 插件简介
 
 这是一款提供了抽奖功能的插件，理论支持1.12.2 - 1.19.4。

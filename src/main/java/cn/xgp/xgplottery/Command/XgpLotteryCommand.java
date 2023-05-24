@@ -1,15 +1,10 @@
 package cn.xgp.xgplottery.Command;
 
 import cn.xgp.xgplottery.Command.SubCmd.*;
-import cn.xgp.xgplottery.Utils.ConfigSetting;
-import cn.xgp.xgplottery.Utils.nmsUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,10 +40,6 @@ public class XgpLotteryCommand implements TabExecutor {
 
 
         if (args.length > 0) {
-            if(args[0].equals("sound")){
-                Player player = (Player) sender;
-                player.sendMessage(nmsUtils.toNBTString(player.getInventory().getItemInMainHand()));
-            }
             String subCommand = args[0].toLowerCase();
             TabExecutor executor = subCommands.get(subCommand);
             if (executor != null) {

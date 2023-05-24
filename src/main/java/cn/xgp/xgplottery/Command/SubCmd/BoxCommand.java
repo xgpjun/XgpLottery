@@ -4,7 +4,6 @@ import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Listener.RemoveBoxListener;
 import cn.xgp.xgplottery.Listener.SelectBoxListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
-import cn.xgp.xgplottery.Utils.nmsUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,7 +16,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 public class BoxCommand implements TabExecutor {

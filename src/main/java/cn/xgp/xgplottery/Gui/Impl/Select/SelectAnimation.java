@@ -2,11 +2,9 @@ package cn.xgp.xgplottery.Gui.Impl.Select;
 
 
 import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryManageGui;
-import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryMenuGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
-import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;

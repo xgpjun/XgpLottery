@@ -18,7 +18,7 @@ import java.util.UUID;
 
 public class MyPlaceholder extends PlaceholderExpansion {
 
-    private final JavaPlugin plugin; // The instance is created in the constructor and won't be modified, so it can be final
+    private final JavaPlugin plugin;
 
     public MyPlaceholder(JavaPlugin plugin) {
         this.plugin = plugin;

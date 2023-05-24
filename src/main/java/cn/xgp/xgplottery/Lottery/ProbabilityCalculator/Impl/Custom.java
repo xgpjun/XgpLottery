@@ -20,19 +20,10 @@ public class Custom extends ProbabilityCalculator{
     Player player;
 
     @Override
-    public String getCalculatorType() {
-        return "Custom";
-    }
-    public String toLore(){
-        return "自定义概率";
-    }
-
-    @Override
     public ItemStack getAward(Lottery lottery,Player player) {
         int maxTime = lottery.getMaxTime();
         int spWeight = lottery.getSpWeightSum();
         int commWeight = lottery.getCommonWeightSum();
-        int weightSum = spWeight+commWeight;
 
         List<ItemStack> items = new ArrayList<>(lottery.getItems()) ;
         List<ItemStack> spItems = new ArrayList<>(lottery.getSpItems()) ;
@@ -94,7 +85,7 @@ public class Custom extends ProbabilityCalculator{
             randomWeight -=spWeights.get(i);
             if(randomWeight<=0){
                 award = spItems.get(i).clone();
-                msg = ChatColor.GOLD+"[抽奖小助手]"+ChatColor.AQUA+player.getName()+ChatColor.GREEN+"抽到了保底物品，这是他的第"+ChatColor.AQUA+TimesUtils.getCurrentTimes(player.getUniqueId(),lottery.getName()) +ChatColor.GREEN+"次抽奖:";
+                msg = ChatColor.GOLD+"[抽奖小助手]"+ChatColor.AQUA+player.getName()+ChatColor.GREEN+"在奖池："+ChatColor.AQUA+lottery.getName()+ChatColor.GREEN+"抽到了保底物品，这是他的第"+ChatColor.AQUA+TimesUtils.getCurrentTimes(player.getUniqueId(),lottery.getName()) +ChatColor.GREEN+"次抽奖:";
                 this.player = player;
                 lotteryTimes.setTimes(0);
                 return award.clone();

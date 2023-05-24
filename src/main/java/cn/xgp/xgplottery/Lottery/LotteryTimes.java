@@ -1,11 +1,8 @@
 package cn.xgp.xgplottery.Lottery;
 
-import cn.xgp.xgplottery.XgpLottery;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.bukkit.entity.Player;
 
-import java.util.List;
 import java.util.UUID;
 
 @Data

@@ -4,7 +4,6 @@ import cn.xgp.xgplottery.Lottery.BoxParticle;
 import cn.xgp.xgplottery.Lottery.LotteryBox;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 
 public class BoxParticleUtils {
     public static void addBox(LotteryBox lotteryBox){

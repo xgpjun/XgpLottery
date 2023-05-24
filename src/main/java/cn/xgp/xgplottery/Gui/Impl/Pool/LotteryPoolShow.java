@@ -9,7 +9,6 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -23,7 +22,6 @@ public class LotteryPoolShow extends PlayerGui {
     private final Inventory inv ;
     @Getter
     private final Lottery lottery;
-    //TODO 文本自定义
     public LotteryPoolShow(Lottery lottery){
         this.lottery = lottery;
         inv = Bukkit.createInventory(this,6*9, ChatColor.YELLOW+ lottery.getName()+ "-奖池内容");

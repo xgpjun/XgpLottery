@@ -3,7 +3,6 @@ package cn.xgp.xgplottery.Command.SubCmd;
 import cn.xgp.xgplottery.Gui.Impl.Shop.LotteryShop;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
@@ -11,7 +10,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class ShopCommand implements TabExecutor {

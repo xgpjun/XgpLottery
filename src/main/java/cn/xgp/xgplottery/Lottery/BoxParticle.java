@@ -21,7 +21,6 @@ public class BoxParticle {
         cube.setPeriod(1L)
                 .setColor(Color.WHITE)
                 .alwaysShowAsync();
-//                .alwaysShow();
         XgpLottery.boxParticleList.add(this);
     }
 

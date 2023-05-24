@@ -23,7 +23,7 @@ public class SpecialPoolGui extends LotteryGui{
     private final Inventory inv ;
     @Getter
     private final Lottery lottery;
-    //TODO 文本自定义
+
 
     public SpecialPoolGui(Lottery lottery){
         this.lottery = lottery;
