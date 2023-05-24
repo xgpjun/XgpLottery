@@ -23,7 +23,7 @@ public class GiveUtils {
     public static void giveKey(Player player ,String lotteryName,int amount){
         MyItem key = new MyItem(Material.BONE)
                 .setDisplayName(ChatColor.GOLD+lotteryName+"-抽奖箱钥匙")
-                .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"使用方法：手持右键抽奖箱"+ChatColor.GOLD+"✦")
+                .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"使用方法：手持右键抽奖箱")
                 .addEnchant()
                 .setAmount(amount);
         player.getInventory().addItem(key.getItem());
@@ -32,7 +32,7 @@ public class GiveUtils {
     public static void giveTicket(Player player ,String lotteryName,int amount){
         MyItem ticket = new MyItem(Material.PAPER)
                 .setDisplayName(ChatColor.GOLD+lotteryName+"-抽奖券")
-                .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"右键以抽奖"+ChatColor.GOLD+"✦")
+                .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"右键以抽奖")
                 .addEnchant()
                 .setAmount(amount);
         player.getInventory().addItem(ticket.getItem());

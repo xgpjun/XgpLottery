@@ -1,8 +1,6 @@
 package cn.xgp.xgplottery.Utils;
 
-import cn.xgp.xgplottery.Command.SubCmd.GiveCommand;
 import org.bukkit.configuration.Configuration;
-import org.bukkit.entity.Player;
 
 public class ConfigSetting {
     public static String version;
@@ -14,6 +12,7 @@ public class ConfigSetting {
     public static long autoSaveTime;
     public static boolean autoSaveMsg;
     public static long autoUpdateTopTime;
+    public static boolean broadcast;
 
     public static void loadConfig(Configuration config){
         version = config.getString("version");
@@ -25,6 +24,7 @@ public class ConfigSetting {
         autoSaveTime = config.getLong("autoSaveTime",120L)*20;
         autoUpdateTopTime = config.getLong("autoUpdateTopTime",120L)*20;
         autoSaveMsg = config.getBoolean("autoSaveMsg",true);
+        broadcast = config.getBoolean("broadcast",true);
         LangUtils.loadLangFile(config.getString("lang","zh_CN.yml"));
     }
 

@@ -3,7 +3,7 @@ package cn.xgp.xgplottery.Listener;
 import cn.xgp.xgplottery.Gui.Impl.Pool.LotteryPoolShow;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryBox;
-import cn.xgp.xgplottery.Lottery.LotteryTimes;
+import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.Utils.TimesUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
@@ -12,19 +12,24 @@ import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Objects;
+
 public class LotteryListener implements Listener {
+
+
     @EventHandler
     public void playerUsePaper(PlayerInteractEvent e) {
         Player player = e.getPlayer();
-        ItemStack item = player.getInventory().getItemInMainHand();
-        if(e.getHand()== EquipmentSlot.HAND&&item.getType() != Material.AIR&&item.getItemMeta()!=null&&item.getItemMeta().hasLore()){
-            if(item.getItemMeta().getLore().contains(ChatColor.GOLD+"✦"+ChatColor.AQUA+ "右键以抽奖"+ChatColor.GOLD+"✦")&&item.getEnchantmentLevel(Enchantment.ARROW_INFINITE)==19){
+        ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
+        if(VersionAdapterUtils.ifMainHand(e) &&item.getType() != Material.AIR&&item.getItemMeta()!=null&&item.getItemMeta().hasLore()){
+            if(Objects.requireNonNull(item.getItemMeta().getLore()).contains(ChatColor.GOLD+"✦"+ChatColor.AQUA+ "右键以抽奖")&&item.getEnchantmentLevel(Enchantment.ARROW_INFINITE)==19){
                 e.setCancelled(true);
                 String name = item.getItemMeta().getDisplayName();
                 name = ChatColor.stripColor(name.split("-")[0]);
@@ -60,18 +65,18 @@ public class LotteryListener implements Listener {
 
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void playerClickBox(PlayerInteractEvent e){
-        if(e.getHand()== EquipmentSlot.HAND&&e.getClickedBlock() != null&&XgpLottery.locations.contains(e.getClickedBlock().getLocation())){
+        if(VersionAdapterUtils.ifMainHand(e)&&e.getClickedBlock() != null&&XgpLottery.locations.contains(e.getClickedBlock().getLocation())){
             e.setCancelled(true);
             Location location = e.getClickedBlock().getLocation();
             Lottery lottery = LotteryBox.getLotteryByLocation(location);
             Player player = e.getPlayer();
             if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
                 if(!player.isSneaking()&&lottery!=null){
-                    ItemStack item = player.getInventory().getItemInMainHand();
+                    ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
                     if(item.getType() != Material.AIR&&item.getItemMeta()!=null&&item.getItemMeta().hasLore()){
-                        if (item.getItemMeta().getLore().contains(ChatColor.GOLD+"✦"+ChatColor.AQUA+"使用方法：手持右键抽奖箱"+ChatColor.GOLD+"✦")&&item.getEnchantmentLevel(Enchantment.ARROW_INFINITE)==19) {
+                        if (Objects.requireNonNull(item.getItemMeta().getLore()).contains(ChatColor.GOLD+"✦"+ChatColor.AQUA+"使用方法：手持右键抽奖箱")&&item.getEnchantmentLevel(Enchantment.ARROW_INFINITE)==19) {
                             String name = item.getItemMeta().getDisplayName();
                             String[] parts = name.split("-");
                             name = ChatColor.stripColor(parts[0]);
@@ -95,6 +100,7 @@ public class LotteryListener implements Listener {
                     player.openInventory(new LotteryPoolShow(lottery).getInventory());
                 }
             }else if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
+                assert lottery != null;
                 sendTextBox(player,lottery);
             }
         }

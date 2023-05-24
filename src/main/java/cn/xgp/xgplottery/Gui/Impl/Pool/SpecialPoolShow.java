@@ -1,5 +1,6 @@
 package cn.xgp.xgplottery.Gui.Impl.Pool;
 
+import cn.xgp.xgplottery.Gui.PlayerGui;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
@@ -17,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import java.text.DecimalFormat;
 import java.util.Objects;
 
-public class SpecialPoolShow extends LotteryGui {
+public class SpecialPoolShow extends PlayerGui {
     private final Inventory inv ;
     @Getter
     private final Lottery lottery;

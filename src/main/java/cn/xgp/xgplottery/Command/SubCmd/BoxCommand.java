@@ -4,6 +4,7 @@ import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Listener.RemoveBoxListener;
 import cn.xgp.xgplottery.Listener.SelectBoxListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
+import cn.xgp.xgplottery.Utils.nmsUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -33,6 +34,7 @@ public class BoxCommand implements TabExecutor {
             sender.sendMessage(ChatColor.RED+"你没有权限这么做！");
             return true;
         }
+
         if((args.length!=2&&args.length!=3)||(args.length==2&&!args[1].equals("remove"))||(args.length==3&&!args[1].equals("create"))){
             sender.sendMessage(ChatColor.RED+"输入格式有误");
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery box create [奖池名称]\n" + ChatColor.GREEN + "创建一个指定奖池的抽奖箱");

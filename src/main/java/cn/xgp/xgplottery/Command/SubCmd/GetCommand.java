@@ -2,6 +2,7 @@ package cn.xgp.xgplottery.Command.SubCmd;
 
 import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -22,7 +23,6 @@ public class GetCommand implements TabExecutor {
     /***
      * /xl get ticket 123
      * /xl get key 123
-     *
      */
 
     @Override
@@ -44,7 +44,7 @@ public class GetCommand implements TabExecutor {
             player.sendMessage(ChatColor.RED+"啊咧咧？ 没找到奖池呢~");
             return true;
         }
-        ItemStack item = player.getInventory().getItemInMainHand();
+        ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
         if(item.getType()== Material.AIR){
             player.sendMessage(ChatColor.RED+"没找到手上有物品捏~");
             return true;
@@ -52,14 +52,14 @@ public class GetCommand implements TabExecutor {
         MyItem guiItem = new MyItem(item);
         if(args[1].equals("ticket")){
             guiItem.setDisplayName(ChatColor.GOLD+name+"-抽奖券")
-                    .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"右键以抽奖"+ChatColor.GOLD+"✦")
+                    .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"右键以抽奖")
                     .addEnchant();
         }else {
             guiItem.setDisplayName(ChatColor.GOLD+name+"-抽奖箱钥匙")
-                    .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"使用方法：手持右键抽奖箱"+ChatColor.GOLD+"✦")
+                    .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"使用方法：手持右键抽奖箱")
                     .addEnchant();
         }
-        player.getInventory().setItemInMainHand(guiItem.getItem());
+        VersionAdapterUtils.setItemInMainHand(player,guiItem.getItem());
         return true;
     }
     @Nullable

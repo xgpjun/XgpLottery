@@ -5,11 +5,8 @@ import cn.xgp.xgplottery.Listener.GetNameListener;
 import cn.xgp.xgplottery.Listener.GuiListener;
 import cn.xgp.xgplottery.Listener.LotteryListener;
 import cn.xgp.xgplottery.Lottery.*;
-import cn.xgp.xgplottery.Utils.ConfigSetting;
-import cn.xgp.xgplottery.Utils.LangUtils;
-import cn.xgp.xgplottery.Utils.SerializeUtils;
+import cn.xgp.xgplottery.Utils.*;
 
-import cn.xgp.xgplottery.Utils.TimesUtils;
 import cn.xgp.xgplottery.bStats.Metrics;
 import net.milkbowl.vault.economy.Economy;
 import org.black_ixx.playerpoints.PlayerPoints;
@@ -56,6 +53,7 @@ public final class XgpLottery extends JavaPlugin {
     public void onEnable() {
         instance=this;
         Metrics.enable();
+        System.setProperty("file.encoding","UTF8");
 
         //读取配置文件
         ConfigSetting.loadConfig(getConfig());
@@ -71,6 +69,7 @@ public final class XgpLottery extends JavaPlugin {
 
         //注册监听器
         Bukkit.getPluginManager().registerEvents(new GuiListener(),this);
+
         Bukkit.getPluginManager().registerEvents(new LotteryListener(),this);
 
     }

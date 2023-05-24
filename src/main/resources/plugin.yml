@@ -25,3 +25,6 @@ permissions:
   xgplottery.shop:
     description: "allow to open shop GUI"
     default: not op
+  xgplottery.show:
+    description: "allow to open show GUI"
+    default: not op

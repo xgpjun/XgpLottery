@@ -1,12 +1,16 @@
 package cn.xgp.xgplottery.Utils;
 
+
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 
+
 public class nmsUtils {
+
+//    NBTCompressedStreamTools
     private static Class<?> nbtTagCompound;
     private static Class<?> itemStack;
     private static Class<?> MojangsonParser;
@@ -16,6 +20,7 @@ public class nmsUtils {
     private static Method asCraftMirror;
     private static Method asNMSCopy;
     private static Method save;
+    private static Method toString;
 
     private static String NMS_PACKAGE = "";
     private static String OBC_PACKAGE = "";
@@ -57,6 +62,7 @@ public class nmsUtils {
                 a = itemStack.getMethod("a",nbtTagCompound);
             asCraftMirror = CraftItemStack.getMethod("asCraftMirror",itemStack);
             asNMSCopy = CraftItemStack.getMethod("asNMSCopy", ItemStack.class);
+            toString = nbtTagCompound.getMethod("toString");
 
 
 
@@ -66,8 +72,8 @@ public class nmsUtils {
         }
     }
 
-
     public static ItemStack toItem(String NBTString){
+
         Object nbt; //(nbtTagCompound)
         ItemStack item = null;
         Object nmsItemStack;
@@ -76,8 +82,16 @@ public class nmsUtils {
             if(versionToInt>12){
                 nmsItemStack = a.invoke(itemStack,nbt);
             }else {
-                Constructor<?> constructor = itemStack.getConstructor(nbtTagCompound);
-                nmsItemStack = constructor.newInstance(nbt);
+                if(versionToInt>9) {
+                    Constructor<?> constructor = itemStack.getConstructor(nbtTagCompound);
+                    nmsItemStack = constructor.newInstance(nbt);
+                }
+                else {
+                    //for1.7.10
+                    Method createStack = itemStack.getMethod("createStack", nbtTagCompound);
+                    nmsItemStack = createStack.invoke(itemStack,nbt);
+                }
+
             }
             item = (ItemStack) asCraftMirror.invoke(CraftItemStack,nmsItemStack);
         } catch (Exception e) {
@@ -86,37 +100,21 @@ public class nmsUtils {
         return item;
     }
     public static String toNBTString(ItemStack itemStack){
-        Object nbt = new Object();
+
+        Object nbt;
+        Object str = null;
         try {
             Object nmsItemStack = asNMSCopy.invoke(CraftItemStack,itemStack);
             Constructor<?> constructor = nbtTagCompound.getConstructor();
             nbt =  constructor.newInstance();
             save.invoke(nmsItemStack,nbt);
+            str =  toString.invoke(nbt);
         }catch (Exception e){
             e.printStackTrace();
         }
-
-        return nbt.toString();
+        return (String)str;
     }
 
 
-//    public static ItemStack toItem(String NBTString){
-//        Objects nbt = null; //(nbtTagCompound)
-//        try {
-//            nbt = MojangsonParser.parse(NBTString);
-//        } catch (CommandSyntaxException e) {
-//            e.printStackTrace();
-//        }
-//        net.minecraft.world.item.ItemStack nms = net.minecraft.world.item.ItemStack.a(nbt);
-//        net.minecraft.server.v1_16_R3.ItemStack nmsItemStack = net.minecraft.server.v1_16_R3.ItemStack.a(nbt);
-//        return CraftItemStack.asCraftMirror(nmsItemStack);
-//    }
-//    public static String toNBTString(ItemStack itemStack){
-//
-//        net.minecraft.server.v1_16_R3.ItemStack nmsItemStack = CraftItemStack.asNMSCopy(itemStack);
-//        NBTTagCompound nbt = new NBTTagCompound();
-//        nmsItemStack.save(nbt);
-//        return nbt.toString();
-//    }
 }
 

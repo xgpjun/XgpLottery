@@ -1,6 +1,7 @@
 package cn.xgp.xgplottery.Gui.Impl.Pool;
 
 import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryManageGui;
+import cn.xgp.xgplottery.Gui.Impl.Select.SelectAnimation;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
@@ -60,11 +61,12 @@ public class LotteryPoolGui extends LotteryGui {
             inv.setItem(49,new MyItem(Material.ANVIL)
                     .setDisplayName(ChatColor.YELLOW+"操作指南")
                     .setLore(ChatColor.RED+"空手左键点击本物品返回列表")
-                    .addLore(ChatColor.RED+"右键点击本物品切换售卖方式")
                     .addLore(ChatColor.GOLD+"出售方式："+ChatColor.AQUA+(lottery.isPoint()?"点券":"金币"))
                     .addLore(ChatColor.GOLD+"拖动物品点击加入物品")
-                    .addLore(ChatColor.GOLD+"shift+右键点击删除物品")
-                    .addLore(ChatColor.GOLD+"左键物品点击设置权重（越小概率越低）")
+                    .addLore(ChatColor.GOLD+"shift+右键点击[奖品]删除物品")
+                    .addLore(ChatColor.GOLD+"左键物品点击[奖品]设置权重（越小概率越低）")
+                    .addLore(ChatColor.RED+"Shift+右键点击选择抽奖动画")
+                    .addLore(ChatColor.RED+"右键点击本物品切换售卖方式")
                     .getItem());
         }
 
@@ -113,10 +115,13 @@ public class LotteryPoolGui extends LotteryGui {
                 player.openInventory(new LotteryManageGui().getInventory());
             }
         }
-        if(e.isRightClick()&&e.getRawSlot()==49){
+        if(!e.isShiftClick()&&e.isRightClick()&&e.getRawSlot()==49){
             lottery.setPoint(!lottery.isPoint());
             player.openInventory(new LotteryPoolGui(lottery).getInventory());
             SerializeUtils.saveLotteryData();
+        }
+        if(e.isShiftClick()&&e.isRightClick()&&e.getRawSlot()==49){
+            player.openInventory(new SelectAnimation(lottery).getInventory());
         }
     }
 

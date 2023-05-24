@@ -1,7 +1,8 @@
 package cn.xgp.xgplottery.Listener;
 
 import cn.xgp.xgplottery.Gui.Impl.Anim.AnimHolder;
-import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.BoxAnimation;
+import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.HumanEntity;
@@ -20,16 +21,16 @@ public class CloseListener implements Listener {
     private final int taskId;
     private final UUID uuid;
     private final ItemStack award;
-    private final BoxAnimation boxAnimation;
+    private final LotteryAnimation anim;
 
 
 
 
-    public CloseListener(int taskId,UUID uuid,ItemStack award,BoxAnimation boxAnimation){
+    public CloseListener(int taskId,UUID uuid,LotteryAnimation anim){
         this.uuid = uuid;
         this.taskId = taskId;
-        this.award = new ItemStack(award);
-        this.boxAnimation = boxAnimation;
+        this.award = anim.getAward();
+        this.anim = anim;
     }
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e){
@@ -39,20 +40,23 @@ public class CloseListener implements Listener {
     }
     @EventHandler
     public void dropItemEvent(PlayerDropItemEvent e){
-        if(isUniquePlayer(e.getPlayer())&& e.getPlayer().getOpenInventory().getTopInventory().getHolder() instanceof BoxAnimation){
+        if(isUniquePlayer(e.getPlayer())&& e.getPlayer().getOpenInventory().getTopInventory().getHolder() instanceof AnimHolder){
             e.setCancelled(true);
         }
     }
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent e) {
-        if(!boxAnimation.stop&&isUniquePlayer(e.getPlayer())&&e.getInventory().getHolder() instanceof AnimHolder){
+        if(isUniquePlayer(e.getPlayer())&&e.getInventory().getHolder() instanceof AnimHolder){
             // 中止多线程
             clear();
             //给与奖品
-            Player player = (Player) e.getPlayer();
-            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,1.0f,1.0f);
-            player.getInventory().addItem(award);
+            if(!anim.isStop()) {
+                Player player = (Player) e.getPlayer();
+                player.playSound(player.getLocation(), LotteryAnimation.getFinish(), 1.0f, 1.0f);
+                player.getInventory().addItem(award);
+                anim.getCalculator().sendMessage();
+            }
         }
     }
     public void clear(){

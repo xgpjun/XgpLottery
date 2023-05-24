@@ -10,9 +10,9 @@ import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -28,21 +28,13 @@ public class SerializeUtils {
     }
 
     public static void load(){
-        createLotteryFolder();
+
 
         loadLotteryData();
         loadData();
         saveTaskId = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, SerializeUtils::save, ConfigSetting.autoSaveTime*3, ConfigSetting.autoSaveTime).getTaskId();
     }
 
-    public static void createLotteryFolder(){
-        File folder =new File(XgpLottery.instance.getDataFolder(), "Lottery");
-        if(!folder.exists()){
-            if(folder.mkdir()){
-                XgpLottery.log("创建奖池文件夹成功");
-            }
-        }
-    }
 
     public static void saveData(){
         File folder = new File(XgpLottery.instance.getDataFolder(), "Data");
@@ -51,25 +43,25 @@ public class SerializeUtils {
                 XgpLottery.log("创建数据文件夹成功");
             }
         }
-        File file1 = new File(folder, "box.dat");
+        File file1 = new File(folder, "box.json");
         try (FileWriter writer = new FileWriter(file1)) {
             writer.write(boxToJson(XgpLottery.lotteryBoxList));
         } catch (IOException e) {
             XgpLottery.log("储存文件时发生错误：" + e.getMessage());
         }
-        File file2 = new File(folder, "current.dat");
+        File file2 = new File(folder, "current.json");
         try (FileWriter writer = new FileWriter(file2)) {
             writer.write(timesToJson(XgpLottery.currentTime));
         } catch (IOException e) {
             XgpLottery.log("储存文件时发生错误：" + e.getMessage());
         }
-        File file3 = new File(folder, "total.dat");
+        File file3 = new File(folder, "total.json");
         try (FileWriter writer = new FileWriter(file3)) {
             writer.write(timesToJson(XgpLottery.totalTime));
         } catch (IOException e) {
             XgpLottery.log("储存文件时发生错误：" + e.getMessage());
         }
-        File file4 = new File(folder,"all.dat");
+        File file4 = new File(folder,"all.json");
         try (FileWriter writer = new FileWriter(file4)) {
             writer.write(timesToJson(XgpLottery.allTimes));
         } catch (IOException e) {
@@ -82,10 +74,10 @@ public class SerializeUtils {
         if(!folder.exists()){
             return;
         }
-        File file1 = new File(folder, "box.dat");
-        File file2 = new File(folder, "current.dat");
-        File file3 = new File(folder, "total.dat");
-        File file4 = new File(folder,"all.dat");
+        File file1 = new File(folder, "box.json");
+        File file2 = new File(folder, "current.json");
+        File file3 = new File(folder, "total.json");
+        File file4 = new File(folder,"all.json");
         try (BufferedReader reader = new BufferedReader(new FileReader(file1))) {
             StringBuilder jsonBuilder = new StringBuilder();
             String line;
@@ -163,8 +155,10 @@ public class SerializeUtils {
                 XgpLottery.log("创建数据文件夹成功");
             }
         }
-        File file = new File(folder, "lottery.dat");
-        try (FileWriter writer = new FileWriter(file)) {
+
+        File file = new File(folder, "lottery.json");
+        try (OutputStream outputStream = new FileOutputStream(file);
+             Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
             writer.write(lotteryToJson(dataList));
         } catch (IOException e) {
             e.printStackTrace();
@@ -175,11 +169,11 @@ public class SerializeUtils {
         if(!folder.exists()){
             return;
         }
-        File file = new File(folder, "lottery.dat");
+        File file = new File(folder, "lottery.json");
         if(!file.exists())
             return;
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-            
+        try (InputStream inputStream = new FileInputStream(file);
+             BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             StringBuilder jsonBuilder = new StringBuilder();
             String line;
             while ((line = reader.readLine()) != null) {
@@ -191,7 +185,11 @@ public class SerializeUtils {
                 XgpLottery.lotteryList.put(lotteryNbtConverter.getName(),lotteryNbtConverter.toLottery());
             }
             XgpLottery.log("读取奖池数据成功");
-        }catch (Exception e) {
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        catch (Exception e) {
             XgpLottery.log("读取 JSON 文件时发生错误：" + e.getMessage());
         }
     }
@@ -202,6 +200,7 @@ public class SerializeUtils {
     public static String timesToJson(List<LotteryTimes> lotteryTimesList){
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
+                .disableHtmlEscaping()
                 .create();
         return gson.toJson(lotteryTimesList);
     }

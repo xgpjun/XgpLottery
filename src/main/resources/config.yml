@@ -6,6 +6,8 @@ showProbability: false
 #是否显示粒子特效
 enableParticle: true
 
+#抽到保底是否播报
+broadcast: true
 #是否启用商店
 shop: true
 #商店是否给与玩家奖券，如果为false则直接进行抽奖。

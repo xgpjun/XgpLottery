@@ -45,11 +45,14 @@ public class HelpCommand implements TabExecutor {
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery particle clear\n" + ChatColor.GREEN + "关闭所有粒子特效");
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery reload\n" + ChatColor.GREEN + "重载插件");
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery shop\n" + ChatColor.GREEN + "打开商店");
+                sender.sendMessage(ChatColor.AQUA + "/XgpLottery show [奖池名称]\n" + ChatColor.GREEN + "打开指定奖池预览");
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery top [奖池名称] (current)\n" + ChatColor.GREEN + "列出该奖池的所有玩家抽奖次数（未保底次数）");
                 sender.sendMessage(ChatColor.GREEN + "------页数<3 / 3>------");
             }
         }else {
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery shop\n" + ChatColor.GREEN + "打开商店");
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery show [奖池名称]\n" + ChatColor.GREEN + "打开指定奖池预览");
+
         }
         return true;
     }

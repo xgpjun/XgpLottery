@@ -3,6 +3,7 @@ package cn.xgp.xgplottery.Command.SubCmd;
 import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
+import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -44,7 +45,7 @@ public class AddCommand implements TabExecutor {
             player.sendMessage(ChatColor.RED+"啊咧咧？ 没找到奖池呢~");
             return true;
         }
-        ItemStack item = player.getInventory().getItemInMainHand();
+        ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
         if(item.getType().equals(Material.AIR)){
             player.sendMessage(ChatColor.RED+"没找到手上有物品捏~");
             return true;

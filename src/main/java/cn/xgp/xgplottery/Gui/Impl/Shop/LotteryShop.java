@@ -1,5 +1,6 @@
 package cn.xgp.xgplottery.Gui.Impl.Shop;
 
+import cn.xgp.xgplottery.Gui.PlayerGui;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
@@ -17,7 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
-public class LotteryShop extends LotteryGui {
+public class LotteryShop extends PlayerGui {
     private final Inventory inv = Bukkit.createInventory(this,6*9,ChatColor.GOLD+"商店");
 
     private final Player player;

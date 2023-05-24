@@ -4,6 +4,7 @@ import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryMenuGui;
 import cn.xgp.xgplottery.Lottery.BoxParticle;
 import cn.xgp.xgplottery.Utils.ConfigSetting;
+import cn.xgp.xgplottery.Utils.nmsUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -33,6 +34,10 @@ public class ParticleCommand implements TabExecutor {
         }
         if(!ConfigSetting.enableParticle){
             sender.sendMessage(ChatColor.RED+"本服未开启粒子特效，请在config.yml中更改”enableParticle“");
+            return true;
+        }
+        if(nmsUtils.versionToInt<9){
+            sender.sendMessage(ChatColor.RED+"1.9以下无法使用粒子特效！");
             return true;
         }
 

@@ -2,6 +2,7 @@ package cn.xgp.xgplottery.Command;
 
 import cn.xgp.xgplottery.Command.SubCmd.*;
 import cn.xgp.xgplottery.Utils.ConfigSetting;
+import cn.xgp.xgplottery.Utils.nmsUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -29,8 +30,9 @@ public class XgpLotteryCommand implements TabExecutor {
         registerSubCommand("papi",new PapiCommand());
         registerSubCommand("particle",new ParticleCommand());
         registerSubCommand("reload",new ReloadCommand());
-        registerSubCommand("top",new TopCommand());
         registerSubCommand("shop",new ShopCommand());
+        registerSubCommand("show",new ShowCommand());
+        registerSubCommand("top",new TopCommand());
     }
 
     public void registerSubCommand(String subCommand, TabExecutor executor) {
@@ -44,8 +46,8 @@ public class XgpLotteryCommand implements TabExecutor {
 
         if (args.length > 0) {
             if(args[0].equals("sound")){
-                Sound sound = Sound.valueOf(args[1]);
-                ((Player) sender).playSound(((Player) sender).getLocation(), sound,1.0f,1);
+                Player player = (Player) sender;
+                player.sendMessage(nmsUtils.toNBTString(player.getInventory().getItemInMainHand()));
             }
             String subCommand = args[0].toLowerCase();
             TabExecutor executor = subCommands.get(subCommand);

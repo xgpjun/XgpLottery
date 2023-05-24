@@ -79,7 +79,8 @@ public class MyItem {
 
     public MyItem addEnchant(){
         itemMeta.addEnchant(Enchantment.ARROW_INFINITE,19,true);
-        itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+        if(nmsUtils.versionToInt>7)
+            itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         return this;
     }
 }

@@ -4,6 +4,7 @@ import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryManageGui;
 import cn.xgp.xgplottery.Gui.Impl.Pool.LotteryPoolGui;
 import cn.xgp.xgplottery.Gui.Impl.Pool.SpecialPoolGui;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.BoxAnimation;
+import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.SelectItemAnimation;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.Impl.Custom;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
@@ -61,6 +62,7 @@ public class Lottery {
 
     public LotteryAnimation getAnimationObject(Player player, Lottery lottery, boolean isCmd) {
         switch (animation){
+            case "SelectItemAnimation": return new SelectItemAnimation(player,lottery,isCmd);
             case "BoxAnimation":
             default: return new BoxAnimation(player,lottery,isCmd);
         }

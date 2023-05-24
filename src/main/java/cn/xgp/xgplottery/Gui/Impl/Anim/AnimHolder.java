@@ -1,9 +1,7 @@
 package cn.xgp.xgplottery.Gui.Impl.Anim;
 
-import cn.xgp.xgplottery.Gui.LotteryGui;
-import org.bukkit.inventory.InventoryHolder;
+import cn.xgp.xgplottery.Gui.PlayerGui;
 
-public abstract class AnimHolder extends LotteryGui {
-    public abstract AnimHolder loadGui();
+public abstract class AnimHolder extends PlayerGui {
 
 }

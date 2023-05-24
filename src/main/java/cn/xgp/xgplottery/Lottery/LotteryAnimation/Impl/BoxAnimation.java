@@ -5,8 +5,12 @@ import cn.xgp.xgplottery.Gui.Impl.Anim.BoxAnimGui;
 import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
+import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
+import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.Utils.nmsUtils;
 import cn.xgp.xgplottery.XgpLottery;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -20,66 +24,67 @@ import java.util.List;
 import java.util.Random;
 
 public class BoxAnimation extends LotteryAnimation {
+    public boolean stop = false;
     private final Player player;
     private final Lottery lottery;
-    public boolean stop = false;
     private final boolean isCommand;
-    static Sound sound;
-
-    static
-    {
-        if(nmsUtils.versionToInt<13){
-            sound = Sound.valueOf("BLOCK_NOTE_PLING");
-        }else {
-            sound = Sound.BLOCK_NOTE_BLOCK_HARP;
-        }
-    }
-
-    public BoxAnimation(Player player,Lottery lottery){
-        this(player,lottery,false);
-    }
+    @Getter
+    ProbabilityCalculator calculator;
+    @Getter
+    ItemStack award;
+    int taskID;
 
     public BoxAnimation(Player player,Lottery lottery,Boolean isCommand){
         this.player = player;
         this.lottery = lottery;
         this.isCommand = isCommand;
+
     }
 
     @Override
-    public String getAnimationType() {
-        return "BoxAnimation";
-    }
     public String toLore(){
         return "物品滚动动画";
     }
 
     @Override
-    public void playAnimation() {
+    public boolean isStop(){
+        return stop;
+    }
 
+    @Override
+    public void playAnimation() {
+        calculator = lottery.getCalculatorObject();
+        award = calculator.getAward(lottery,player);
 
         Inventory inventory = new BoxAnimGui().loadGui().getInventory();
         List<ItemStack> showItemList = new ArrayList<>();
         initItemList(showItemList, lottery);
         //get award
-        ItemStack award = lottery.getCalculatorObject().getAward(lottery,player);
+
 
         showItemList.set(20,award);
         player.openInventory(inventory);
         if(!isCommand){
-            ItemStack item = player.getInventory().getItemInMainHand();
-            item.setAmount(item.getAmount()-1);
+            ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
+
+            if (item.getAmount() <= 1) {
+                VersionAdapterUtils.setItemInMainHand(player,null);
+            } else {
+                item.setAmount(item.getAmount()-1);
+            }
         }
 
-        int taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
+        taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
             int j = 0;
             @Override
             public void run() {
+
                 for (int i = 9; i < 18; i++) {
-                    MyItem guiitem = new MyItem(showItemList.get(i-9+j));
+                    MyItem myItem = new MyItem(showItemList.get(i-9+j));
                     if(i==13)
-                        inventory.setItem(i,guiitem.addEnchant().getItem());
+                        inventory.setItem(i,myItem.addEnchant().getItem());
                     else
-                        inventory.setItem(i,guiitem.getItem());
+                        inventory.setItem(i,myItem.getItem());
                 }
                 j++;
                 if (j >= showItemList.size() - 9) {
@@ -91,26 +96,33 @@ public class BoxAnimation extends LotteryAnimation {
                 float pitch = (float) Math.pow(2.0, j / 18.0);
                 player.playSound(player.getLocation(), sound,1.0f,pitch);
                 if (stop) {
-                    // 停止循环
-                    Bukkit.getScheduler().cancelTasks(XgpLottery.instance);
+                    cancelTask();
                     //给与物品
-                    player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP,1.0f,1.0f);
+                    player.playSound(player.getLocation(), finish,1.0f,1.0f);
                     player.getInventory().addItem(award);
+                    calculator.sendMessage();
                 }
 
             }
 
+
         }, 0L, 5L).getTaskId();
-        CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),award,this);
+        CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this);
         Bukkit.getPluginManager().registerEvents(closeListener,XgpLottery.instance);
     }
 
     private void initItemList(List<ItemStack> showItemList,Lottery lottery){
-        List<ItemStack> items = lottery.getItems();
         Random random = new Random();
+        int item = lottery.getAmount();
+        int sp = lottery.getSpAmount();
         for (int i = 0; i <= 40; i++) {
-            showItemList.add(items.get(random.nextInt(items.size())).clone());
+            int next = random.nextInt(item+sp);
+            ItemStack itemStack = next>=item?lottery.getSpItems().get(next-item).clone():lottery.getItems().get(next).clone();
+            showItemList.add(itemStack);
         }
+    }
+    private void cancelTask() {
+        Bukkit.getScheduler().cancelTask(taskID);
     }
 
 }

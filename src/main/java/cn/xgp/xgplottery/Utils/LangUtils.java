@@ -18,7 +18,7 @@ public class LangUtils {
     {
         File LangConfigFile = new File(XgpLottery.instance.getDataFolder(),"lang\\"+fileName);
         FileConfiguration LangConfig = YamlConfiguration.loadConfiguration(LangConfigFile);
-        EnableMessage = LangConfig.getString("EnableMessage");
+        EnableMessage = LangConfig.getString("EnableMessage")+"小钢炮君制作~";
         DisableMessage = LangConfig.getString("DisableMessage");
     }
 

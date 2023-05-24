@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -37,8 +38,8 @@ public class LotteryManageGui extends LotteryGui {
                     .setDisplayName(ChatColor.BLUE+"奖池 :"+ChatColor.AQUA + lottery.getName())
                     .setLore(ChatColor.GOLD+"保底次数："+ChatColor.RESET+""+ChatColor.GREEN +mt,
                             ChatColor.GOLD+"货币类型："+ChatColor.AQUA+sellType +ChatColor.GOLD+"价格："+ChatColor.AQUA+lottery.getValue(),
+                            ChatColor.GOLD+"抽奖动画："+ChatColor.AQUA+lottery.getAnimationObject(null,null,true).toLore(),
                             ChatColor.AQUA +"shift+左键点击设置保底 shift+右键设置价格" ,
-//                            ChatColor.AQUA +"使用/XgpLottery change <奖池名> 来更改货币类型",
                             ChatColor.AQUA +"左键打开奖池，右键打开保底池")
                     .getItem());
 

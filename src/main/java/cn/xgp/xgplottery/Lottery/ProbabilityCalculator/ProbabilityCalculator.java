@@ -9,4 +9,5 @@ public abstract class ProbabilityCalculator {
     public abstract String getCalculatorType();
     public abstract String toLore();
     public abstract ItemStack getAward(Lottery lottery,Player player);
+    public abstract void sendMessage();
 }
