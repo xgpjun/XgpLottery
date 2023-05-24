@@ -22,3 +22,7 @@ MCBBS:[XgpLottery - (mcbbs.net)](https://www.mcbbs.net/thread-1445345-1-1.html)
 
 ## 相关文档
 [点击此处](https://xgpjuns-organization.gitbook.io/xgplottery/)
+
+## 感谢
+感谢吕佬 莫老 Willy 在群里对我铸币问题的指点
+排名不分先后 按照首拼排序
