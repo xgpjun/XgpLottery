@@ -106,8 +106,12 @@ public class LotteryShop extends PlayerGui {
                 EconomyResponse r = econ.withdrawPlayer(player, value);
                 if(r.transactionSuccess()) {
                     player.sendMessage(String.format(ChatColor.GREEN+"成功购买！你还有"+ChatColor.AQUA+" %s", econ.format(r.balance)));
+                    GiveUtils.giveLottery(player,lottery.getName());
+                    player.openInventory(new LotteryShop(player).getInventory());
+
                 } else {
                     player.sendMessage(String.format(ChatColor.RED+"你的钱不够，你只有"+ChatColor.AQUA+"%s",r.balance));
+                    player.closeInventory();
                 }
             }
 

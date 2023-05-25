@@ -18,6 +18,7 @@ import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
 
+import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -119,8 +120,10 @@ public final class XgpLottery extends JavaPlugin {
         }
         if (Bukkit.getPluginManager().isPluginEnabled("PlayerPoints")) {
             try{
+                Class<?> playerPointsClass = Class.forName("org.black_ixx.playerpoints.PlayerPoints");
+                Method getInstanceMethod = playerPointsClass.getMethod("getInstance");
                 ppAPI = PlayerPoints.getInstance().getAPI();
-            }catch (Exception e){
+                }catch (Exception e){
                 XgpLottery.instance.getLogger().warning("加载PlayerPoints依赖失败，请尝试更新到最新版本");
             }
         }

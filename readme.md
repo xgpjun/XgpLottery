@@ -1,10 +1,11 @@
 # XgpLottery 
 
 仅仅是一款抽奖插件捏~
+
 MCBBS:[XgpLottery - (mcbbs.net)](https://www.mcbbs.net/thread-1445345-1-1.html)
 ## 插件简介
 
-这是一款提供了抽奖功能的插件，理论支持1.12.2 - 1.19.4。
+这是一款提供了抽奖功能的插件，理论支持1.7.10 - 1.19.4。
 
 特点：  
 
@@ -21,3 +22,7 @@ MCBBS:[XgpLottery - (mcbbs.net)](https://www.mcbbs.net/thread-1445345-1-1.html)
 
 ## 相关文档
 [点击此处](https://xgpjuns-organization.gitbook.io/xgplottery/)
+
+## 感谢
+感谢吕佬 莫老 Willy 在群里对我铸币操作的指点
+排名不分先后 按照首拼排序
