@@ -1,6 +1,7 @@
 package cn.xgp.xgplottery.Listener;
 
 import cn.xgp.xgplottery.Utils.BoxParticleUtils;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.XgpLottery;
@@ -35,10 +36,10 @@ public class RemoveBoxListener implements Listener {
                     BoxParticleUtils.removeBox(XgpLottery.getLotteryBoxByLocation(location));
                     //delete location
                     XgpLottery.locations.remove(location);
-                    player.sendMessage(ChatColor.GREEN+"移除成功~");
+                    player.sendMessage(ChatColor.GREEN+ LangUtils.RemoveBoxSuccessfully);
                     SerializeUtils.saveData();
                 }else{
-                    e.getPlayer().sendMessage(ChatColor.RED+"这个方块好像并不是抽奖箱");
+                    e.getPlayer().sendMessage(ChatColor.RED+LangUtils.RemoveBoxNotFound);
                 }
                 HandlerList.unregisterAll(this);
             }

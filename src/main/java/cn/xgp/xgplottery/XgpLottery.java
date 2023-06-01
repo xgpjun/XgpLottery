@@ -14,6 +14,7 @@ import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -36,6 +37,9 @@ public final class XgpLottery extends JavaPlugin {
     public static List<Location> locations = new ArrayList<>();
     //正在产生粒子的方块
     public static List<BoxParticle> boxParticleList = new ArrayList<>();
+
+
+    //当启用数据库模式时，这些字段将不会被插件处理
     //记录次数
     public static List<LotteryTimes> totalTime = new CopyOnWriteArrayList<>();
     //未保底次数
@@ -47,21 +51,29 @@ public final class XgpLottery extends JavaPlugin {
     public void onLoad() {
         saveDefaultConfig();
         saveResource("lang\\zh_CN.yml",false);
+        saveResource("lang\\en_US.yml",false);
+        saveResource("database.yml",false);
     }
 
 
     @Override
     public void onEnable() {
+
         instance=this;
         Metrics.enable();
-        System.setProperty("file.encoding","UTF8");
 
         //读取配置文件
         ConfigSetting.loadConfig(getConfig());
+
+        if(ConfigSetting.enableDatabase)
+            SqlUtils.getConnection();
+
+
         SerializeUtils.load();
         TimesUtils.autoLoadTop();
         //启动相关依赖
         enableDepend();
+
 
         log(LangUtils.EnableMessage);
         //注册命令
@@ -73,17 +85,21 @@ public final class XgpLottery extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new LotteryListener(),this);
 
+        Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance, ConfigSetting::updateConfig);
+
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
+
+        SerializeUtils.save();
+
+        SqlUtils.closeConnection();
         log(LangUtils.DisableMessage);
         Bukkit.getScheduler().cancelTask(SerializeUtils.saveTaskId);
         Bukkit.getScheduler().cancelTask(TimesUtils.taskId);
 
-        saveConfig();
-        SerializeUtils.save();
     }
 
     public static Future<String> getInput(Player player){
@@ -110,6 +126,10 @@ public final class XgpLottery extends JavaPlugin {
         Bukkit.getConsoleSender().sendMessage("§6[XgpLottery] " +"§a"+ message);
     }
 
+    public static void warning(String message) {
+        Bukkit.getConsoleSender().sendMessage("§e[XgpLottery] " +"§e"+ message);
+    }
+
     static void enableDepend(){
         if (instance.getConfig().getBoolean("EnableParticle")&&Bukkit.getPluginManager().getPlugin("ParticleLib") != null){
             BoxParticle.playAllParticle();
@@ -122,12 +142,16 @@ public final class XgpLottery extends JavaPlugin {
             try{
                 Class<?> playerPointsClass = Class.forName("org.black_ixx.playerpoints.PlayerPoints");
                 Method getInstanceMethod = playerPointsClass.getMethod("getInstance");
+
                 ppAPI = PlayerPoints.getInstance().getAPI();
                 }catch (Exception e){
-                XgpLottery.instance.getLogger().warning("加载PlayerPoints依赖失败，请尝试更新到最新版本");
+
+                Plugin plugin = Bukkit.getPluginManager().getPlugin("PlayerPoints");
+                ppAPI = ((PlayerPoints) plugin).getAPI();
             }
         }
         if(Bukkit.getPluginManager().isPluginEnabled("Vault")){
+
             RegisteredServiceProvider<Economy> rsp = instance.getServer().getServicesManager().getRegistration(Economy.class);
             if (rsp != null) {
                 eco =rsp.getProvider();
@@ -137,9 +161,15 @@ public final class XgpLottery extends JavaPlugin {
     }
 
     public static void reload(){
-        log("正在重载");
+
+        Bukkit.getScheduler().cancelTask(SerializeUtils.saveTaskId);
         instance.reloadConfig();
         ConfigSetting.loadConfig(instance.getConfig());
+        log(LangUtils.ReloadMessage);
+        SqlUtils.closeConnection();
+        if(ConfigSetting.enableDatabase)
+            SqlUtils.getConnection();
+
         SerializeUtils.load();
         enableDepend();
     }

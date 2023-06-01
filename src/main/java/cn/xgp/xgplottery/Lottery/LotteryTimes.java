@@ -8,6 +8,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 public class LotteryTimes {
+
     private String lotteryName;
     private UUID uuid;
     private int times;
@@ -19,5 +20,4 @@ public class LotteryTimes {
     public LotteryTimes(UUID uuid){
         this(null,uuid,0 );
     }
-
 }

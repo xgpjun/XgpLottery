@@ -3,6 +3,7 @@ package cn.xgp.xgplottery.Gui.Impl.Manage;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -12,7 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 //创建奖池GUI
 public class LotteryCreateGui extends LotteryGui {
-    private final Inventory inv = Bukkit.createInventory(this,6*9,ChatColor.GOLD+"创建奖池");
+    private final Inventory inv = Bukkit.createInventory(this,6*9,ChatColor.GOLD+ LangUtils.CreateButton1);
 
 
     @Override
@@ -27,8 +28,8 @@ public class LotteryCreateGui extends LotteryGui {
         //创建奖池
         MyItem manageIcon = new MyItem(Material.ANVIL);
         inv.setItem(22,manageIcon
-                .setDisplayName(ChatColor.BLUE+"点击此处创建一个抽奖池")
-                .setLore(ChatColor.GREEN+"创建一个奖池")
+                .setDisplayName(ChatColor.BLUE+LangUtils.CreateButton2)
+                .setLore(ChatColor.GREEN+LangUtils.CreateButton1)
                 .getItem());
         return this;
     }

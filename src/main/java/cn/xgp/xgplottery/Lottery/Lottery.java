@@ -8,6 +8,7 @@ import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.SelectItemAnimation;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.Impl.Custom;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.Utils.TimesUtils;
 import cn.xgp.xgplottery.XgpLottery;
@@ -29,7 +30,7 @@ import java.util.concurrent.TimeoutException;
 @AllArgsConstructor
 public class Lottery {
 
-    private String name = "默认名称";           //奖池名称
+    private String name;
     private String animation;                 //抽奖显示动画
     private int maxTime;                    //保底次数
     private List<ItemStack> items;                       //储存奖池物品
@@ -69,6 +70,12 @@ public class Lottery {
     }
 
     public void open(Player player,boolean isCmd){
+        //抽奖
+        if(getCommonWeightSum()<=0){
+            player.sendMessage(ChatColor.RED+LangUtils.PoolIsEmpty);
+            return;
+        }
+
         TimesUtils.addTimes(player,getName());
         getAnimationObject(player,this,isCmd).playAnimation();
     }
@@ -162,23 +169,27 @@ public class Lottery {
         player.closeInventory();
         Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
             try{
-                player.sendMessage(ChatColor.RED+ "[XgpLottery]"+ChatColor.GREEN +"开始创建奖池，请输入奖池名称，输入‘cancel’取消：");
-                player.sendMessage(ChatColor.RED+"请不要用颜色代码，这是文件名，只在管理页面显示");
+                player.sendMessage(ChatColor.RED+ "[XgpLottery]"+ChatColor.GREEN +LangUtils.CreateLottery);
+                player.sendMessage(ChatColor.RED+LangUtils.DontUseColor);
                 try{
                     String name = XgpLottery.getInput(player).get(15, TimeUnit.SECONDS);
                     name = name.trim();
+                    if(name.equals("cancel")){
+                        player.sendMessage(ChatColor.RED+LangUtils.WrongType);
+                        return;
+                    }
                     if(XgpLottery.lotteryList.containsKey(name)){
-                        player.sendMessage(ChatColor.RED+"这个奖池已经存在了！");
+                        player.sendMessage(ChatColor.RED+LangUtils.LotteryAlreadyExists);
                     }else if(!name.isEmpty()){
                         XgpLottery.lotteryList.put(name,getDefaultLottery(name));
-                        player.sendMessage(ChatColor.YELLOW+"创建了名称是："+name+"的奖池，请打开管理页面编辑");
+                        player.sendMessage(ChatColor.YELLOW+LangUtils.CreateLotterySuccessfully.replace("%name%",name));
                         SerializeUtils.saveLotteryData();
                         Bukkit.getScheduler().runTask(XgpLottery.instance,()-> player.openInventory(new LotteryManageGui().getInventory()));
                     }else{
-                        player.sendMessage(ChatColor.RED+"我怎么啥也没收到捏~");
+                        player.sendMessage(ChatColor.RED+LangUtils.WrongType);
                     }
                 }catch (TimeoutException e){
-                    player.sendMessage("给你输入的时间已经过了，已取消");
+                    player.sendMessage(ChatColor.RED+ LangUtils.TimeOut);
                 }
             }catch (Exception e){
                 e.printStackTrace();
@@ -189,7 +200,7 @@ public class Lottery {
         player.closeInventory();
         Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
             try{
-                player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +"请输入新的权重,可以为0。输入‘cancel’取消：");
+                player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN + LangUtils.ReceiveWeight);
                 try{
                     String weight  = XgpLottery.getInput(player).get(15, TimeUnit.SECONDS);
                     if(weight!=null&&Integer.parseInt(weight)>=0){
@@ -197,7 +208,7 @@ public class Lottery {
                             lottery.changeSpWeight(index,Integer.parseInt(weight));
                         else
                             lottery.changeWeight(index,Integer.parseInt(weight));
-                        player.sendMessage(ChatColor.GREEN+"成功将权重修改为"+weight+"!");
+                        player.sendMessage(ChatColor.GREEN+LangUtils.ChangeWeightSuccessfully+weight+"!");
                         new BukkitRunnable(){
                             @Override
                             public void run(){
@@ -211,12 +222,12 @@ public class Lottery {
                         }.runTaskAsynchronously(XgpLottery.instance);
                         SerializeUtils.saveLotteryData();
                     }else{
-                        player.sendMessage(ChatColor.RED+"你好像输错了哦~");
+                        player.sendMessage(ChatColor.RED+LangUtils.WrongType);
                     }
                 }catch (TimeoutException e){
-                    player.sendMessage(ChatColor.RED+"给你输入的时间已经过了，已取消");
+                    player.sendMessage(ChatColor.RED+LangUtils.TimeOut);
                 }catch (NumberFormatException e){
-                    player.sendMessage(ChatColor.RED+"错误的格式/已取消");
+                    player.sendMessage(ChatColor.RED+LangUtils.WrongType);
                 }
             }catch (Exception e){
                 e.printStackTrace();
@@ -229,12 +240,12 @@ public class Lottery {
         player.closeInventory();
         Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
             try{
-                player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +"请输入新的保底次数,输入-1为取消保底次数。输入‘cancel’取消");
+                player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +LangUtils.SetMaxTime);
                 try{
                     String times  = XgpLottery.getInput(player).get(15, TimeUnit.SECONDS);
                     if(times!=null){
                         lottery.setMaxTime(Integer.parseInt(times));
-                        player.sendMessage(ChatColor.GREEN+"成功将保底次数修改为"+times+"!");
+                        player.sendMessage(ChatColor.GREEN+LangUtils.ChangeTimeSuccessfully+times+"!");
                         new BukkitRunnable(){
                             @Override
                             public void run(){
@@ -244,12 +255,12 @@ public class Lottery {
                         }.runTaskAsynchronously(XgpLottery.instance);
                         SerializeUtils.saveLotteryData();
                     }else{
-                        player.sendMessage(ChatColor.RED+"你好像输错了哦~");
+                        player.sendMessage(ChatColor.RED+LangUtils.WrongType);
                     }
                 }catch (TimeoutException e){
-                    player.sendMessage(ChatColor.RED+"给你输入的时间已经过了，已取消");
+                    player.sendMessage(ChatColor.RED+LangUtils.TimeOut);
                 }catch (NumberFormatException e){
-                    player.sendMessage(ChatColor.RED+"错误的格式/已取消");
+                    player.sendMessage(ChatColor.RED+LangUtils.WrongType);
                 }
             }catch (Exception e){
                 e.printStackTrace();
@@ -261,12 +272,12 @@ public class Lottery {
         player.closeInventory();
         Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
             try{
-                player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +"请输入新的价格,输入0为取消售卖。输入‘cancel’取消");
+                player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +LangUtils.SetValue);
                 try{
                     String value  = XgpLottery.getInput(player).get(15, TimeUnit.SECONDS);
                     if(value!=null){
                         lottery.setValue(Integer.parseInt(value));
-                        player.sendMessage(ChatColor.GREEN+"成功将价格次数修改为"+value+"!");
+                        player.sendMessage(ChatColor.GREEN+LangUtils.SetValueSuccessfully+value+"!");
                         new BukkitRunnable(){
                             @Override
                             public void run(){
@@ -276,12 +287,12 @@ public class Lottery {
                         }.runTaskAsynchronously(XgpLottery.instance);
                         SerializeUtils.saveLotteryData();
                     }else{
-                        player.sendMessage(ChatColor.RED+"你好像输错了哦~");
+                        player.sendMessage(ChatColor.RED+LangUtils.WrongType);
                     }
                 }catch (TimeoutException e){
-                    player.sendMessage(ChatColor.RED+"给你输入的时间已经过了，已取消");
+                    player.sendMessage(ChatColor.RED+ LangUtils.TimeOut);
                 }catch (NumberFormatException e){
-                    player.sendMessage(ChatColor.RED+"错误的格式/已取消");
+                    player.sendMessage(ChatColor.RED+LangUtils.WrongType);
                 }
             }catch (Exception e){
                 e.printStackTrace();

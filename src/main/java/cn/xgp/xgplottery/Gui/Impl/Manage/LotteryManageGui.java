@@ -5,6 +5,7 @@ import cn.xgp.xgplottery.Gui.Impl.Pool.SpecialPoolGui;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -17,7 +18,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 //管理奖池GUI
 public class LotteryManageGui extends LotteryGui {
-    private final Inventory inv = Bukkit.createInventory(this,6*9,ChatColor.GOLD+"奖池管理");
+    private final Inventory inv = Bukkit.createInventory(this,6*9,ChatColor.GOLD+LangUtils.ManageButton1);
 
     @Override
     public @NotNull Inventory getInventory() {
@@ -31,15 +32,15 @@ public class LotteryManageGui extends LotteryGui {
         int index = 0;
         for(Lottery lottery:XgpLottery.lotteryList.values()){
             int maxTime = lottery.getMaxTime();
-            String mt = maxTime>0? String.valueOf(maxTime) :"未设置保底次数";
-            String sellType = lottery.isPoint()?ChatColor.AQUA+"点券":ChatColor.AQUA+"金币";
+            String mt = maxTime>0? String.valueOf(maxTime) :LangUtils.NotSetMaxTime;
+            String sellType = lottery.isPoint()?ChatColor.AQUA+LangUtils.Points:ChatColor.AQUA+LangUtils.Money;
             inv.setItem(slot[index],new MyItem(Material.CHEST)
-                    .setDisplayName(ChatColor.BLUE+"奖池 :"+ChatColor.AQUA + lottery.getName())
-                    .setLore(ChatColor.GOLD+"保底次数："+ChatColor.RESET+""+ChatColor.GREEN +mt,
-                            ChatColor.GOLD+"货币类型："+ChatColor.AQUA+sellType +ChatColor.GOLD+"价格："+ChatColor.AQUA+lottery.getValue(),
-                            ChatColor.GOLD+"抽奖动画："+ChatColor.AQUA+lottery.getAnimationObject(null,null,true).toLore(),
-                            ChatColor.AQUA +"shift+左键点击设置保底 shift+右键设置价格" ,
-                            ChatColor.AQUA +"左键打开奖池，右键打开保底池")
+                    .setDisplayName(ChatColor.BLUE+LangUtils.PoolButton1+ChatColor.AQUA + lottery.getName())
+                    .setLore(ChatColor.GOLD+ LangUtils.PoolButton2+ChatColor.RESET+""+ChatColor.GREEN +mt,
+                            ChatColor.GOLD+LangUtils.PoolButton3+ChatColor.AQUA+sellType +ChatColor.GOLD+LangUtils.Price+ChatColor.AQUA+lottery.getValue(),
+                            ChatColor.GOLD+LangUtils.PoolButton4+ChatColor.AQUA+lottery.getAnimationObject(null,null,true).toLore(),
+                            ChatColor.AQUA +LangUtils.PoolButton5,
+                            ChatColor.AQUA +LangUtils.PoolButton6)
                     .getItem());
 
             index++;

@@ -1,6 +1,7 @@
 package cn.xgp.xgplottery.Command;
 
 import cn.xgp.xgplottery.Command.SubCmd.*;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -17,6 +18,7 @@ public class XgpLotteryCommand implements TabExecutor {
         registerSubCommand("add",new AddCommand());
         registerSubCommand("box",new BoxCommand());
         registerSubCommand("change",new ChangeCommand());
+        registerSubCommand("convert",new ConvertCommand());
         registerSubCommand("delete",new DeleteCommand());
         registerSubCommand("get",new GetCommand());
         registerSubCommand("give",new GiveCommand());
@@ -25,9 +27,12 @@ public class XgpLotteryCommand implements TabExecutor {
         registerSubCommand("papi",new PapiCommand());
         registerSubCommand("particle",new ParticleCommand());
         registerSubCommand("reload",new ReloadCommand());
+        registerSubCommand("record",new RecordCommand());
         registerSubCommand("shop",new ShopCommand());
         registerSubCommand("show",new ShowCommand());
         registerSubCommand("top",new TopCommand());
+
+        registerSubCommand("test",new TestCommand());
     }
 
     public void registerSubCommand(String subCommand, TabExecutor executor) {
@@ -48,7 +53,7 @@ public class XgpLotteryCommand implements TabExecutor {
         }else
             return subCommands.get("help").onCommand(sender, command, label, args);
 
-        sender.sendMessage(ChatColor.RED+"使用/xgplottery help查看帮助");
+        sender.sendMessage(ChatColor.RED+ LangUtils.CmdHelpMsg);
         return true;
     }
 

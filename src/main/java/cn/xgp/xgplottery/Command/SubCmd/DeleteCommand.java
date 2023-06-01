@@ -5,7 +5,9 @@ import cn.xgp.xgplottery.Lottery.BoxParticle;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryBox;
 import cn.xgp.xgplottery.Lottery.LotteryTimes;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
+import cn.xgp.xgplottery.Utils.TimesUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -23,15 +25,20 @@ public class DeleteCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+        if(!sender.hasPermission("xgplottery.manager")){
+            sender.sendMessage(ChatColor.RED+LangUtils.DontHavePermission);
+            return true;
+        }
+
         if(args.length!=2){
-            sender.sendMessage(ChatColor.RED+"输入格式有误");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery delete [奖池名称]\n" + ChatColor.GREEN + "删除指定奖池，本命令会并清除掉相关数据");
+            sender.sendMessage(ChatColor.RED+LangUtils.WrongInput);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery delete "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdDelete);
             return true;
         }
         String name = args[1];
         Lottery lottery = XgpLottery.lotteryList.get(name);
         if(lottery==null){
-            sender.sendMessage(ChatColor.RED+"啊咧咧？ 没找到奖池呢~");
+            sender.sendMessage(ChatColor.RED+LangUtils.NotFoundLottery);
             return true;
         }
 
@@ -71,28 +78,10 @@ public class DeleteCommand implements TabExecutor {
         for(Location location:locationList){
             XgpLottery.locations.remove(location);
         }
-        //删除lotteryTime
-        List<LotteryTimes> times = new ArrayList<>();
-        for(LotteryTimes lotteryTimes: XgpLottery.totalTime){
-            if(lotteryTimes.getLotteryName().equals(name)){
-                times.add(lotteryTimes);
-            }
-        }
-        for(LotteryTimes lotteryTimes:times){
-            XgpLottery.totalTime.remove(lotteryTimes);
-        }
-        List<LotteryTimes> cTimes = new ArrayList<>();
-        for(LotteryTimes lotteryTimes: XgpLottery.currentTime){
-            if(lotteryTimes.getLotteryName().equals(name)){
-                cTimes.add(lotteryTimes);
-            }
-        }
-        for(LotteryTimes lotteryTimes:cTimes){
-            XgpLottery.currentTime.remove(lotteryTimes);
-        }
+        TimesUtils.deleteTimes(name);
 
         SerializeUtils.save();
-        sender.sendMessage(ChatColor.GREEN+"删除成功！");
+        sender.sendMessage(ChatColor.GREEN+ LangUtils.DeleteSuccessfully);
         return true;
     }
     @Nullable

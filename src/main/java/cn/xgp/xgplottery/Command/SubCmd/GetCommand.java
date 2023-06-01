@@ -2,6 +2,7 @@ package cn.xgp.xgplottery.Command.SubCmd;
 
 import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
@@ -28,35 +29,35 @@ public class GetCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(!(sender instanceof Player &&sender.hasPermission("xgplottery.manager"))){
-            sender.sendMessage(ChatColor.RED+"你没有权限这么做！");
+            sender.sendMessage(ChatColor.RED+ LangUtils.DontHavePermission);
             return true;
         }
         if(args.length!=3||(!args[1].equals("ticket")&&!args[1].equals("key"))){
-            sender.sendMessage(ChatColor.RED+"输入格式有误");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery get ticket [奖池名称]\n" + ChatColor.GREEN + "把手中的物品设置为指定奖池的抽奖券");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery get key [奖池名称]\n" + ChatColor.GREEN + "把手中的物品设置为指定奖池的抽奖箱钥匙");
+            sender.sendMessage(ChatColor.RED+LangUtils.WrongInput);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery get ticket "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdGet1);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery get key "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdGet2);
             return true;
         }
 
         Player player = (Player) sender;
         String name = args[2];
         if(!XgpLottery.lotteryList.containsKey(name)){
-            player.sendMessage(ChatColor.RED+"啊咧咧？ 没找到奖池呢~");
+            player.sendMessage(ChatColor.RED+LangUtils.NotFoundLottery);
             return true;
         }
         ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
         if(item.getType()== Material.AIR){
-            player.sendMessage(ChatColor.RED+"没找到手上有物品捏~");
+            player.sendMessage(ChatColor.RED+LangUtils.NotFoundItemInHand);
             return true;
         }
         MyItem guiItem = new MyItem(item);
         if(args[1].equals("ticket")){
-            guiItem.setDisplayName(ChatColor.GOLD+name+"-抽奖券")
-                    .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"右键以抽奖")
+            guiItem.setDisplayName(ChatColor.GOLD+name+"-"+LangUtils.TicketName)
+                    .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+LangUtils.TicketLore)
                     .addEnchant();
         }else {
-            guiItem.setDisplayName(ChatColor.GOLD+name+"-抽奖箱钥匙")
-                    .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+"使用方法：手持右键抽奖箱")
+            guiItem.setDisplayName(ChatColor.GOLD+name+"-"+LangUtils.KeyName)
+                    .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+LangUtils.KeyLore)
                     .addEnchant();
         }
         VersionAdapterUtils.setItemInMainHand(player,guiItem.getItem());

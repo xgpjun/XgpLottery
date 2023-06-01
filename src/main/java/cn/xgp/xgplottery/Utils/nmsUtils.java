@@ -8,9 +8,10 @@ import java.lang.reflect.Method;
 
 
 
+
 public class nmsUtils {
 
-//    NBTCompressedStreamTools
+
     private static Class<?> nbtTagCompound;
     private static Class<?> itemStack;
     private static Class<?> MojangsonParser;
@@ -64,9 +65,6 @@ public class nmsUtils {
             asNMSCopy = CraftItemStack.getMethod("asNMSCopy", ItemStack.class);
             toString = nbtTagCompound.getMethod("toString");
 
-
-
-            // 后面的代码会写在这里
         } catch (ClassNotFoundException | NoSuchMethodException e) {
             e.printStackTrace();
         }
@@ -114,6 +112,7 @@ public class nmsUtils {
         }
         return (String)str;
     }
+
 
 
 }

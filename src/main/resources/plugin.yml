@@ -1,5 +1,5 @@
 name: XgpLottery
-version: '${project.version}'
+version: ${project.version}
 main: cn.xgp.xgplottery.XgpLottery
 api-version: 1.13
 authors: [ 1badsobig ]

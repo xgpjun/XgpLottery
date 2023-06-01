@@ -5,6 +5,7 @@ import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.Impl.Custom;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -27,7 +28,7 @@ public class SpecialPoolGui extends LotteryGui{
 
     public SpecialPoolGui(Lottery lottery){
         this.lottery = lottery;
-        inv = Bukkit.createInventory(this,6*9, ChatColor.YELLOW+ lottery.getName()+ "-保底物品内容");
+        inv = Bukkit.createInventory(this,6*9, ChatColor.YELLOW+ lottery.getName()+ "-"+LangUtils.GuaranteedAwardList);
     }
     @Override
     public @NotNull Inventory getInventory() {
@@ -47,9 +48,9 @@ public class SpecialPoolGui extends LotteryGui{
                 int weight = lottery.getSpWeights().get(i);
                 int sum = lottery.getWeightSum();
                 inv.setItem(index, guiItem
-                        .setLore(ChatColor.GOLD +"权重/总权重："+ChatColor.GREEN+weight +"/"+sum)
-                        .addLore(ChatColor.GOLD +"概率："+ChatColor.GREEN+df.format((double) weight/sum))
-                        .addLore(ChatColor.GOLD+"占保底物品概率："+ChatColor.GREEN+df.format((double) weight/ lottery.getSpWeightSum()))
+                        .setLore(ChatColor.GOLD + LangUtils.Weight+"/"+ LangUtils.WeightSum +ChatColor.GREEN+weight +"/"+sum)
+                        .addLore(ChatColor.GOLD + LangUtils.Probability+ChatColor.GREEN+df.format((double) weight/sum))
+                        .addLore(ChatColor.GOLD + LangUtils.ProbabilityInGuaranteedAward+ChatColor.GREEN+df.format((double) weight/ lottery.getSpWeightSum()))
                         .getItem());
                 index++;
             }
@@ -58,13 +59,13 @@ public class SpecialPoolGui extends LotteryGui{
             }
 
             inv.setItem(49,new MyItem(Material.ANVIL)
-                    .setDisplayName(ChatColor.YELLOW+"操作指南")
-                    .setLore(ChatColor.RED+"空手左键点击本物品返回列表")
-                    .addLore(ChatColor.RED+"右键点击本物品切换售卖方式")
-                    .addLore(ChatColor.GOLD+"出售方式："+ChatColor.AQUA+(lottery.isPoint()?"点券":"金币"))
-                    .addLore(ChatColor.GOLD+"拖动物品点击加入物品")
-                    .addLore(ChatColor.GOLD+"shift+右键点击删除物品")
-                    .addLore(ChatColor.GOLD+"左键点击设置权重（越小概率越低）")
+                    .setDisplayName(ChatColor.YELLOW+LangUtils.AnvilText1)
+                    .setLore(ChatColor.RED+LangUtils.AnvilText2)
+                    .addLore(ChatColor.RED+LangUtils.AnvilText3)
+                    .addLore(ChatColor.GOLD+LangUtils.AnvilText4+ChatColor.AQUA+(lottery.isPoint()?LangUtils.Points:LangUtils.Money))
+                    .addLore(ChatColor.GOLD+LangUtils.AnvilText5)
+                    .addLore(ChatColor.GOLD+LangUtils.AnvilText6)
+                    .addLore(ChatColor.GOLD+LangUtils.AnvilText7)
                     .getItem());
 
         }
@@ -105,7 +106,7 @@ public class SpecialPoolGui extends LotteryGui{
                     player.openInventory(new SpecialPoolGui(lottery).getInventory());
                     SerializeUtils.saveLotteryData();
                 }else {
-                    player.sendMessage(ChatColor.RED+"奖池已满 ，请删除一些后继续添加");
+                    player.sendMessage(ChatColor.RED+ LangUtils.LotteryIsFull);
                     player.closeInventory();
                 }
             }

@@ -3,6 +3,7 @@ package cn.xgp.xgplottery.Command.SubCmd;
 import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.TimesTop;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -22,22 +23,22 @@ public class TopCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(!sender.hasPermission("xgplottery.manager")){
-            sender.sendMessage(ChatColor.RED+"你没有权限这么做！");
+            sender.sendMessage(ChatColor.RED+LangUtils.DontHavePermission);
             return true;
         }
         if(args.length!=3&&args.length!=2){
-            sender.sendMessage(ChatColor.RED + "输入格式有误");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery top [奖池名称] (current)\n" + ChatColor.GREEN + "列出该奖池的所有玩家抽奖次数（未保底次数）");
+            sender.sendMessage(ChatColor.RED + LangUtils.WrongInput);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery top "+LangUtils.LotteryName+" (current)\n" + ChatColor.GREEN + LangUtils.CmdTop);
             return true;
         }
         Lottery lottery = XgpLottery.lotteryList.get(args[1]);
         if (lottery == null) {
-            sender.sendMessage(ChatColor.RED + "啊咧咧，没有找到奖池捏~");
+            sender.sendMessage(ChatColor.RED + LangUtils.NotFoundLottery);
             return true;
         }
         if(args.length==2){
             TimesTop top = new TimesTop(true,lottery.getName());
-            sender.sendMessage(ChatColor.GREEN + "---这是该奖池的总抽奖次数排行榜---");
+            sender.sendMessage(ChatColor.GREEN + LangUtils.AllTopTitle);
             int i =1;
             for(String str: top.topString){
                 sender.sendMessage(ChatColor.GREEN+Integer.toString(i)+" "+ str);
@@ -47,7 +48,7 @@ public class TopCommand implements TabExecutor {
             }
         }else {
             TimesTop top = new TimesTop(false,lottery.getName());
-            sender.sendMessage(ChatColor.GREEN + "---这是该奖池的当前未保底次数排行榜---");
+            sender.sendMessage(ChatColor.GREEN + LangUtils.CurrentTopTitle);
             int i =1;
             for(String str: top.topString){
                 sender.sendMessage(ChatColor.GREEN+Integer.toString(i)+" "+ str);

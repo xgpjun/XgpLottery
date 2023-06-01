@@ -3,6 +3,7 @@ package cn.xgp.xgplottery.Listener;
 import cn.xgp.xgplottery.Gui.Impl.Pool.LotteryPoolShow;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryBox;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.Utils.TimesUtils;
 import cn.xgp.xgplottery.XgpLottery;
@@ -29,7 +30,7 @@ public class LotteryListener implements Listener {
         Player player = e.getPlayer();
         ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
         if(VersionAdapterUtils.ifMainHand(e) &&item.getType() != Material.AIR&&item.getItemMeta()!=null&&item.getItemMeta().hasLore()){
-            if(Objects.requireNonNull(item.getItemMeta().getLore()).contains(ChatColor.GOLD+"✦"+ChatColor.AQUA+ "右键以抽奖")&&item.getEnchantmentLevel(Enchantment.ARROW_INFINITE)==19){
+            if(Objects.requireNonNull(item.getItemMeta().getLore()).contains(ChatColor.GOLD+"✦"+ChatColor.AQUA+ LangUtils.TicketLore)&&item.getEnchantmentLevel(Enchantment.ARROW_INFINITE)==19){
                 e.setCancelled(true);
                 String name = item.getItemMeta().getDisplayName();
                 name = ChatColor.stripColor(name.split("-")[0]);
@@ -37,19 +38,14 @@ public class LotteryListener implements Listener {
                 if(XgpLottery.lotteryList.containsKey(name)){
                     lottery = XgpLottery.lotteryList.get(name);
                 }else {
-                    player.sendMessage(ChatColor.RED+"物品出错了，请联系管理员");
+                    player.sendMessage(ChatColor.RED+ LangUtils.ItemWrongMsg);
                     return;
                 }
                 if(e.getAction().equals(Action.RIGHT_CLICK_AIR)||e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
                     // 判断物品类型或其他条件
                     if(!player.isSneaking()){
                         //抽奖
-                        if(lottery.getWeightSum()<=0){
-                            player.sendMessage(ChatColor.RED+"奖池现在还是空的！");
-                            return;
-                        }else{
-                            lottery.open(player,false);
-                        }
+                        lottery.open(player,false);
                     }else {
                         //显示奖池
                         player.openInventory(new LotteryPoolShow(lottery).getInventory());
@@ -76,24 +72,18 @@ public class LotteryListener implements Listener {
                 if(!player.isSneaking()&&lottery!=null){
                     ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
                     if(item.getType() != Material.AIR&&item.getItemMeta()!=null&&item.getItemMeta().hasLore()){
-                        if (Objects.requireNonNull(item.getItemMeta().getLore()).contains(ChatColor.GOLD+"✦"+ChatColor.AQUA+"使用方法：手持右键抽奖箱")&&item.getEnchantmentLevel(Enchantment.ARROW_INFINITE)==19) {
+                        if (Objects.requireNonNull(item.getItemMeta().getLore()).contains(ChatColor.GOLD+"✦"+ChatColor.AQUA+LangUtils.KeyLore)&&item.getEnchantmentLevel(Enchantment.ARROW_INFINITE)==19) {
                             String name = item.getItemMeta().getDisplayName();
                             String[] parts = name.split("-");
                             name = ChatColor.stripColor(parts[0]);
                             if(name.equals(lottery.getName())){
                                 //抽奖
-                                if(lottery.getWeightSum()<=0){
-                                    player.sendMessage(ChatColor.RED+"奖池现在还是空的！");
-                                }else {
-                                    lottery.open(player,false);
-                                }
-                            }else {
-                                player.sendMessage(ChatColor.RED+"这个好像不是该宝箱的钥匙~");
+                                lottery.open(player,false);
                             }
                         }
                     }
                     else{
-                        e.getPlayer().sendMessage(ChatColor.GOLD+"[温馨提示]"+ChatColor.GREEN+ "左键查看奖池信息");
+                        e.getPlayer().sendMessage(ChatColor.GOLD+LangUtils.LotteryPrefix+ChatColor.GREEN+ LangUtils.LeftClickTips);
                     }
                 }
                 else if(player.isSneaking()&&lottery!=null){
@@ -108,17 +98,17 @@ public class LotteryListener implements Listener {
 
     public void sendTextBox(Player player, Lottery lottery) {
         String[] str = new String[4];
-        str[0] = ChatColor.GOLD+"[温馨提示]"+ChatColor.GREEN+ "请手持钥匙右键打开";
-        str[1] = ChatColor.GOLD+"[温馨提示]"+ChatColor.GREEN+"shift+右键打开奖池预览";
-        str[2] = ChatColor.GOLD+"[奖池信息]"+ChatColor.GREEN+"奖池名称："+ChatColor.AQUA+lottery.getName();
+        str[0] = ChatColor.GOLD+LangUtils.LotteryPrefix+ChatColor.GREEN+ LangUtils.BoxInformation1;
+        str[1] = ChatColor.GOLD+LangUtils.LotteryPrefix+ChatColor.GREEN+ LangUtils.BoxInformation2;
+        str[2] = ChatColor.GOLD+LangUtils.LotteryPrefix+ChatColor.GREEN+ LangUtils.BoxInformation3+ ChatColor.AQUA+lottery.getName();
         if(lottery.getMaxTime()>0){
             int times = 0;
             if(TimesUtils.getCurrentLotteryTimes(player.getUniqueId(),lottery.getName())!=null)
                 times = TimesUtils.getCurrentLotteryTimes(player.getUniqueId(),lottery.getName()).getTimes();
 
-            str[3] = ChatColor.GOLD+"[奖池信息]"+ChatColor.GREEN+"奖池保底数："+ChatColor.AQUA+lottery.getMaxTime()+ChatColor.GREEN+"您当前未保底抽数："+ ChatColor.AQUA+ times;
+            str[3] = ChatColor.GOLD+LangUtils.LotteryPrefix+ChatColor.GREEN+ LangUtils.BoxInformation4 +ChatColor.AQUA+lottery.getMaxTime()+ChatColor.GREEN+ LangUtils.BoxInformation5 + ChatColor.AQUA+ times;
         }else
-            str[3] = ChatColor.GOLD+"[奖池信息] 当前奖池未开启保底机制";
+            str[3] = ChatColor.GOLD+LangUtils.LotteryPrefix+ LangUtils.BoxInformation6;
         int maxLength = 0;
         for (String line : str) {
             if (line.length() > maxLength) {

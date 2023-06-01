@@ -1,6 +1,7 @@
 package cn.xgp.xgplottery.Gui.Impl.Anim;
 
 import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.nmsUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -11,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class BoxAnimGui extends AnimHolder {
-    private final Inventory inv = Bukkit.createInventory(this,3*9,ChatColor.GOLD+"祈愿!");
+    private final Inventory inv = Bukkit.createInventory(this,3*9,ChatColor.GOLD+LangUtils.SelectItemGuiTitle);
 
     @Override
     public @NotNull Inventory getInventory() {
@@ -25,13 +26,13 @@ public class BoxAnimGui extends AnimHolder {
         if(nmsUtils.versionToInt<13){
             Material select = Material.valueOf("STAINED_GLASS_PANE");
             selectGlass = new MyItem(select,1,(byte)1)
-                    .setDisplayName(ChatColor.GOLD+"看看抽到了啥！")
-                    .setLore(ChatColor.GRAY+ "看看抽到了啥！")
+                    .setDisplayName(ChatColor.GOLD+LangUtils.SelectGlass3)
+                    .setLore(ChatColor.GRAY+ LangUtils.SelectGlass3)
                     .getItem();
         }else {
             selectGlass = new MyItem(Material.ORANGE_STAINED_GLASS_PANE)
-                    .setDisplayName(ChatColor.GOLD+"看看抽到了啥！")
-                    .setLore(ChatColor.GRAY+ "看看抽到了啥！")
+                    .setDisplayName(ChatColor.GOLD+LangUtils.SelectGlass3)
+                    .setLore(ChatColor.GRAY+ LangUtils.SelectGlass3)
                     .getItem();
         }
     }

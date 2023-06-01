@@ -4,6 +4,8 @@ import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.SelectItemAnimation;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.GiveUtils;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.nmsUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import lombok.AllArgsConstructor;
@@ -20,7 +22,7 @@ import java.util.Random;
 
 @AllArgsConstructor
 public class SelectItemGui extends AnimHolder{
-    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+"祈愿!");
+    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+LangUtils.SelectItemGuiTitle);
     private final SelectItemAnimation selectItemAnimation;
 
 
@@ -31,13 +33,13 @@ public class SelectItemGui extends AnimHolder{
         if(nmsUtils.versionToInt<13){
             Material select = Material.valueOf("STAINED_GLASS_PANE");
             selectGlass = new MyItem(select,1,(byte)1)
-                    .setDisplayName(ChatColor.GOLD+"点击翻开，获得物品")
-                    .setLore(ChatColor.GRAY+ "我的回合，抽卡！")
+                    .setDisplayName(ChatColor.GOLD+ LangUtils.SelectGlass1)
+                    .setLore(ChatColor.GRAY+ LangUtils.SelectGlass2)
                     .getItem();
         }else {
             selectGlass = new MyItem(Material.ORANGE_STAINED_GLASS_PANE)
-                    .setDisplayName(ChatColor.GOLD+"点击翻开，获得物品")
-                    .setLore(ChatColor.GRAY+ "我的回合，抽卡！")
+                    .setDisplayName(ChatColor.GOLD+LangUtils.SelectGlass1)
+                    .setLore(ChatColor.GRAY+LangUtils.SelectGlass2)
                     .getItem();
         }
     }
@@ -61,7 +63,7 @@ public class SelectItemGui extends AnimHolder{
             selectItemAnimation.stop = true;
             inv.setItem(e.getRawSlot(),new MyItem(selectItemAnimation.getAward()).addEnchant().getItem());
             player.playSound(player.getLocation(), LotteryAnimation.getFinish(),1.0f,1.0f);
-            player.getInventory().addItem(selectItemAnimation.getAward());
+            GiveUtils.addItem(player,selectItemAnimation.getAward());
             selectItemAnimation.getCalculator().sendMessage();
 
             int item = selectItemAnimation.getLottery().getAmount();

@@ -1,10 +1,12 @@
 package cn.xgp.xgplottery.Lottery.ProbabilityCalculator.Impl;
 
 import cn.xgp.xgplottery.Lottery.Lottery;
+import cn.xgp.xgplottery.Lottery.LotteryRecord;
 import cn.xgp.xgplottery.Lottery.LotteryTimes;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
 import cn.xgp.xgplottery.Utils.ChatUtils;
 import cn.xgp.xgplottery.Utils.ConfigSetting;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.TimesUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -37,9 +39,9 @@ public class Custom extends ProbabilityCalculator{
             //抽奖次数大于等于保底次数
             if(currentTime>=maxTime){
                 int randomWeight = new Random().nextInt(spWeight)+1;
-                player.sendMessage(ChatColor.GOLD+"[抽奖小助手]"+ChatColor.GREEN+"这是你的第"+ TimesUtils.getCurrentTimes(player.getUniqueId(),lottery.getName()) +"次抽奖！");
-
+                player.sendMessage(ChatColor.GOLD+ LangUtils.LotteryPrefix+ChatColor.GREEN+ LangUtils.LotteryInformation.replace("%time%",Integer.toString(TimesUtils.getCurrentTimes(player.getUniqueId(),lottery.getName()))));
                 ItemStack award = getSpItem(lottery, player, spItems, spWeights, lotteryTimes, randomWeight);
+                LotteryRecord.addRecord(award,player.getUniqueId(),true,lottery.getName());
                 if (award != null) return award;
                 //这里是执行不到的~
                 return new ItemStack(Material.DIAMOND);
@@ -49,8 +51,10 @@ public class Custom extends ProbabilityCalculator{
                 int randomWeight = new Random().nextInt(lottery.getWeightSum())+1;
                 //抽到保底物品
                 if(randomWeight<=spWeight){
-                    player.sendMessage(ChatColor.GOLD+"[抽奖小助手]"+ChatColor.GREEN+"这是你的第"+ TimesUtils.getCurrentTimes(player.getUniqueId(),lottery.getName()) +"次抽奖！");
-                    return getSpItem(lottery, player, spItems, spWeights, lotteryTimes, randomWeight);
+                    player.sendMessage(ChatColor.GOLD+LangUtils.LotteryPrefix+ChatColor.GREEN+ LangUtils.LotteryInformation.replace("%time%",Integer.toString(TimesUtils.getCurrentTimes(player.getUniqueId(),lottery.getName()))));
+                    ItemStack award = getSpItem(lottery, player, spItems, spWeights, lotteryTimes, randomWeight);
+                    LotteryRecord.addRecord(award,player.getUniqueId(),true,lottery.getName());
+                    return award;
                 }
                 //没抽到保底物品
                 else {
@@ -58,21 +62,24 @@ public class Custom extends ProbabilityCalculator{
                     for(int i =0;i<items.size();i++){
                         randomWeight -=weights.get(i);
                         if(randomWeight<=0){
-                            player.sendMessage(ChatColor.GOLD+"[抽奖小助手]"+ChatColor.GREEN+"这是你的第"+ TimesUtils.getCurrentTimes(player.getUniqueId(),lottery.getName()) +"次抽奖！");
-                            return items.get(i).clone();
+                            player.sendMessage(ChatColor.GOLD+LangUtils.LotteryPrefix+ChatColor.GREEN+ LangUtils.LotteryInformation.replace("%time%",Integer.toString(TimesUtils.getCurrentTimes(player.getUniqueId(),lottery.getName()))));
+                            ItemStack item = items.get(i).clone();
+                            LotteryRecord.addRecord(item,player.getUniqueId(),false,lottery.getName());
+                            return item;
                         }
                     }
                 }
             }
         }
         else{
-            player.sendMessage(ChatColor.GOLD+"[抽奖小助手]"+ChatColor.GREEN+"这是你的第"+ TimesUtils.getCurrentTimes(player.getUniqueId(),lottery.getName()) +"次抽奖，但是这个奖池并没有保底~");
+            player.sendMessage(ChatColor.GOLD+LangUtils.LotteryPrefix+ChatColor.GREEN+ LangUtils.LotteryInformation.replace("%time%",Integer.toString(TimesUtils.getCurrentTimes(player.getUniqueId(),lottery.getName()))));
             int randomWeight = new Random().nextInt(commWeight)+1;
             for(int i =0;i<items.size();i++){
                 ItemStack item = items.get(i);
                 randomWeight -=weights.get(i);
                 if(randomWeight<=0){
-                    return item.clone();
+                    LotteryRecord.addRecord(item,player.getUniqueId(),false,lottery.getName());
+                    return item;
                 }
             }
         }
@@ -85,11 +92,10 @@ public class Custom extends ProbabilityCalculator{
             randomWeight -=spWeights.get(i);
             if(randomWeight<=0){
                 award = spItems.get(i).clone();
-                msg = ChatColor.GOLD+"[抽奖小助手]"+ChatColor.AQUA+player.getName()+ChatColor.GREEN+"在奖池："+ChatColor.AQUA+lottery.getName()+ChatColor.GREEN+"抽到了保底物品，这是他的第"+ChatColor.AQUA+TimesUtils.getCurrentTimes(player.getUniqueId(),lottery.getName()) +ChatColor.GREEN+"次抽奖:";
+                msg = ChatColor.GOLD+LangUtils.LotteryPrefix+ChatColor.AQUA+LangUtils.BroadcastMsg.replace("%player%",player.getName()).replace("%lotteryName%",lottery.getName()).replace("%time%",Integer.toString(TimesUtils.getCurrentTimes(player.getUniqueId(),lottery.getName())));
                 this.player = player;
-                lotteryTimes.setTimes(0);
+                TimesUtils.clearCurrentTime(lotteryTimes);
                 return award.clone();
-
             }
         }
         return null;
@@ -102,7 +108,7 @@ public class Custom extends ProbabilityCalculator{
         if(ConfigSetting.broadcast){
             ChatUtils.sendMessage(msg,award);
         }else {
-            player.sendMessage(ChatColor.GOLD+"你抽到了保底物品！");
+            player.sendMessage(ChatColor.GOLD+LangUtils.BroadcastNotEnableMsg);
         }
     }
 

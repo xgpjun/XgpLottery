@@ -1,7 +1,8 @@
 package cn.xgp.xgplottery.Command.SubCmd;
 
-import cn.xgp.xgplottery.XgpLottery;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -16,16 +17,17 @@ import java.util.List;
 public class PapiCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if(XgpLottery.ppAPI==null)
-            sender.sendMessage(ChatColor.RED+ "未检测到PlaceHolderAPI");
+        if(!sender.hasPermission("xgplottery.manager")){
+            sender.sendMessage(ChatColor.RED+ LangUtils.DontHavePermission);
+            return true;
+        }
+
+        if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI")==null)
+            sender.sendMessage(ChatColor.RED+ LangUtils.NotFoundAPI+"PlaceHolderAPI");
         if(args.length==2&&args[0].equals("papi")){
             String str = args[1];
             str = PlaceholderAPI.setPlaceholders((Player) sender,str);
             sender.sendMessage(str);
-        }else {
-            sender.sendMessage(ChatColor.RED + "输入格式有误");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery papi [占位符]\n" + ChatColor.GREEN + "测试占位符用");
-
         }
         return true;
     }

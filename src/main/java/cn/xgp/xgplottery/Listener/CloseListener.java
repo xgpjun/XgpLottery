@@ -2,9 +2,9 @@ package cn.xgp.xgplottery.Listener;
 
 import cn.xgp.xgplottery.Gui.Impl.Anim.AnimHolder;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
-import lombok.Setter;
+import cn.xgp.xgplottery.Utils.GiveUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -23,14 +23,20 @@ public class CloseListener implements Listener {
     private final ItemStack award;
     private final LotteryAnimation anim;
 
+    private final boolean isBox;
 
 
 
-    public CloseListener(int taskId,UUID uuid,LotteryAnimation anim){
+    public CloseListener(int taskId,UUID uuid,LotteryAnimation anim,boolean isBox){
         this.uuid = uuid;
         this.taskId = taskId;
         this.award = anim.getAward();
         this.anim = anim;
+        this.isBox = isBox;
+    }
+
+    public CloseListener(int taskId,UUID uuid,LotteryAnimation anim){
+        this(taskId,uuid,anim,false);
     }
     @EventHandler
     public void onInventoryClick(InventoryClickEvent e){
@@ -51,10 +57,13 @@ public class CloseListener implements Listener {
             // 中止多线程
             clear();
             //给与奖品
-            if(!anim.isStop()) {
+            if(!anim.isStop()|| isBox) {
                 Player player = (Player) e.getPlayer();
                 player.playSound(player.getLocation(), LotteryAnimation.getFinish(), 1.0f, 1.0f);
-                player.getInventory().addItem(award);
+                if(award==null){
+                    return;
+                }
+                GiveUtils.addItem(player,award);
                 anim.getCalculator().sendMessage();
             }
         }

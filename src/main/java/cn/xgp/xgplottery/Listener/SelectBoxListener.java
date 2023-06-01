@@ -3,6 +3,7 @@ package cn.xgp.xgplottery.Listener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryBox;
 import cn.xgp.xgplottery.Utils.BoxParticleUtils;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.XgpLottery;
@@ -37,10 +38,10 @@ public class SelectBoxListener implements Listener {
             if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
                 Location location = Objects.requireNonNull(e.getClickedBlock()).getLocation();
                 if(XgpLottery.getLotteryBoxByLocation(location)!=null){
-                    player.sendMessage(ChatColor.RED+"这个方块已经是"+ Objects.requireNonNull(XgpLottery.getLotteryBoxByLocation(location)).getLotteryName()+"的抽奖箱了！");
+                    player.sendMessage(ChatColor.RED+ LangUtils.SetBoxRepeatedly.replace("%lotteryName%",Objects.requireNonNull(XgpLottery.getLotteryBoxByLocation(location)).getLotteryName()));
                 }else{
                     BoxParticleUtils.addBox(new LotteryBox(lottery.getName(),location));
-                    player.sendMessage(ChatColor.GREEN+"设置成功~");
+                    player.sendMessage(ChatColor.GREEN+LangUtils.SetBoxSuccessful);
                     XgpLottery.locations.add(location);
                     SerializeUtils.saveData();
                 }

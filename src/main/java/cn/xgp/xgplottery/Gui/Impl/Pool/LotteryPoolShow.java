@@ -5,6 +5,7 @@ import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Utils.ConfigSetting;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,7 +25,7 @@ public class LotteryPoolShow extends PlayerGui {
     private final Lottery lottery;
     public LotteryPoolShow(Lottery lottery){
         this.lottery = lottery;
-        inv = Bukkit.createInventory(this,6*9, ChatColor.YELLOW+ lottery.getName()+ "-奖池内容");
+        inv = Bukkit.createInventory(this,6*9, ChatColor.YELLOW+ lottery.getName()+ "-"+LangUtils.AwardList);
     }
     @Override
     public @NotNull Inventory getInventory() {
@@ -41,7 +42,7 @@ public class LotteryPoolShow extends PlayerGui {
                 MyItem guiItem = new MyItem(item);
                 int weight = lottery.getWeights().get(i);
                 int sum = lottery.getWeightSum();
-                guiItem.setLore(ChatColor.GOLD +"概率："+ChatColor.GREEN+df.format((double) weight/sum));
+                guiItem.setLore(ChatColor.GOLD + LangUtils.Probability +ChatColor.GREEN+df.format((double) weight/sum));
                 inv.setItem(i, guiItem.getItem());
             }
         }else {
@@ -55,8 +56,8 @@ public class LotteryPoolShow extends PlayerGui {
             inv.setItem(index,borderGlass);
         }
         inv.setItem(49,new MyItem(Material.CHEST)
-                .setDisplayName(ChatColor.YELLOW+"点击切换")
-                .setLore(ChatColor.AQUA+"点击切换到保底物品")
+                .setDisplayName(ChatColor.YELLOW+LangUtils.Switch)
+                .setLore(ChatColor.AQUA+LangUtils.SwitchToGuaranteedAwardList)
                 .getItem());
         return this;
     }
@@ -64,8 +65,8 @@ public class LotteryPoolShow extends PlayerGui {
         if(e.isLeftClick()&&e.getRawSlot()==49){
             if(lottery.getSpItems().size()==0){
                 inv.setItem(49,new MyItem(Material.CHEST)
-                        .setDisplayName(ChatColor.RED+"不可以捏")
-                        .setLore(ChatColor.RED+"本奖池还不存在保底物品")
+                        .setDisplayName(ChatColor.RED+LangUtils.DontHaveGuaranteedAward1)
+                        .setLore(ChatColor.RED+LangUtils.DontHaveGuaranteedAward2)
                         .getItem());
                 return;
             }

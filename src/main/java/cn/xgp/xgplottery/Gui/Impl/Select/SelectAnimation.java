@@ -5,6 +5,7 @@ import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryManageGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 @AllArgsConstructor
 public class SelectAnimation extends LotteryGui {
     private final Lottery lottery;
-    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+"选择");
+    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ LangUtils.Select );
 
     @Override
     public @NotNull Inventory getInventory() {
@@ -29,10 +30,10 @@ public class SelectAnimation extends LotteryGui {
     public LotteryGui loadGui() {
         setBorder(inv);
         inv.setItem(10,new MyItem(Material.CHEST)
-                .setDisplayName(ChatColor.AQUA+"物品滚动动画")
+                .setDisplayName(ChatColor.AQUA+LangUtils.ScrollingAnimation)
                 .getItem());
         inv.setItem(11,new MyItem(Material.CHEST)
-                .setDisplayName(ChatColor.AQUA+"物品选择动画")
+                .setDisplayName(ChatColor.AQUA+ LangUtils.SelectItemAnimation)
                 .getItem());
 
         return this;

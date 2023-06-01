@@ -1,6 +1,7 @@
 package cn.xgp.xgplottery.Lottery;
 
 import cn.xgp.xgplottery.Utils.ConfigSetting;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.TimesUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import me.clip.placeholderapi.PlaceholderAPI;
@@ -87,13 +88,13 @@ public class MyPlaceholder extends PlaceholderExpansion {
             if(args[0].equals("max")){
                 Lottery lottery = XgpLottery.lotteryList.get(lotteryName);
                 if(lottery==null||lottery.getMaxTime()<1)
-                    return "无";
+                    return LangUtils.None;
                 return String.valueOf(lottery.getMaxTime());
             }
             if(args[0].equals("value")){
                 Lottery lottery = XgpLottery.lotteryList.get(lotteryName);
                 if(lottery==null||lottery.getValue()<=0)
-                    return "无";
+                    return LangUtils.None;
                 return String.valueOf(lottery.getValue());
             }
 
@@ -114,7 +115,7 @@ public class MyPlaceholder extends PlaceholderExpansion {
                     rank = Integer.parseInt(args[1]);
                     LotteryTimes times = TimesUtils.getAllTimesTop(rank);
                     if(times==null)
-                        return "无";
+                        return LangUtils.None;
                     if(args[2].equals("name"))
                         return Bukkit.getOfflinePlayer(times.getUuid()).getName();
                     else if(args[2].equals("amount"))
@@ -141,7 +142,7 @@ public class MyPlaceholder extends PlaceholderExpansion {
                 TimesTop timesTop = new TimesTop(true,lotteryName);
                 LotteryTimes times = timesTop.getTimesByRank(rank);
                 if(times==null)
-                    return "无";
+                    return LangUtils.None;
                 if(args[3].equals("name")){
                     return Bukkit.getOfflinePlayer(times.getUuid()).getName();
                 }

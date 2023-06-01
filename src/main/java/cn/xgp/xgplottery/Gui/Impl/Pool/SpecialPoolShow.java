@@ -5,6 +5,7 @@ import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Utils.ConfigSetting;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -24,7 +25,7 @@ public class SpecialPoolShow extends PlayerGui {
 
     public SpecialPoolShow(Lottery lottery){
         this.lottery = lottery;
-        inv = Bukkit.createInventory(this,6*9, ChatColor.YELLOW+ lottery.getName()+ "-保底物品内容");
+        inv = Bukkit.createInventory(this,6*9, ChatColor.YELLOW+ lottery.getName()+ "-"+ LangUtils.GuaranteedAwardList);
     }
     @Override
     public @NotNull Inventory getInventory() {
@@ -40,8 +41,8 @@ public class SpecialPoolShow extends PlayerGui {
                 MyItem guiItem = new MyItem(item);
                 int weight = lottery.getSpWeights().get(i);
                 int sum = lottery.getWeightSum();
-                guiItem.setLore(ChatColor.GOLD +"概率："+ChatColor.GREEN+df.format((double) weight/sum))
-                        .addLore(ChatColor.GOLD+"占保底物品概率："+ChatColor.GREEN+df.format((double) weight/ lottery.getSpWeightSum()));
+                guiItem.setLore(ChatColor.GOLD + LangUtils.Probability +ChatColor.GREEN+df.format((double) weight/sum))
+                        .addLore(ChatColor.GOLD+ LangUtils.ProbabilityInGuaranteedAward +ChatColor.GREEN+df.format((double) weight/ lottery.getSpWeightSum()));
                 inv.setItem(i, guiItem.getItem());
             }
         }else {
@@ -55,8 +56,8 @@ public class SpecialPoolShow extends PlayerGui {
             inv.setItem(index,borderGlass);
         }
         inv.setItem(49,new MyItem(Material.CHEST)
-                .setDisplayName(ChatColor.YELLOW+"点击切换")
-                .setLore(ChatColor.AQUA+"点击切换到普通物品")
+                .setDisplayName(ChatColor.YELLOW+LangUtils.Switch)
+                .setLore(ChatColor.AQUA+LangUtils.SwitchToNormal)
                 .getItem());
         return this;
     }

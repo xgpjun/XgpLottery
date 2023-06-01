@@ -6,6 +6,7 @@ import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import lombok.Getter;
@@ -38,7 +39,7 @@ public class BoxAnimation extends LotteryAnimation {
 
     @Override
     public String toLore(){
-        return "物品滚动动画";
+        return LangUtils.ScrollingAnimation;
     }
 
     @Override
@@ -85,24 +86,21 @@ public class BoxAnimation extends LotteryAnimation {
                 if (j >= showItemList.size() - 9) {
                     j = 0;
                 }
-                if (j == 17) { // 中奖物品的位置是第 20 个 21-4
+                if (j == 17) { // 中奖物品的位置是第 17   21-4
                     stop = true;
                 }
                 float pitch = (float) Math.pow(2.0, j / 18.0);
                 player.playSound(player.getLocation(), sound,1.0f,pitch);
                 if (stop) {
                     cancelTask();
-                    //给与物品
                     player.playSound(player.getLocation(), finish,1.0f,1.0f);
-                    player.getInventory().addItem(award);
-                    calculator.sendMessage();
                 }
 
             }
 
 
         }, 0L, 5L).getTaskId();
-        CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this);
+        CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this,true);
         Bukkit.getPluginManager().registerEvents(closeListener,XgpLottery.instance);
     }
 

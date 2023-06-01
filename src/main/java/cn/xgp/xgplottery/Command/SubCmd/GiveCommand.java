@@ -3,6 +3,7 @@ package cn.xgp.xgplottery.Command.SubCmd;
 import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Utils.GiveUtils;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -30,14 +31,14 @@ public class GiveCommand implements TabExecutor {
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
 
         if(!sender.hasPermission("xgplottery.manager")){
-            sender.sendMessage(ChatColor.RED+"你没有权限这么做！");
+            sender.sendMessage(ChatColor.RED+LangUtils.DontHavePermission);
             return true;
         }
         if(!(args.length >= 4 && args.length <= 5)){
-            sender.sendMessage(ChatColor.RED+"输入格式有误");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery give [玩家名称] key [奖池名称] (数量)\n" + ChatColor.GREEN + "给与玩家默认材质的开箱钥匙");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery give [玩家名称] ticket [奖池名称] (数量)\n" + ChatColor.GREEN + "给与玩家默认材质的奖券");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery give [玩家名称] open [奖池名称]\n" + ChatColor.GREEN + "直接让玩家进行抽奖");
+            sender.sendMessage(ChatColor.RED+LangUtils.WrongInput);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery give "+LangUtils.PlayerName+" key "+LangUtils.LotteryName+" "+LangUtils.Amount+"\n" + ChatColor.GREEN + LangUtils.CmdGive1);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery give "+LangUtils.PlayerName+" ticket "+LangUtils.LotteryName+" "+LangUtils.Amount+"\n" + ChatColor.GREEN + LangUtils.CmdGive2);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery give "+LangUtils.PlayerName+" open "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdGive3);
             return true;
         }
         Player player = Bukkit.getPlayer(args[1]);
@@ -46,11 +47,11 @@ public class GiveCommand implements TabExecutor {
         String option = args[2];
         int amount = 1;
         if (player == null) {
-            sender.sendMessage(ChatColor.RED + "未找到该玩家");
+            sender.sendMessage(ChatColor.RED + LangUtils.NotFoundPlayer);
             return true;
         }
         if (lottery == null) {
-            sender.sendMessage(ChatColor.RED + "啊咧咧，没有找到奖池捏~");
+            sender.sendMessage(ChatColor.RED + LangUtils.NotFoundLottery);
             return true;
         }
         lotteryName = lottery.getName();
@@ -58,26 +59,26 @@ public class GiveCommand implements TabExecutor {
             try {
                 amount = Integer.parseInt(args[4]);
             } catch (NumberFormatException e) {
-                sender.sendMessage(ChatColor.RED + "格式输入有误");
-                sender.sendMessage(ChatColor.RED + "使用/xgplottery help查看帮助");
+                sender.sendMessage(ChatColor.RED + LangUtils.WrongInput);
+                sender.sendMessage(ChatColor.RED + LangUtils.CmdHelpMsg);
                 return true;
             }
         }
         switch (option) {
             case "key":
                 GiveUtils.giveKey(player, lotteryName, amount);
-                sender.sendMessage(ChatColor.GREEN+"成功给与"+player.getName());
+                sender.sendMessage(ChatColor.GREEN+LangUtils.GiveSuccessfully+player.getName());
                 break;
             case "ticket":
                 GiveUtils.giveTicket(player, lotteryName, amount);
-                sender.sendMessage(ChatColor.GREEN+"成功给与"+player.getName());
+                sender.sendMessage(ChatColor.GREEN+LangUtils.GiveSuccessfully+player.getName());
                 break;
             case "open":
                 GiveUtils.open(player, lotteryName);
-                sender.sendMessage(ChatColor.GREEN+"成功给与"+player.getName());
+                sender.sendMessage(ChatColor.GREEN+LangUtils.GiveSuccessfully+player.getName());
                 break;
             default:
-                sender.sendMessage(ChatColor.RED + "您的输入有误");
+                sender.sendMessage(ChatColor.RED + LangUtils.WrongInput);
         }
         return true;
     }
@@ -96,7 +97,7 @@ public class GiveCommand implements TabExecutor {
             return XgpLotteryCommand.filter(strings,args);
         }
         if(args.length==5&&(args[3].equals("key")||args[3].equals("ticket"))){
-            return Collections.singletonList("<数量>");
+            return Collections.singletonList(LangUtils.Amount);
         }
         return new ArrayList<>();
     }

@@ -1,12 +1,15 @@
 package cn.xgp.xgplottery.Lottery;
 
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.nmsUtils;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class MyItem {
@@ -83,4 +86,15 @@ public class MyItem {
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         return this;
     }
+
+    public ItemStack addRecordInfo(boolean special){
+        String dateString = new SimpleDateFormat(LangUtils.Time).format(new Date());
+        addLore(ChatColor.GREEN+LangUtils.GetItemAt+ChatColor.AQUA+dateString);
+        if(special){
+            addLore(ChatColor.GOLD+LangUtils.GuaranteedAward);
+            addEnchant();
+        }
+        return getItem();
+    }
+
 }

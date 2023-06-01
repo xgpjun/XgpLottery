@@ -1,6 +1,7 @@
 package cn.xgp.xgplottery.Gui;
 
 import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.nmsUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -23,25 +24,25 @@ public abstract class LotteryGui implements InventoryHolder {
         if(nmsUtils.versionToInt<13){
             Material stainedGlassPane = Material.valueOf("STAINED_GLASS_PANE");
             borderGlass = new MyItem(stainedGlassPane,1,(byte)7)
-                    .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")
-                    .setLore(ChatColor.GRAY+ "这是分界线捏，没有别的东西了~")
+                    .setDisplayName(ChatColor.GRAY+ LangUtils.BorderGlass1)
+                    .setLore(ChatColor.GRAY+ LangUtils.BorderGlass2)
                     .getItem();
         }else {
             borderGlass = new MyItem(Material.GRAY_STAINED_GLASS_PANE)
-                    .setDisplayName(ChatColor.GRAY+"我也是有边界的>_<")
-                    .setLore(ChatColor.GRAY+ "这是分界线捏，没有别的东西了~")
+                    .setDisplayName(ChatColor.GRAY+LangUtils.BorderGlass1)
+                    .setLore(ChatColor.GRAY+ LangUtils.BorderGlass2)
                     .getItem();
         }
 
         if(nmsUtils.versionToInt<8){
             exit = new MyItem(Material.BEDROCK)
-                    .setDisplayName(ChatColor.RED+"退出")
-                    .setLore(ChatColor.GOLD+ "好了！我要关闭菜单了~")
+                    .setDisplayName(ChatColor.RED+LangUtils.Exit1)
+                    .setLore(ChatColor.GOLD+ LangUtils.Exit2)
                     .getItem();
         }else {
             exit = new MyItem(Material.BARRIER)
-                    .setDisplayName(ChatColor.RED+"退出")
-                    .setLore(ChatColor.GOLD+ "好了！我要关闭菜单了~")
+                    .setDisplayName(ChatColor.RED+LangUtils.Exit1)
+                    .setLore(ChatColor.GOLD+ LangUtils.Exit2)
                     .getItem();
         }
     }
@@ -52,8 +53,8 @@ public abstract class LotteryGui implements InventoryHolder {
             gui.setItem(i,borderGlass);
         }
         gui.setItem(0,new MyItem(Material.COMPASS)
-                .setDisplayName(ChatColor.GREEN+"返回上一层")
-                .setLore(ChatColor.GOLD+ "反悔了！我要去上一层菜单~")
+                .setDisplayName(ChatColor.GREEN+LangUtils.PreviousInv1)
+                .setLore(ChatColor.GOLD+ LangUtils.PreviousInv2)
                 .getItem());
 
         gui.setItem(8,exit);

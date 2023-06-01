@@ -2,6 +2,7 @@ package cn.xgp.xgplottery.Command.SubCmd;
 
 import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Lottery.Lottery;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.XgpLottery;
@@ -28,43 +29,43 @@ public class AddCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(!(sender instanceof Player &&sender.hasPermission("xgplottery.manager"))){
-            sender.sendMessage(ChatColor.RED+"你没有权限这么做！");
+            sender.sendMessage(ChatColor.RED+ LangUtils.DontHavePermission);
             return true;
         }
 
         Player player = (Player) sender;
         if(args.length!=3||(!(args[1].equals("item"))&&!(args[1].equals("award")))){
-            sender.sendMessage(ChatColor.RED+"输入格式有误");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery add item [奖池名称]\n" + ChatColor.GREEN + "把手中的物品加入指定奖池的普通物品列表");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery add award [奖池名称]\n" + ChatColor.GREEN + "把手中的物品加入指定奖池的保底物品列表");
+            sender.sendMessage(ChatColor.RED+LangUtils.WrongInput);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery add item "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdAdd1);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery add award "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdAdd2);
             return true;
         }
         String name = args[2];
         Lottery lottery = XgpLottery.lotteryList.get(name);
         if(lottery==null){
-            player.sendMessage(ChatColor.RED+"啊咧咧？ 没找到奖池呢~");
+            player.sendMessage(ChatColor.RED+LangUtils.NotFoundLottery);
             return true;
         }
         ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
         if(item.getType().equals(Material.AIR)){
-            player.sendMessage(ChatColor.RED+"没找到手上有物品捏~");
+            player.sendMessage(ChatColor.RED+LangUtils.NotFoundItemInHand);
             return true;
         }
         if(args[1].equals("item")){
             if(lottery.getAmount()>=45){
-                player.sendMessage(ChatColor.RED+name+"奖池已经满啦！");
+                player.sendMessage(ChatColor.RED+LangUtils.LotteryIsFull);
                 return true;
             }
             lottery.addItem(item.clone());
-            player.sendMessage(ChatColor.GREEN+"向"+name+"添加物品成功！");
+            player.sendMessage(ChatColor.GREEN+LangUtils.AddItemSuccessfully);
         }else {
             if(lottery.getSpAmount()>=45){
-                player.sendMessage(ChatColor.RED+name+"奖池已经满啦！");
+                player.sendMessage(ChatColor.RED+LangUtils.LotteryIsFull);
                 return true;
             }
             lottery.addSpItem(item.clone());
             System.out.println(item.getClass());
-            player.sendMessage(ChatColor.GREEN+"向"+name+"添加保底物品成功！");
+            player.sendMessage(ChatColor.GREEN+LangUtils.AddItemSuccessfully);
         }
         SerializeUtils.saveLotteryData();
         return true;

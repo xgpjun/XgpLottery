@@ -3,7 +3,9 @@ package cn.xgp.xgplottery.Command.SubCmd;
 import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Lottery.BoxParticle;
 import cn.xgp.xgplottery.Utils.ConfigSetting;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.nmsUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -26,22 +28,27 @@ public class ParticleCommand implements TabExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(!(sender instanceof Player &&sender.hasPermission("xgplottery.manager"))){
-            sender.sendMessage(ChatColor.RED+"你没有权限这么做！");
+            sender.sendMessage(ChatColor.RED+ LangUtils.DontHavePermission);
+            return true;
+        }
+        if(Bukkit.getPluginManager().getPlugin("ParticleLib") == null){
+            sender.sendMessage(ChatColor.RED+ LangUtils.NotFoundAPI+"ParticleLib");
             return true;
         }
         if(!ConfigSetting.enableParticle){
-            sender.sendMessage(ChatColor.RED+"本服未开启粒子特效，请在config.yml中更改”enableParticle“");
+            sender.sendMessage(ChatColor.RED+LangUtils.NotEnableParticle);
             return true;
         }
+
         if(nmsUtils.versionToInt<9){
-            sender.sendMessage(ChatColor.RED+"1.9以下无法使用粒子特效！");
+            sender.sendMessage(ChatColor.RED+LangUtils.CantEnableParticle);
             return true;
         }
 
         if(args.length!=2||(!args[1].equals("show")&&!args[1].equals("clear"))){
-            sender.sendMessage(ChatColor.RED+"输入格式有误");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery particle show\n" + ChatColor.GREEN + "启用所有粒子特效");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery particle clear\n" + ChatColor.GREEN + "关闭所有粒子特效");
+            sender.sendMessage(ChatColor.RED+LangUtils.WrongInput);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery particle show\n" + ChatColor.GREEN + LangUtils.CmdParticle1);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery particle clear\n" + ChatColor.GREEN + LangUtils.CmdParticle2);
             return true;
         }
         if(args[1].equals("show"))

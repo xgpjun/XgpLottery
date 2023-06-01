@@ -6,6 +6,8 @@ import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
+import cn.xgp.xgplottery.Utils.GiveUtils;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import lombok.Getter;
@@ -39,7 +41,7 @@ public class SelectItemAnimation extends LotteryAnimation {
 
     @Override
     public String toLore() {
-        return "物品选择动画";
+        return LangUtils.SelectItemAnimation;
     }
     @Override
     public boolean isStop(){
@@ -67,6 +69,7 @@ public class SelectItemAnimation extends LotteryAnimation {
             if(!stop) {
                 player.playSound(player.getLocation(), finish, 1.0f, 1.0f);
                 inventory.setItem(new Random().nextInt(54), new MyItem(award).addEnchant().getItem());
+                GiveUtils.addItem(player,award.clone());
                 calculator.sendMessage();
             }
             stop = true;

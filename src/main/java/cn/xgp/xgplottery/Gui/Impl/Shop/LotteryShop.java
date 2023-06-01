@@ -5,6 +5,7 @@ import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Utils.GiveUtils;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.economy.EconomyResponse;
@@ -19,7 +20,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 public class LotteryShop extends PlayerGui {
-    private final Inventory inv = Bukkit.createInventory(this,6*9,ChatColor.GOLD+"商店");
+    private final Inventory inv = Bukkit.createInventory(this,6*9,ChatColor.GOLD+LangUtils.ShopTitle);
 
     private final Player player;
 
@@ -39,15 +40,15 @@ public class LotteryShop extends PlayerGui {
         int index = 0;
         for(Lottery lottery: XgpLottery.lotteryList.values()){
             int maxTime = lottery.getMaxTime();
-            String mt = maxTime>0? String.valueOf(maxTime) :"未设置保底次数";
-            String sellType = lottery.isPoint()?ChatColor.AQUA+"点券":ChatColor.AQUA+"金币";
-            String value = lottery.getValue()>0?ChatColor.GOLD+"价格："+ChatColor.AQUA+lottery.getValue():ChatColor.GOLD+"暂未开放售卖";
+            String mt = maxTime>0? String.valueOf(maxTime) : LangUtils.NotSetMaxTime;
+            String sellType = lottery.isPoint()?ChatColor.AQUA+LangUtils.Points:ChatColor.AQUA+LangUtils.Money;
+            String value = lottery.getValue()>0?ChatColor.GOLD+ LangUtils.Price +ChatColor.AQUA+lottery.getValue():ChatColor.GOLD+LangUtils.NotSale;
             inv.setItem(slot[index],new MyItem(Material.CHEST)
-                    .setDisplayName(ChatColor.BLUE+"奖池 :"+ChatColor.AQUA + lottery.getName())
-                    .setLore(ChatColor.GOLD+"保底次数："+ChatColor.RESET+""+ChatColor.GREEN +mt,
+                    .setDisplayName(ChatColor.BLUE+LangUtils.BoxInformation3+ChatColor.AQUA + lottery.getName())
+                    .setLore(ChatColor.GOLD+LangUtils.BoxInformation4+ChatColor.RESET+""+ChatColor.GREEN +mt,
                             value,
-                            ChatColor.GOLD+"货币类型："+sellType,
-                            ChatColor.AQUA +"左键购买，右键打开奖池预览")
+                            ChatColor.GOLD+LangUtils.SaleType +sellType,
+                            ChatColor.AQUA +LangUtils.SaleOperation)
                     .getItem());
 
             index++;
@@ -55,10 +56,10 @@ public class LotteryShop extends PlayerGui {
                 break;
         }
         setBorder(inv);
-        String points = XgpLottery.ppAPI!=null? "点券:"+ChatColor.AQUA+ XgpLottery.ppAPI.look(player.getUniqueId()) :"本服未安装点券插件";
-        String money = XgpLottery.eco!=null?"金币："+ChatColor.AQUA+ XgpLottery.eco.getBalance(player) :"本服未安装经济系统";
+        String points = XgpLottery.ppAPI!=null? LangUtils.Points+ChatColor.AQUA+ XgpLottery.ppAPI.look(player.getUniqueId()) :LangUtils.NoMoneyAPI;
+        String money = XgpLottery.eco!=null?LangUtils.Money+ChatColor.AQUA+ XgpLottery.eco.getBalance(player) :LangUtils.NoPointsAPI;
         inv.setItem(0,new MyItem(Material.DIAMOND)
-                .setDisplayName(ChatColor.GOLD+"个人信息")
+                .setDisplayName(ChatColor.GOLD+LangUtils.PersonalInformation)
                 .setLore(ChatColor.GOLD+money,ChatColor.GOLD+points)
                 .addEnchant()
                 .getItem());
@@ -81,41 +82,40 @@ public class LotteryShop extends PlayerGui {
             //未开启售卖
             int value = lottery.getValue();
             if(value<=0){
-                player.sendMessage(ChatColor.GOLD+"[温馨提示]"+ChatColor.GREEN+ "这个奖池暂未开启售卖");
+                player.sendMessage(ChatColor.GOLD+LangUtils.LotteryPrefix+ChatColor.GREEN+ LangUtils.NotSale);
                 return;
             }
             if(lottery.isPoint()){
                 if(XgpLottery.ppAPI==null){
-                    player.sendMessage(ChatColor.RED+"本服务器未加载点券系统，请联系管理员");
+                    player.sendMessage(ChatColor.RED+LangUtils.NoMoneyAPI);
                     return;
                 }
                 if(XgpLottery.ppAPI.take(player.getUniqueId(),value)){
                     GiveUtils.giveLottery(player,lottery.getName());
+                    player.sendMessage(String.format(ChatColor.GREEN+ LangUtils.CanAfford +ChatColor.AQUA+" %s", XgpLottery.ppAPI.look(player.getUniqueId())));
                     player.openInventory(new LotteryShop(player).getInventory());
                     return;
                 }
                 player.closeInventory();
-                player.sendMessage(ChatColor.RED+"您的点券余额不足");
+                player.sendMessage(ChatColor.RED+LangUtils.CantAfford);
             }
             else {
                 if(XgpLottery.eco ==null){
-                    player.sendMessage(ChatColor.RED+"本服务器未加载经济系统，请联系管理员");
+                    player.sendMessage(ChatColor.RED+LangUtils.NoPointsAPI);
                     return;
                 }
                 Economy econ = XgpLottery.eco;
                 EconomyResponse r = econ.withdrawPlayer(player, value);
                 if(r.transactionSuccess()) {
-                    player.sendMessage(String.format(ChatColor.GREEN+"成功购买！你还有"+ChatColor.AQUA+" %s", econ.format(r.balance)));
+                    player.sendMessage(String.format(ChatColor.GREEN+ LangUtils.CanAfford +ChatColor.AQUA+" %s", econ.format(r.balance)));
                     GiveUtils.giveLottery(player,lottery.getName());
                     player.openInventory(new LotteryShop(player).getInventory());
 
                 } else {
-                    player.sendMessage(String.format(ChatColor.RED+"你的钱不够，你只有"+ChatColor.AQUA+"%s",r.balance));
+                    player.sendMessage(ChatColor.RED+LangUtils.CantAfford);
                     player.closeInventory();
                 }
             }
-
         }
-
     }
 }
