@@ -50,59 +50,50 @@ public class SqlUtils {
     @SuppressWarnings("SqlResolve")
     public static int getOneTimes(String timesType,String uuid,String lotteryName){
         int times = 0;
-        try {
-            String sql = "SELECT `times` FROM `"+timesType+"` WHERE `uuid` = ? AND `lotteryName` = ?";
-
-            PreparedStatement statement = connection.prepareStatement(sql);
+        String sql = "SELECT `times` FROM `"+timesType+"` WHERE `uuid` = ? AND `lotteryName` = ?";
+        try(PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, uuid);
             statement.setString(2, lotteryName);
-
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (resultSet.next()) {
                     times = resultSet.getInt("times");
                 }
             }
-
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
         return times;
     }
 
     @SuppressWarnings("SqlResolve")
     public static void addTimes(String uuid, String lotteryName, String timesType){
-        try {
+        String selectQuery = "SELECT `times` FROM `" + timesType + "` WHERE `uuid` = ? AND `lotteryName` = ?";
+
+        try(PreparedStatement selectStatement = connection.prepareStatement(selectQuery)) {
             // 先查询是否存在记录
-            String selectQuery = "SELECT `times` FROM `" + timesType + "` WHERE `uuid` = ? AND `lotteryName` = ?";
-            PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
             selectStatement.setString(1, uuid);
             selectStatement.setString(2, lotteryName);
             ResultSet resultSet = selectStatement.executeQuery();
-
             if (resultSet.next()) {
                 // 如果存在记录，则更新times值
                 int times = resultSet.getInt("times") + 1;
                 String updateQuery = "UPDATE `" + timesType + "` SET `times` = ? WHERE `uuid` = ? AND `lotteryName` = ?";
-                PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
-                updateStatement.setInt(1, times);
-                updateStatement.setString(2, uuid);
-                updateStatement.setString(3, lotteryName);
-                updateStatement.executeUpdate();
-                updateStatement.close();
+                try(PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
+                    updateStatement.setInt(1, times);
+                    updateStatement.setString(2, uuid);
+                    updateStatement.setString(3, lotteryName);
+                    updateStatement.executeUpdate();
+                }
             } else {
                 // 如果不存在记录，则插入新的数据
                 String insertQuery = "INSERT INTO `" + timesType + "` (`uuid`, `lotteryName`, `times`) VALUES (?, ?, 1)";
-                PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
-                insertStatement.setString(1, uuid);
-                insertStatement.setString(2, lotteryName);
-                insertStatement.executeUpdate();
-                insertStatement.close();
+                try(PreparedStatement insertStatement = connection.prepareStatement(insertQuery)) {
+                    insertStatement.setString(1, uuid);
+                    insertStatement.setString(2, lotteryName);
+                    insertStatement.executeUpdate();
+                }
             }
-
             resultSet.close();
-            selectStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -110,13 +101,11 @@ public class SqlUtils {
 
     public static void clearCurrentTimes(LotteryTimes lotteryTimes){
         String updateQuery = "UPDATE `current` SET `times` = ? WHERE `uuid` = ? AND `lotteryName` = ?";
-        try {
-            PreparedStatement updateStatement = connection.prepareStatement(updateQuery);
+        try(PreparedStatement updateStatement = connection.prepareStatement(updateQuery)) {
             updateStatement.setInt(1, 0);
             updateStatement.setString(2, String.valueOf(lotteryTimes.getUuid()));
             updateStatement.setString(3, lotteryTimes.getLotteryName());
             updateStatement.executeUpdate();
-            updateStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -125,38 +114,28 @@ public class SqlUtils {
     public static List<LotteryTimes> getAllTimes(String timesType) {
         List<LotteryTimes> lotteryTimesList = new ArrayList<>();
 
-        try {
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery("SELECT `uuid`, `times` ,`lotteryName` FROM `"+timesType+"`");
 
+        try(Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery("SELECT `uuid`, `times` ,`lotteryName` FROM `"+timesType+"`")) {
             while (resultSet.next()) {
                 String uuid = resultSet.getString("uuid");
                 String lotteryName = resultSet.getString("lotteryName");
-
-
                 int times = resultSet.getInt("times");
                 LotteryTimes lotteryTimes = new LotteryTimes(lotteryName ,UUID.fromString(uuid), times);
                 lotteryTimesList.add(lotteryTimes);
             }
-
-            resultSet.close();
-            statement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
-        });
         return lotteryTimesList;
     }
 
     @SuppressWarnings("SqlResolve")
     public static void deleteTimes(String lotteryName,String timesType) {
         Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
-            try {
-                PreparedStatement statement = connection.prepareStatement("DELETE FROM `"+timesType+"` WHERE `lotteryName` = ?");
+            try(PreparedStatement statement = connection.prepareStatement("DELETE FROM `"+timesType+"` WHERE `lotteryName` = ?")) {
                 statement.setString(1, lotteryName);
                 statement.executeUpdate();
-                statement.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
@@ -164,10 +143,9 @@ public class SqlUtils {
     }
 
     public static void updateRecord(String uuid,String lotteryName,String items){
-        try {
+        String selectQuery = "SELECT `items` FROM `record` WHERE `uuid` = ? AND `lotteryName` = ?";
+        try(PreparedStatement selectStatement = connection.prepareStatement(selectQuery)) {
             // 先查询是否存在记录
-            String selectQuery = "SELECT `items` FROM `record` WHERE `uuid` = ? AND `lotteryName` = ?";
-            PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
             selectStatement.setString(1, uuid);
             selectStatement.setString(2, lotteryName);
             ResultSet resultSet = selectStatement.executeQuery();
@@ -192,7 +170,6 @@ public class SqlUtils {
                 insertStatement.close();
             }
             resultSet.close();
-            selectStatement.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -334,6 +311,104 @@ public class SqlUtils {
                 e.printStackTrace();
             }
         }
+    }
+
+    public static void convertToFile(){
+        getConnection();
+        //all
+
+        String allQuery = "SELECT `uuid`, `times`, `lotteryName` FROM `all`";
+        try(Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(allQuery)) {
+            while (resultSet.next()) {
+                String uuid = resultSet.getString("uuid");
+                int times = resultSet.getInt("times");
+                String lotteryName = resultSet.getString("lotteryName");
+                XgpLottery.allTimes.add(new LotteryTimes(lotteryName,UUID.fromString(uuid),times));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //current
+
+        String currentQuery = "SELECT `uuid`, `times`, `lotteryName` FROM `current`";
+        try(Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(currentQuery)) {
+            while (resultSet.next()) {
+                String uuid = resultSet.getString("uuid");
+                int times = resultSet.getInt("times");
+                String lotteryName = resultSet.getString("lotteryName");
+                XgpLottery.currentTime.add(new LotteryTimes(lotteryName,UUID.fromString(uuid),times));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //total
+        String totalQuery = "SELECT `uuid`, `times`, `lotteryName` FROM `total`";
+        try(Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(totalQuery)) {
+            while (resultSet.next()) {
+                String uuid = resultSet.getString("uuid");
+                int times = resultSet.getInt("times");
+                String lotteryName = resultSet.getString("lotteryName");
+                XgpLottery.totalTime.add(new LotteryTimes(lotteryName,UUID.fromString(uuid),times));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        SerializeUtils.saveDataByFile();
+
+
+        //lottery
+        String lotteryQuery = "SELECT `lotteryData` FROM `lottery`";
+        try(Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(lotteryQuery)) {
+            if(resultSet.next()) {
+                String json = resultSet.getString("lotteryData");
+                File folder = new File(XgpLottery.instance.getDataFolder(), "Data");
+                if(!folder.exists()){
+                    folder.mkdirs();
+                }
+                File file = new File(folder, "lottery.json");
+                try (OutputStream outputStream = new FileOutputStream(file);
+                     Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
+                    writer.write(json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        //record
+        String recordQuery = "SELECT `uuid`, `items`, `lotteryName` FROM `record`";
+        try(Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(recordQuery)) {
+            File folder = new File(XgpLottery.instance.getDataFolder(), "Record");
+            while (resultSet.next()) {
+                String uuid = resultSet.getString("uuid");
+                String items = resultSet.getString("items");
+                String lotteryName = resultSet.getString("lotteryName");
+                if (!folder.exists()) {
+                    folder.mkdirs();
+                }
+                File file = new File(folder, uuid +"_"+lotteryName + ".json");
+                try (OutputStream outputStream = new FileOutputStream(file);
+                     Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
+                    writer.write(items);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private static String readFile(File file) throws IOException {

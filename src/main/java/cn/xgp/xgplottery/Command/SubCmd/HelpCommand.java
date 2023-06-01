@@ -50,7 +50,7 @@ public class HelpCommand implements TabExecutor {
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery shop\n" + ChatColor.GREEN + LangUtils.CmdShop);
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery show "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdShow);
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery top "+LangUtils.LotteryName+" (current)\n" + ChatColor.GREEN + LangUtils.CmdTop);
-                sender.sendMessage(ChatColor.AQUA + "/XgpLottery convert \n" + ChatColor.GREEN + LangUtils.CmdConvert);
+                sender.sendMessage(ChatColor.AQUA + "/XgpLottery convert (file)\n" + ChatColor.GREEN + LangUtils.CmdConvert);
                 sender.sendMessage(ChatColor.GREEN + "------<4 / 4>------");
             }
         }else {

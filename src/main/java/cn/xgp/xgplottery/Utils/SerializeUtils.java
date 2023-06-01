@@ -90,7 +90,7 @@ public class SerializeUtils {
         }
     }
 
-    private static void saveDataByFile(){
+    public static void saveDataByFile(){
         File folder = new File(XgpLottery.instance.getDataFolder(), "Data");
         if(!folder.exists()){
             folder.mkdirs();
