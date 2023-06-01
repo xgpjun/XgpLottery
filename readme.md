@@ -17,6 +17,8 @@ MCBBS:[XgpLottery - (mcbbs.net)](https://www.mcbbs.net/thread-1445345-1-1.html)
 - 可向玩家公布概率。
 - 支持占位符
 - 可选择不同的抽奖动画。
+- 支持查看历史记录
+- 支持mysql
 
 
 
