@@ -1,10 +1,10 @@
 package cn.xgp.xgplottery.Gui.Impl.Select;
 
 
-import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryManageGui;
+import cn.xgp.xgplottery.Gui.Impl.Manage.LotterySetting;
+import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.MyItem;
-import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import lombok.AllArgsConstructor;
@@ -21,6 +21,7 @@ public class SelectAnimation extends LotteryGui {
     private final Lottery lottery;
     private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ LangUtils.Select );
 
+    private final LotterySetting lotterySetting;
     @Override
     public @NotNull Inventory getInventory() {
         loadGui();
@@ -35,26 +36,43 @@ public class SelectAnimation extends LotteryGui {
         inv.setItem(11,new MyItem(Material.CHEST)
                 .setDisplayName(ChatColor.AQUA+ LangUtils.SelectItemAnimation)
                 .getItem());
-
+        inv.setItem(12,new MyItem(Material.CHEST)
+                .setDisplayName(ChatColor.AQUA+ "多彩抽奖动画")
+                .getItem());
+        inv.setItem(13,new MyItem(Material.CHEST)
+                .setDisplayName(ChatColor.AQUA+ "跑马灯抽奖动画")
+                .getItem());
         return this;
     }
     public void handleClick(InventoryClickEvent e){
         Player player = (Player) e.getWhoClicked();
         switch (e.getRawSlot()){
             //上一层
-            case 0: player.openInventory(new LotteryManageGui().getInventory());break;
+            case 0: player.openInventory(lotterySetting.getInventory());break;
             //退出
             case 8: player.getOpenInventory().close();break;
             case 10: {
                 lottery.setAnimation("BoxAnimation");
                 SerializeUtils.saveLotteryData();
-                player.openInventory(new LotteryManageGui().getInventory());
+                player.openInventory(lotterySetting.getInventory());
                 break;
             }
             case 11: {
                 lottery.setAnimation("SelectItemAnimation");
                 SerializeUtils.saveLotteryData();
-                player.openInventory(new LotteryManageGui().getInventory());
+                player.openInventory(lotterySetting.getInventory());
+                break;
+            }
+            case 12:{
+                lottery.setAnimation("ColorfulAnimation");
+                SerializeUtils.saveLotteryData();
+                player.openInventory(lotterySetting.getInventory());
+                break;
+            }
+            case 13:{
+                lottery.setAnimation("MarqueeAnimation");
+                SerializeUtils.saveLotteryData();
+                player.openInventory(lotterySetting.getInventory());
                 break;
             }
             default:

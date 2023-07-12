@@ -2,7 +2,7 @@ package cn.xgp.xgplottery.Gui;
 
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
-import cn.xgp.xgplottery.Utils.nmsUtils;
+import cn.xgp.xgplottery.Utils.NMSUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -17,11 +17,20 @@ public abstract class LotteryGui implements InventoryHolder {
     public abstract Inventory getInventory();
     public abstract LotteryGui loadGui();
     protected static int[] slot = {10,11,12,13,14,15,16,19,20,21,22,23,24,25,28,29,30,31,32,33,34,37,38,39,40,41,42,43};
-    static int[] border = {1,2,3,4,5,6,7,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53};
+    protected static int[] border = {1,2,3,4,5,6,7,9,17,18,26,27,35,36,44,45,46,47,48,49,50,51,52,53};
+
+    protected static int[] smallBorder = {0,1,2,3,4,5,6,7,8,9,17,18,19,20,21,22,23,24,25,26};
     protected static ItemStack borderGlass;
     protected static ItemStack exit;
+    protected static Material command;
+    protected static Material writable_book;
+
+    protected static ItemStack nextPage = new MyItem(Material.PAPER).setDisplayName(ChatColor.GREEN+LangUtils.NextPage).getItem();
+    protected static ItemStack previousPage = new MyItem(Material.PAPER).setDisplayName(ChatColor.GREEN+LangUtils.PreviousPage).getItem();
+
+
     static {
-        if(nmsUtils.versionToInt<13){
+        if(NMSUtils.versionToInt<13){
             Material stainedGlassPane = Material.valueOf("STAINED_GLASS_PANE");
             borderGlass = new MyItem(stainedGlassPane,1,(byte)7)
                     .setDisplayName(ChatColor.GRAY+ LangUtils.BorderGlass1)
@@ -34,7 +43,7 @@ public abstract class LotteryGui implements InventoryHolder {
                     .getItem();
         }
 
-        if(nmsUtils.versionToInt<8){
+        if(NMSUtils.versionToInt<8){
             exit = new MyItem(Material.BEDROCK)
                     .setDisplayName(ChatColor.RED+LangUtils.Exit1)
                     .setLore(ChatColor.GOLD+ LangUtils.Exit2)
@@ -44,6 +53,13 @@ public abstract class LotteryGui implements InventoryHolder {
                     .setDisplayName(ChatColor.RED+LangUtils.Exit1)
                     .setLore(ChatColor.GOLD+ LangUtils.Exit2)
                     .getItem();
+        }
+        if(NMSUtils.versionToInt<13){
+            command = Material.valueOf("COMMAND");
+            writable_book = Material.valueOf("BOOK_AND_QUILL");
+        }else {
+            command = Material.COMMAND_BLOCK;
+            writable_book = Material.WRITABLE_BOOK;
         }
     }
 
@@ -58,6 +74,13 @@ public abstract class LotteryGui implements InventoryHolder {
                 .getItem());
 
         gui.setItem(8,exit);
+    }
+    public int findSlot(int tar){
+        for (int i =0;i<slot.length;i++){
+            if(slot[i] == tar)
+                return i;
+        }
+        return -1;
     }
     public abstract void handleClick(InventoryClickEvent e);
 }

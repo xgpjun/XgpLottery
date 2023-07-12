@@ -22,11 +22,9 @@ import java.util.List;
 public class BoxCommand implements TabExecutor {
 
     /***
-     *
      *             /xl box create 123
      *             /xl box remove
      */
-
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(!(sender instanceof Player &&sender.hasPermission("xgplottery.manager"))){

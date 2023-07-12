@@ -1,14 +1,15 @@
 package cn.xgp.xgplottery.Gui.Impl.Pool;
 
-import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryManageGui;
-import cn.xgp.xgplottery.Gui.Impl.Select.SelectAnimation;
-import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Gui.Impl.Manage.LotterySetting;
+import cn.xgp.xgplottery.Gui.Impl.Manage.LotterySettings.AwardSetting;
 import cn.xgp.xgplottery.Gui.LotteryGui;
+import cn.xgp.xgplottery.Gui.PoolGui;
+import cn.xgp.xgplottery.Lottery.Award;
 import cn.xgp.xgplottery.Lottery.Lottery;
-import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.Impl.Custom;
+import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
+import cn.xgp.xgplottery.Utils.ReceiveUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -17,79 +18,110 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
 import java.text.DecimalFormat;
-import java.util.Objects;
+import java.util.List;
 
 //奖池详细内容
-public class LotteryPoolGui extends LotteryGui {
-    private final Inventory inv ;
-    @Getter
+public class LotteryPoolGui extends PoolGui {
+    private final Inventory inv;
     private final Lottery lottery;
+    private final List<Award> awards;
+    int page;
+    int size;
 
-
-    public LotteryPoolGui(Lottery lottery){
+    public LotteryPoolGui(List<Award> awards,Lottery lottery){
+        this.awards = awards;
         this.lottery = lottery;
-        inv = Bukkit.createInventory(this,6*9, ChatColor.YELLOW+ lottery.getName()+ "-"+ LangUtils.AwardList);
+        inv = Bukkit.createInventory(this,6*9, ChatColor.YELLOW+LangUtils.AwardList);
+        size =  (int) Math.ceil( (double)awards.size() / 45);
     }
     @Override
     public @NotNull Inventory getInventory() {
-        loadGui();
-        return inv;
+        return getPage(1);
     }
 
     @Override
     public LotteryGui loadGui() {
-        if(lottery.getCalculatorObject() instanceof Custom){
-            DecimalFormat df = new DecimalFormat("0.00%");
-            int index =0;
-            for(int i =0;i<lottery.getItems().size();i++) {
-                ItemStack item = lottery.getItems().get(i);
-                MyItem guiItem = new MyItem(item);
-                int weight = lottery.getWeights().get(i);
-                int sum = lottery.getWeightSum();
-                inv.setItem(index, guiItem
-                        .setLore(ChatColor.GOLD +LangUtils.Weight+"/"+LangUtils.WeightSum+ChatColor.GREEN+weight +"/"+sum)
-                        .addLore(ChatColor.GOLD +LangUtils.Probability+ChatColor.GREEN+df.format((double) weight/sum))
-                        .getItem());
-                index++;
-            }
-
-            for (index = 45;index<=53;index++){
-                inv.setItem(index,borderGlass);
-            }
-
-            inv.setItem(49,new MyItem(Material.ANVIL)
-                    .setDisplayName(ChatColor.YELLOW+LangUtils.AnvilText1)
-                    .setLore(ChatColor.RED+LangUtils.AnvilText2)
-                    .addLore(ChatColor.RED+LangUtils.AnvilText3)
-                    .addLore(ChatColor.GOLD+LangUtils.AnvilText4+ChatColor.AQUA+(lottery.isPoint()?LangUtils.Points:LangUtils.Money))
-                    .addLore(ChatColor.GOLD+LangUtils.AnvilText5)
-                    .addLore(ChatColor.GOLD+LangUtils.AnvilText6)
-                    .addLore(ChatColor.GOLD+LangUtils.AnvilText7)
-                    .addLore(ChatColor.RED+LangUtils.AnvilText8)
-
-                    .getItem());
+        for (int index = 45;index<=53;index++){
+            inv.setItem(index,borderGlass);
         }
-
+        inv.setItem(45,previousPage);
+        inv.setItem(53,nextPage);
         return this;
     }
+
+    public Inventory getPage(int page){
+        this.page = Math.max(1, Math.min(page, size));
+        inv.clear();
+        loadGui();
+        inv.setItem(49,new MyItem(Material.DIAMOND)
+                .setDisplayName(ChatColor.GOLD+LangUtils.CurrentPage+ChatColor.AQUA+ this.page)
+                .addLore(ChatColor.BLUE+LangUtils.TotalPage+ChatColor.AQUA+ this.size)
+                .addLore(ChatColor.BLUE+LangUtils.AnvilText1)
+                .addLore(ChatColor.RED+LangUtils.AnvilText2)
+                .addLore(ChatColor.GOLD+LangUtils.AnvilText5)
+                .getItem());
+        if(awards.size()==0)
+            return inv;
+
+
+        DecimalFormat df = new DecimalFormat("0.00%");
+
+        for (int i=0;i<45;i++) {
+            int index = i+(this.page-1)*45;
+            if(index>=awards.size())
+                break;
+            Award award = awards.get(index);
+            ItemStack item = award.getItem();
+            MyItem guiItem = new MyItem(item);
+            if(award.getDisplayName()!=null){
+                guiItem.setDisplayName(award.getDisplayName());
+            }
+            int weight = award.getWeight();
+            int sum = lottery.getWeightSum();
+            String str = weight==0? "0.00%":df.format((double) weight/sum);
+            inv.setItem(i, guiItem
+                    .addLore(ChatColor.GOLD +LangUtils.Weight+"/"+LangUtils.WeightSum+ChatColor.AQUA+":"+ChatColor.GREEN+weight +"/"+sum)
+                    .addLore(ChatColor.GOLD +LangUtils.Probability+ChatColor.GREEN+str)
+                    .addLore(ChatColor.BLUE+"奖品详细设置:"+ChatColor.AQUA+"Shift+左键")
+                    .addLore(ChatColor.BLUE+"设置权重:"+ChatColor.AQUA+"左键")
+                    .addLore(ChatColor.BLUE+"删除奖品:"+ChatColor.RED+"Shift+右键")
+                    .getItem());
+        }
+        return inv;
+    }
+
+    @Override
+    public Inventory refresh(){
+        return new LotteryPoolGui(awards,lottery).getPage(page);
+    }
+
     public void handleClick(InventoryClickEvent e){
         Player player = (Player) e.getWhoClicked();
+        //点击奖池物品
         if(e.getRawSlot()>=0&&e.getRawSlot()<=44&&e.getCurrentItem()!=null){
-            //得到奖池对象
-            Lottery lottery = ((LotteryPoolGui) Objects.requireNonNull(e.getInventory().getHolder())).getLottery();
+
             //被点击的物品
-            int index = e.getSlot();
-            ItemStack itemStack = lottery.getItems().get(index);
+
+            int index = e.getRawSlot()+45*(page-1);
+            Award award = awards.get(index);
+            ItemStack itemStack = award.getItem();
+
+            //详细修改
+            if(e.isShiftClick()&&e.isLeftClick()&&itemStack!=null){
+                player.openInventory(new AwardSetting(awards, index,this).getInventory());
+            }
+
             //删除物品
             if(e.isShiftClick()&&e.isRightClick()&&itemStack!=null){
-                if(lottery.getItems().contains(itemStack)){
-                    lottery.delItem(e.getRawSlot());
-                    player.openInventory(new LotteryPoolGui(lottery).getInventory());
-                    SerializeUtils.saveLotteryData();
-                }
-            }else if(!e.isShiftClick()&&e.isLeftClick()&&itemStack!=null){
-                Lottery.receiveWeight(player,lottery,e.getRawSlot(),false);
+                awards.remove(index);
+                player.openInventory(refresh());
+                SerializeUtils.saveLotteryData();
+            }
+            //修改权重
+            if(!e.isShiftClick()&&e.isLeftClick()&&itemStack!=null){
+                ReceiveUtils.receiveWeight(player,awards.get(index),this);
             }
         }
         //退出/添加物品
@@ -101,28 +133,23 @@ public class LotteryPoolGui extends LotteryGui {
                 // 把玩家拿起的物品放入背包
                 player.setItemOnCursor(null);
                 player.getInventory().addItem(cursorItem);
-                Lottery lottery = ((LotteryPoolGui) Objects.requireNonNull(e.getInventory().getHolder())).getLottery();
-                if(lottery.getItems().size()<45){
-                    lottery.addItem(item);
-                    player.openInventory(new LotteryPoolGui(lottery).getInventory());
-                    SerializeUtils.saveLotteryData();
-                }else {
-                    player.sendMessage(ChatColor.RED+ LangUtils.LotteryIsFull);
-                    player.closeInventory();
-                }
+
+                Award award = new Award(item);
+                awards.add(award);
+                player.openInventory(refresh());
+                SerializeUtils.saveLotteryData();
+
             }
             else {
                 // 玩家没有拿起物品，处理点击铁砧返回
-                player.openInventory(new LotteryManageGui().getInventory());
+                player.openInventory(new LotterySetting(lottery.getName()).getInventory());
             }
         }
-        if(!e.isShiftClick()&&e.isRightClick()&&e.getRawSlot()==49){
-            lottery.setPoint(!lottery.isPoint());
-            player.openInventory(new LotteryPoolGui(lottery).getInventory());
-            SerializeUtils.saveLotteryData();
-        }
-        if(e.isShiftClick()&&e.isRightClick()&&e.getRawSlot()==49){
-            player.openInventory(new SelectAnimation(lottery).getInventory());
+
+        if(e.getRawSlot()==45){
+            e.getWhoClicked().openInventory(getPage(this.page-1));
+        }else if(e.getRawSlot()==53){
+            e.getWhoClicked().openInventory(getPage(this.page+1));
         }
     }
 

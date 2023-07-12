@@ -7,7 +7,7 @@ import org.bukkit.Bukkit;
 
 public class BoxParticleUtils {
     public static void addBox(LotteryBox lotteryBox){
-        if(nmsUtils.versionToInt<9)
+        if(NMSUtils.versionToInt<9)
             return;
         XgpLottery.lotteryBoxList.add(lotteryBox);
         if(ConfigSetting.enableParticle&& Bukkit.getPluginManager().getPlugin("ParticleLib") != null){
@@ -15,7 +15,7 @@ public class BoxParticleUtils {
         }
     }
     public static void removeBox(LotteryBox lotteryBox){
-        if(nmsUtils.versionToInt<9)
+        if(NMSUtils.versionToInt<9)
             return;
         XgpLottery.lotteryBoxList.remove(lotteryBox);
         if(ConfigSetting.enableParticle&&Bukkit.getPluginManager().getPlugin("ParticleLib") != null){

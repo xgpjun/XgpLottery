@@ -9,25 +9,46 @@ import org.bukkit.inventory.ItemStack;
 public class VersionAdapterUtils {
 
     public static boolean ifMainHand(PlayerInteractEvent e){
-        if(nmsUtils.versionToInt<9)
+        if(NMSUtils.versionToInt<9)
             return true;
         else
-            return e.getHand()== EquipmentSlot.HAND;
+            return EquipmentSlot.HAND.equals(e.getHand());
     }
     public static void setItemInMainHand(Player player,ItemStack itemStack){
-        if(nmsUtils.versionToInt<9){
+        if(NMSUtils.versionToInt<9){
             player.setItemInHand(itemStack);
         }else {
             player.getInventory().setItemInMainHand(itemStack);
         }
-
-
     }
 
     public static ItemStack getItemInMainHand(Player player){
-        if(nmsUtils.versionToInt<9)
+        if(NMSUtils.versionToInt<9)
             return player.getItemInHand();
         else
             return player.getInventory().getItemInMainHand();
+    }
+    public static int getPlayerEmptySlot(Player player){
+        ItemStack[] items = player.getInventory().getContents();
+        int emptySlots = 0;
+        for (ItemStack i : items) {
+            if (i == null) {
+                emptySlots++;
+            }
+        }
+        ItemStack[] equipment = player.getEquipment().getArmorContents();
+        for (ItemStack i : equipment) {
+            if (i == null) {
+                emptySlots--;
+            }
+        }
+        if(NMSUtils.versionToInt<9){
+            return emptySlots;
+        }
+        else{
+            if(player.getInventory().getItemInOffHand()==null||player.getInventory().getItemInOffHand().getItemMeta()==null)
+                emptySlots--;
+            return emptySlots;
+        }
     }
 }

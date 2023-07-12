@@ -1,30 +1,25 @@
 package cn.xgp.xgplottery.Lottery;
 
-import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryManageGui;
-import cn.xgp.xgplottery.Gui.Impl.Pool.LotteryPoolGui;
-import cn.xgp.xgplottery.Gui.Impl.Pool.SpecialPoolGui;
-import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.BoxAnimation;
-import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.SelectItemAnimation;
+import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.*;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
+import cn.xgp.xgplottery.Lottery.LotteryAnimation.MultipleAnimation;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.Impl.Custom;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
 import cn.xgp.xgplottery.Utils.LangUtils;
-import cn.xgp.xgplottery.Utils.SerializeUtils;
+import cn.xgp.xgplottery.Utils.NMSUtils;
 import cn.xgp.xgplottery.Utils.TimesUtils;
-import cn.xgp.xgplottery.XgpLottery;
+import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 @Data
 @AllArgsConstructor
@@ -32,52 +27,127 @@ public class Lottery {
 
     private String name;
     private String animation;                 //抽奖显示动画
+    private String multipleAnimation;
     private int maxTime;                    //保底次数
-    private List<ItemStack> items;                       //储存奖池物品
-    private List<Integer> weights;
-    private List<ItemStack> spItems;
-    private List<Integer> spWeights;
+
+    @Deprecated
+    private transient List<ItemStack> items;                       //储存奖池物品
+    @Deprecated
+    private transient List<Integer> weights;
+    @Deprecated
+    private transient List<ItemStack> spItems;
+    @Deprecated
+    private transient List<Integer> spWeights;
+
+    private List<Award> awards;
+    private List<Award> spAwards;
+
     private int value;
-    private boolean isPoint;
+    @Deprecated
+    private transient boolean isPoint;
 
+    private String keyMaterial ;
+    private String keyName;
+    private List<String> keyLore;
+    private String ticketMaterial ;
+    private String ticketName;
+    private List<String> ticketLore;
 
+    private SellType sellType;
+    private int limitedTimes;
 
-    public Lottery(@NotNull String animation, List<ItemStack> items,List<ItemStack> spItems,boolean isPoint,int value) {
-        this(animation,items,-1,spItems,isPoint,value);
-    }
-
-    public Lottery(@NotNull String animation, List<ItemStack> items,int maxTime,List<ItemStack> spItems,boolean isPoint,int value) {
+    private boolean isCheckFull;
+    public Lottery(String name, String animation, String multipleAnimation, int maxTime, List<Award> awards, List<Award> spAwards, int value, SellType sellType, int limitedTimes,boolean isCheckFull) {
+        this.name = name;
         this.animation = animation;
-        this.items = items;
+        this.multipleAnimation = multipleAnimation;
         this.maxTime = maxTime;
-        this.spItems = spItems;
-        this.isPoint = isPoint;
+        this.awards = awards;
+        this.spAwards = spAwards;
         this.value = value;
+        this.sellType = sellType;
+        this.limitedTimes = limitedTimes;
+        this.isCheckFull = isCheckFull;
+    }
+    /**
+     * 旧版本数据结构反序列化
+     *
+     */
+    @Deprecated
+    public Lottery(String name,String animation,int maxTime,List<ItemStack> items,List<Integer> weights,List<ItemStack> spItems,List<Integer> spWeights,int value,boolean isPoint){
+        this.name = name;
+        this.animation = animation;
+        this.maxTime = maxTime;
+        this.items = items;
+        this.spItems = spItems;
+        this.weights = weights;
+        this.spWeights = spWeights;
+        this.value = value;
+        this.isPoint = isPoint;
     }
 
     public static Lottery getDefaultLottery(String name){
-        Lottery lottery = new Lottery("default", new ArrayList<>(),-1,new ArrayList<>(),true,0);
-        lottery.setName(name);
-        return lottery;
+        return new Lottery(name,"BoxAnimation","DefaultMultipleAnimation",-1, new ArrayList<>(), new ArrayList<>(),0,SellType.POINTS,0,false);
     }
 
-    public LotteryAnimation getAnimationObject(Player player, Lottery lottery, boolean isCmd) {
+    public LotteryAnimation getAnimationObject(Player player, Lottery lottery) {
         switch (animation){
-            case "SelectItemAnimation": return new SelectItemAnimation(player,lottery,isCmd);
+            case "MarqueeAnimation": return new MarqueeAnimation(player,lottery);
+            case "SelectItemAnimation": return new SelectItemAnimation(player,lottery);
+            case "ColorfulAnimation": return new ColorfulAnimation(player,lottery);
             case "BoxAnimation":
-            default: return new BoxAnimation(player,lottery,isCmd);
+            default: return new BoxAnimation(player,lottery);
         }
     }
 
-    public void open(Player player,boolean isCmd){
-        //抽奖
+    public MultipleAnimation getMultipleAnimationObject(Player player, Lottery lottery){
+        if(multipleAnimation==null)
+            multipleAnimation="DefaultMultipleAnimation";
+        switch (multipleAnimation){
+            case "MultipleSelectItemAnimation": return new MultipleSelectItemAnimation(player,lottery);
+            case "SimpleMultipleAnimation": return new SimpleMultipleAnimation(player,lottery);
+            case "DefaultMultipleAnimation":
+            default: return new DefaultMultipleAnimation(player,lottery);
+        }
+    }
+
+    /**
+     * 用于获取抽奖动画的描述
+     * @return 默认的抽奖动画实例
+     */
+    public LotteryAnimation getAnimationObject() {
+        return getAnimationObject(null,this);
+    }
+
+    public void open(Player player,boolean isCmd,boolean isMultiple){
         if(getCommonWeightSum()<=0){
             player.sendMessage(ChatColor.RED+LangUtils.PoolIsEmpty);
             return;
         }
+        player.sendMessage(ChatColor.GOLD+LangUtils.LotteryPrefix+ChatColor.GREEN+ LangUtils.LotteryInformation.replace("%time%",Integer.toString(TimesUtils.getCurrentTimes(player.getUniqueId(),getName()))));
+        //十连抽
+        if(isMultiple){
+            getMultipleAnimationObject(player,this).playAnimation();
+            if(!isCmd){
+                ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
+                if (item.getAmount() <= 10) {
+                    VersionAdapterUtils.setItemInMainHand(player,null);
+                } else {
+                    item.setAmount(item.getAmount()-10);
+                }
+            }
+        }else {
+            getAnimationObject(player,this).playAnimation();
 
-        TimesUtils.addTimes(player,getName());
-        getAnimationObject(player,this,isCmd).playAnimation();
+            if(!isCmd){
+                ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
+                if (item.getAmount() <= 1) {
+                    VersionAdapterUtils.setItemInMainHand(player,null);
+                } else {
+                    item.setAmount(item.getAmount()-1);
+                }
+            }
+        }
     }
 
 
@@ -86,6 +156,7 @@ public class Lottery {
         return new Custom();
     }
 
+    @Deprecated
     public void addItem(ItemStack item){
         if(items ==null)
             items = new ArrayList<>();
@@ -94,6 +165,7 @@ public class Lottery {
             weights = new ArrayList<>();
         weights.add(1);
     }
+    @Deprecated
     public void addSpItem(ItemStack item){
         if(spItems==null)
             spItems = new ArrayList<>();
@@ -103,11 +175,7 @@ public class Lottery {
         spWeights.add(1);
     }
 
-    public void delItem(int index){
-            items.remove(index);
-            weights.remove(index);
-    }
-
+    @Deprecated
     public void delSpItem(int index){
         spItems.remove(index);
         spWeights.remove(index);
@@ -115,23 +183,12 @@ public class Lottery {
 
 
     public int getAmount(){
-        return items.size();
+        return awards.size();
     }
 
     public int getSpAmount(){
-        return spItems.size();
+        return spAwards.size();
     }
-
-    public void changeWeight(int index,int weight){
-        this.weights.remove(index);
-        this.weights.add(index,weight);
-    }
-
-    public void changeSpWeight(int index,int weight){
-        this.weights.remove(index);
-        this.weights.add(index,weight);
-    }
-
 
     public int getWeightSum(){
         return getCommonWeightSum()+getSpWeightSum();
@@ -139,165 +196,116 @@ public class Lottery {
 
     public int getSpWeightSum(){
         int addition=0;
-        if(spWeights!=null)
-            for(Integer weight : spWeights)
-                addition += weight;
+        if(spAwards!=null)
+            for(Award award : spAwards)
+                addition += award.getWeight();
         return addition;
     }
     public int getCommonWeightSum(){
         int addition=0;
-        if(weights!=null)
-            for (Integer weight : weights)
-                addition += weight;
+        if(awards!=null)
+            for (Award award : awards)
+                addition += award.getWeight();
         return addition;
     }
 
+    @Deprecated
     public List<Integer> getSpWeights() {
         if(spWeights==null)
             spWeights = new ArrayList<>();
         return spWeights;
     }
 
+    @Deprecated
     public List<Integer> getWeights() {
         if(weights==null)
             weights = new ArrayList<>();
         return weights;
     }
 
-
-    public static void createLottery(Player player){
-        player.closeInventory();
-        Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
-            try{
-                player.sendMessage(ChatColor.RED+ "[XgpLottery]"+ChatColor.GREEN +LangUtils.CreateLottery);
-                player.sendMessage(ChatColor.RED+LangUtils.DontUseColor);
-                try{
-                    String name = XgpLottery.getInput(player).get(15, TimeUnit.SECONDS);
-                    name = name.trim();
-                    if(name.equals("cancel")){
-                        player.sendMessage(ChatColor.RED+LangUtils.WrongType);
-                        return;
-                    }
-                    if(XgpLottery.lotteryList.containsKey(name)){
-                        player.sendMessage(ChatColor.RED+LangUtils.LotteryAlreadyExists);
-                    }else if(!name.isEmpty()){
-                        XgpLottery.lotteryList.put(name,getDefaultLottery(name));
-                        player.sendMessage(ChatColor.YELLOW+LangUtils.CreateLotterySuccessfully.replace("%name%",name));
-                        SerializeUtils.saveLotteryData();
-                        Bukkit.getScheduler().runTask(XgpLottery.instance,()-> player.openInventory(new LotteryManageGui().getInventory()));
-                    }else{
-                        player.sendMessage(ChatColor.RED+LangUtils.WrongType);
-                    }
-                }catch (TimeoutException e){
-                    player.sendMessage(ChatColor.RED+ LangUtils.TimeOut);
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        });
-    }
-    public static void receiveWeight(Player player,Lottery lottery,int index,boolean isSpecial){
-        player.closeInventory();
-        Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
-            try{
-                player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN + LangUtils.ReceiveWeight);
-                try{
-                    String weight  = XgpLottery.getInput(player).get(15, TimeUnit.SECONDS);
-                    if(weight!=null&&Integer.parseInt(weight)>=0){
-                        if(isSpecial)
-                            lottery.changeSpWeight(index,Integer.parseInt(weight));
-                        else
-                            lottery.changeWeight(index,Integer.parseInt(weight));
-                        player.sendMessage(ChatColor.GREEN+LangUtils.ChangeWeightSuccessfully+weight+"!");
-                        new BukkitRunnable(){
-                            @Override
-                            public void run(){
-                                Inventory inventory;
-                                if(isSpecial)
-                                    inventory = new SpecialPoolGui(lottery).getInventory();
-                                else
-                                    inventory = new LotteryPoolGui(lottery).getInventory();
-                                Bukkit.getScheduler().runTask(XgpLottery.instance,()->player.openInventory(inventory));
-                            }
-                        }.runTaskAsynchronously(XgpLottery.instance);
-                        SerializeUtils.saveLotteryData();
-                    }else{
-                        player.sendMessage(ChatColor.RED+LangUtils.WrongType);
-                    }
-                }catch (TimeoutException e){
-                    player.sendMessage(ChatColor.RED+LangUtils.TimeOut);
-                }catch (NumberFormatException e){
-                    player.sendMessage(ChatColor.RED+LangUtils.WrongType);
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        });
+    public ItemStack getKeyItemStack(){
+        if(keyMaterial==null)
+            keyMaterial = NMSUtils.toNBTString(new ItemStack(Material.BONE));
+        return NMSUtils.toItem(keyMaterial);
     }
 
-
-    public static void setMaxTime(Player player,Lottery lottery){
-        player.closeInventory();
-        Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
-            try{
-                player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +LangUtils.SetMaxTime);
-                try{
-                    String times  = XgpLottery.getInput(player).get(15, TimeUnit.SECONDS);
-                    if(times!=null){
-                        lottery.setMaxTime(Integer.parseInt(times));
-                        player.sendMessage(ChatColor.GREEN+LangUtils.ChangeTimeSuccessfully+times+"!");
-                        new BukkitRunnable(){
-                            @Override
-                            public void run(){
-                                Inventory inventory = new LotteryManageGui().getInventory();
-                                Bukkit.getScheduler().runTask(XgpLottery.instance,()->player.openInventory(inventory));
-                            }
-                        }.runTaskAsynchronously(XgpLottery.instance);
-                        SerializeUtils.saveLotteryData();
-                    }else{
-                        player.sendMessage(ChatColor.RED+LangUtils.WrongType);
-                    }
-                }catch (TimeoutException e){
-                    player.sendMessage(ChatColor.RED+LangUtils.TimeOut);
-                }catch (NumberFormatException e){
-                    player.sendMessage(ChatColor.RED+LangUtils.WrongType);
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        });
+    public void setKeyItemStack(ItemStack itemStack) {
+        this.keyMaterial = NMSUtils.toNBTString(itemStack);
     }
 
-    public static void setValue(Player player,Lottery lottery){
-        player.closeInventory();
-        Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
-            try{
-                player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +LangUtils.SetValue);
-                try{
-                    String value  = XgpLottery.getInput(player).get(15, TimeUnit.SECONDS);
-                    if(value!=null){
-                        lottery.setValue(Integer.parseInt(value));
-                        player.sendMessage(ChatColor.GREEN+LangUtils.SetValueSuccessfully+value+"!");
-                        new BukkitRunnable(){
-                            @Override
-                            public void run(){
-                                Inventory inventory = new LotteryManageGui().getInventory();
-                                Bukkit.getScheduler().runTask(XgpLottery.instance,()->player.openInventory(inventory));
-                            }
-                        }.runTaskAsynchronously(XgpLottery.instance);
-                        SerializeUtils.saveLotteryData();
-                    }else{
-                        player.sendMessage(ChatColor.RED+LangUtils.WrongType);
-                    }
-                }catch (TimeoutException e){
-                    player.sendMessage(ChatColor.RED+ LangUtils.TimeOut);
-                }catch (NumberFormatException e){
-                    player.sendMessage(ChatColor.RED+LangUtils.WrongType);
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        });
+    public String getKeyName(){
+        if(keyName==null){
+            keyName = ChatColor.GOLD+name+"-"+LangUtils.KeyName;
+        }
+        return keyName;
     }
+    public void setKeyName(String keyName){
+        this.keyName = keyName;
+    }
+
+    public List<String> getKeyLore() {
+        if(keyLore==null){
+            keyLore = Collections.singletonList(ChatColor.GOLD + "✦" + ChatColor.AQUA + LangUtils.KeyLore);
+        }
+        return keyLore;
+    }
+
+    //
+    public ItemStack getTicketItemStack(){
+        if(ticketMaterial==null)
+            ticketMaterial = NMSUtils.toNBTString(new ItemStack(Material.PAPER));
+        return NMSUtils.toItem(ticketMaterial);
+    }
+
+    public void setTicketItemStack(ItemStack itemStack) {
+        this.ticketMaterial = NMSUtils.toNBTString(itemStack);
+    }
+
+    public String getTicketName(){
+        if(ticketName==null){
+            ticketName = ChatColor.GOLD+name+"-"+LangUtils.TicketName;
+        }
+        return ticketName;
+    }
+    public void setTicketName(String ticketName){
+        this.ticketName = ticketName;
+    }
+
+    public List<String> getTicketLore() {
+        if(ticketLore==null){
+            ticketLore = Collections.singletonList(ChatColor.GOLD + "✦" + ChatColor.AQUA + LangUtils.TicketLore);
+        }
+        return ticketLore;
+    }
+    @Deprecated
+    public boolean isKey(ItemStack itemStack){
+        return getKeyName().equals(new MyItem(itemStack).getDisplayName())&&getKeyLore().equals(new MyItem(itemStack).getLoreList());
+    }
+
+    public SellType getSellType() {
+        if(sellType==null){
+            if(isPoint){
+                sellType=SellType.POINTS;
+            }else {
+                sellType=SellType.MONEY;
+            }
+        }
+        return sellType;
+    }
+
+    public void changeSellType(){
+        SellType[] values = SellType.values();
+        sellType = values[(sellType.ordinal() + 1) % values.length];
+    }
+
+    public ItemStack showFakeItem(){
+        int item = getAmount();
+        int sp = getSpAmount();
+        Random random = new Random();
+        int next = random.nextInt(item+sp);
+        return next>=item?getSpAwards().get(next-item).getRecordDisplayItem().clone():getAwards().get(next).getRecordDisplayItem().clone();
+
+    }
+
 }
 

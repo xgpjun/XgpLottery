@@ -1,16 +1,15 @@
 package cn.xgp.xgplottery.Utils;
 
-import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryNbtConverter;
 import cn.xgp.xgplottery.Lottery.LotteryTimes;
 import cn.xgp.xgplottery.XgpLottery;
-import jdk.nashorn.internal.runtime.regexp.joni.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +24,7 @@ public class SqlUtils {
     public static String username;
     public static String password;
     private static Connection connection;
+
 
     public static void getConnection() {
         File LangConfigFile = new File(XgpLottery.instance.getDataFolder(),"database.yml");
@@ -208,6 +208,7 @@ public class SqlUtils {
     public static void convertToDatabase(){
         SerializeUtils.loadLotteryDataByFile();
         SerializeUtils.loadDataByFile();
+        SerializeUtils.loadRewardByFile();
 
         SqlUtils.enable=true;
         XgpLottery.instance.getConfig().set("enableDatabase",true);
@@ -249,7 +250,7 @@ public class SqlUtils {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
+        //total
         try {
             String query = "INSERT INTO `total` (uuid, lotteryName, times) VALUES (?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
@@ -267,16 +268,41 @@ public class SqlUtils {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        //lottery
         try {
             String query = "INSERT INTO `lottery` (lotteryData) VALUES (?)";
+            PreparedStatement statement = connection.prepareStatement(query);;
+            statement.setString(1,SerializeUtils.lotteryToJson(new ArrayList<>(XgpLottery.lotteryList.values())));
+            statement.execute();
+
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //rewards
+        try {
+            String query = "INSERT INTO `rewards` (`rewardData`) VALUES (?)";
+            PreparedStatement statement = connection.prepareStatement(query);;
+            statement.setString(1,SerializeUtils.rewardToJson(XgpLottery.rewards));
+            statement.execute();
+
+            statement.close();
+        }catch (SQLException e) {
+            e.printStackTrace();
+        }
+        //reward
+
+        try {
+            String query = "INSERT INTO `reward` (uuid, lotteryName, times) VALUES (?, ?, ?)";
             PreparedStatement statement = connection.prepareStatement(query);
 
-            List<LotteryNbtConverter> dataList = new ArrayList<>();
-            for(Lottery lottery:XgpLottery.lotteryList.values()){
-                dataList.add(new LotteryNbtConverter(lottery));
+            for (LotteryTimes lotteryTimes : XgpLottery.rewardsTimes) {
+                statement.setString(1, lotteryTimes.getUuid().toString());
+                statement.setString(2, lotteryTimes.getLotteryName());
+                statement.setInt(3, lotteryTimes.getTimes());
+                statement.addBatch(); // 添加到批处理中
             }
-            statement.setString(1,SerializeUtils.lotteryToJson(dataList));
-            statement.execute();
+            statement.executeBatch(); // 执行批处理
 
             statement.close();
         } catch (SQLException e) {
@@ -285,6 +311,7 @@ public class SqlUtils {
 
         SerializeUtils.loadLotteryData();
         SerializeUtils.loadData();
+        SerializeUtils.loadRewardData();
 
         File folder = new File(XgpLottery.instance.getDataFolder(), "Record");
         File[] files = folder.listFiles();
@@ -361,6 +388,46 @@ public class SqlUtils {
 
         SerializeUtils.saveDataByFile();
 
+        //rewards
+
+        try {
+            String query = "SELECT rewardData FROM rewards";
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                String json = resultSet.getString("rewardData");
+
+                File folder = new File(XgpLottery.instance.getDataFolder(), "Data");
+                if(!folder.exists()){
+                    folder.mkdirs();
+                }
+                File file = new File(folder, "RewardGifts.json");
+                try (OutputStream outputStream = Files.newOutputStream(file.toPath());
+                     Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
+                    writer.write(json);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        //reward
+        String rewardQuery = "SELECT `uuid`, `times`, `lotteryName` FROM `reward`";
+        try(Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(rewardQuery)) {
+            while (resultSet.next()) {
+                String uuid = resultSet.getString("uuid");
+                int times = resultSet.getInt("times");
+                String lotteryName = resultSet.getString("lotteryName");
+                XgpLottery.rewardsTimes.add(new LotteryTimes(lotteryName,UUID.fromString(uuid),times));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         //lottery
         String lotteryQuery = "SELECT `lotteryData` FROM `lottery`";
@@ -373,7 +440,7 @@ public class SqlUtils {
                     folder.mkdirs();
                 }
                 File file = new File(folder, "lottery.json");
-                try (OutputStream outputStream = new FileOutputStream(file);
+                try (OutputStream outputStream = Files.newOutputStream(file.toPath());
                      Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
                     writer.write(json);
                 } catch (IOException e) {
@@ -386,6 +453,7 @@ public class SqlUtils {
 
 
         //record
+
         String recordQuery = "SELECT `uuid`, `items`, `lotteryName` FROM `record`";
         try(Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(recordQuery)) {
@@ -413,7 +481,7 @@ public class SqlUtils {
 
     private static String readFile(File file) throws IOException {
         StringBuilder jsonBuilder = new StringBuilder();
-        try (InputStream inputStream = new FileInputStream(file);
+        try (InputStream inputStream = Files.newInputStream(file.toPath());
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
@@ -431,10 +499,15 @@ public class SqlUtils {
             ResultSet resultSet = statement.executeQuery(query);
             if (resultSet.next()) {
                 String lotteryData = resultSet.getString("lotteryData");
-                List<LotteryNbtConverter> dataList = SerializeUtils.lotteryFromJson(lotteryData);
-                for(LotteryNbtConverter lotteryNbtConverter:dataList){
-                    XgpLottery.lotteryList.put(lotteryNbtConverter.getName(),lotteryNbtConverter.toLottery());
+                if(ConfigSetting.versionToInt<120){
+                    List<LotteryNbtConverter> dataList = SerializeUtils.lotteryFromJson(lotteryData);
+                    for(LotteryNbtConverter lotteryNbtConverter:dataList){
+                        XgpLottery.lotteryList.put(lotteryNbtConverter.getName(),lotteryNbtConverter.toLottery());
+                    }
+                }else {
+                    XgpLottery.lotteryList = SerializeUtils.lotteryFromJson_new(lotteryData);
                 }
+
                 XgpLottery.log(LangUtils.LoadLotteryData);
             }
             resultSet.close();
@@ -444,11 +517,8 @@ public class SqlUtils {
         }
     }
     public static void saveLottery(){
-        List<LotteryNbtConverter> dataList = new ArrayList<>();
-        for(Lottery lottery:XgpLottery.lotteryList.values()){
-            dataList.add(new LotteryNbtConverter(lottery));
-        }
-        String json = SerializeUtils.lotteryToJson(dataList);
+
+        String json = SerializeUtils.lotteryToJson(new ArrayList<>(XgpLottery.lotteryList.values()));
         try {
             // 先查询是否存在记录
             String selectQuery = "SELECT `lotteryData` FROM lottery";
@@ -477,6 +547,51 @@ public class SqlUtils {
         }
     }
 
+    public static void loadReward(){
+        String query = "SELECT rewardData FROM rewards";
+        try {
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(query);
+            if (resultSet.next()) {
+                String rewardData = resultSet.getString("rewardData");
+                XgpLottery.rewards = SerializeUtils.rewardFromJson(rewardData);
+            }
+            resultSet.close();
+            statement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public static void saveReward(){
+        String json = SerializeUtils.rewardToJson(XgpLottery.rewards);
+        try {
+            // 先查询是否存在记录
+            String selectQuery = "SELECT `rewardData` FROM rewards";
+            PreparedStatement selectStatement = connection.prepareStatement(selectQuery);
+            ResultSet resultSet = selectStatement.executeQuery();
+
+            if (resultSet.next()) {
+                String UpdateQuery = "UPDATE rewards SET rewardData = ?";
+                PreparedStatement statement = connection.prepareStatement(UpdateQuery);
+                statement.setString(1,json);
+                statement.executeUpdate();
+                statement.close();
+
+            } else {
+                // 如果不存在记录，则插入新的数据
+                String insertQuery = "INSERT INTO `rewards` (`rewardData`) VALUES (?)";
+                PreparedStatement insertStatement = connection.prepareStatement(insertQuery);
+                insertStatement.setString(1, json);
+                insertStatement.executeUpdate();
+                insertStatement.close();
+            }
+            resultSet.close();
+            selectStatement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     private static void createTables() {
         try (Statement statement = connection.createStatement()) {
             // 创建表的 SQL 语句
@@ -485,12 +600,16 @@ public class SqlUtils {
             String sql3 = "CREATE TABLE IF NOT EXISTS `lottery` (lotteryData LONGTEXT NULL)";
             String sql4 = "CREATE TABLE IF NOT EXISTS `record` (uuid TEXT NULL, lotteryName TEXT NULL, items LONGTEXT NULL)";
             String sql5 = "CREATE TABLE IF NOT EXISTS `total` (uuid TEXT NULL, lotteryName TEXT NULL, times INT NULL)";
+            String sql6 = "CREATE TABLE IF NOT EXISTS `reward` (uuid TEXT NULL, lotteryName TEXT NULL, times INT NULL)";
+            String sql7 = "create table if not exists `rewards` (rewardData text null)";
 
             statement.executeUpdate(sql1);
             statement.executeUpdate(sql2);
             statement.executeUpdate(sql3);
             statement.executeUpdate(sql4);
             statement.executeUpdate(sql5);
+            statement.executeUpdate(sql6);
+            statement.executeUpdate(sql7);
         } catch (SQLException e) {
             e.printStackTrace();
         }

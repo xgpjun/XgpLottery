@@ -1,9 +1,9 @@
 package cn.xgp.xgplottery.Gui.Impl.Manage;
 
 import cn.xgp.xgplottery.Gui.LotteryGui;
-import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
+import cn.xgp.xgplottery.Utils.ReceiveUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -40,7 +40,7 @@ public class LotteryCreateGui extends LotteryGui {
             case 0: player.openInventory(new LotteryMenuGui().getInventory());break;
             //退出
             case 8: player.getOpenInventory().close();break;
-            case 22: Lottery.createLottery(player); break;
+            case 22: ReceiveUtils.createLottery(player); break;
             default:
         }
     }

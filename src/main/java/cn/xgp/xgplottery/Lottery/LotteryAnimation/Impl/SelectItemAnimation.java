@@ -5,74 +5,41 @@ import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Lottery.MyItem;
-import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
 import cn.xgp.xgplottery.Utils.GiveUtils;
 import cn.xgp.xgplottery.Utils.LangUtils;
-import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.XgpLottery;
-import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
 
 public class SelectItemAnimation extends LotteryAnimation {
 
-    public boolean stop = false;
-    private final Player player;
-    @Getter
-    private final Lottery lottery;
-    private final boolean isCommand;
-
-    @Getter
-    private ItemStack award ;
-    @Getter
-    ProbabilityCalculator calculator;
-
-
-    public SelectItemAnimation(Player player, Lottery lottery, boolean isCommand) {
-        this.player = player;
-        this.lottery = lottery;
-        this.isCommand = isCommand;
-
+    public SelectItemAnimation(Player player, Lottery lottery) {
+        super(player,lottery);
     }
 
     @Override
     public String toLore() {
         return LangUtils.SelectItemAnimation;
     }
-    @Override
-    public boolean isStop(){
-        return stop;
-    }
 
     @Override
     public void playAnimation() {
-        calculator = lottery.getCalculatorObject();
-        award = calculator.getAward(lottery,player);
+        awards.add(getOneAward());
 
         Inventory inventory = new SelectItemGui(this).loadGui().getInventory();
-        if(!isCommand){
-            ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
-
-            if (item.getAmount() <= 1) {
-                VersionAdapterUtils.setItemInMainHand(player,null);
-            } else {
-                item.setAmount(item.getAmount()-1);
-            }
-        }
         player.openInventory(inventory);
 
-        int taskID = Bukkit.getScheduler().runTaskLater(XgpLottery.instance, () -> {
-            if(!stop) {
+        taskID = Bukkit.getScheduler().runTaskLater(XgpLottery.instance, () -> {
+            if(!isStop()) {
                 player.playSound(player.getLocation(), finish, 1.0f, 1.0f);
-                inventory.setItem(new Random().nextInt(54), new MyItem(award).addEnchant().getItem());
-                GiveUtils.addItem(player,award.clone());
+                inventory.setItem(new Random().nextInt(54), new MyItem(awards.get(0).getRecordDisplayItem()).addEnchant().getItem());
+                GiveUtils.giveAward(player,awards);
                 calculator.sendMessage();
             }
-            stop = true;
+            setStop(true);
         }, 200).getTaskId();
         CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this);
         Bukkit.getPluginManager().registerEvents(closeListener,XgpLottery.instance);

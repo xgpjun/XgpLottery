@@ -9,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 public class RecordGui extends PlayerGui {
     int size;
@@ -25,21 +23,15 @@ public class RecordGui extends PlayerGui {
     Inventory inv;
     String lotteryName;
     List<ItemStack> itemList;
+    LotteryGui returnGui;
 
-    public RecordGui(Player player,String lotteryName){
+    public RecordGui(OfflinePlayer player, String lotteryName,LotteryGui returnGui){
         this.lotteryName = lotteryName;
         itemList = new LotteryRecord(player.getUniqueId(),lotteryName).getRecord();
         Collections.reverse(itemList);
         inv = Bukkit.createInventory(this,6*9, ChatColor.AQUA+ player.getName()+ChatColor.GOLD+ LangUtils.RecordTitle.replace("%lotteryName%",ChatColor.AQUA+ lotteryName+ChatColor.GOLD));
         size =  (int) Math.ceil( (double)itemList.size() / 45);
-
-    }
-    public RecordGui(OfflinePlayer player, String lotteryName){
-        this.lotteryName = lotteryName;
-        itemList = new LotteryRecord(player.getUniqueId(),lotteryName).getRecord();
-        Collections.reverse(itemList);
-        inv = Bukkit.createInventory(this,6*9, ChatColor.AQUA+ player.getName()+ChatColor.GOLD+ LangUtils.RecordTitle.replace("%lotteryName%",ChatColor.AQUA+ lotteryName+ChatColor.GOLD));
-        size =  (int) Math.ceil( (double)itemList.size() / 45);
+        this.returnGui = returnGui;
     }
 
     @Override
@@ -83,6 +75,8 @@ public class RecordGui extends PlayerGui {
             e.getWhoClicked().openInventory(getPage(this.page-1));
         }else if(e.getRawSlot()==53){
             e.getWhoClicked().openInventory(getPage(this.page+1));
+        }else if(e.getRawSlot()==49){
+            e.getWhoClicked().openInventory(returnGui.getInventory());
         }
     }
 }

@@ -19,7 +19,6 @@ public class ChangeCommand implements TabExecutor {
     /*
     /xl change 123
      */
-
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(!sender.hasPermission("xgplottery.manager")){
@@ -36,8 +35,9 @@ public class ChangeCommand implements TabExecutor {
             sender.sendMessage(ChatColor.RED+LangUtils.NotFoundLottery);
             return true;
         }
-        lottery.setPoint(!lottery.isPoint());
-        String str = lottery.isPoint()?LangUtils.Points:LangUtils.Money;
+
+        lottery.changeSellType();
+        String str = lottery.getSellType().getSellType();
         sender.sendMessage(ChatColor.GREEN+LangUtils.ChangeSaleTypeSuccessfully+ChatColor.AQUA+str);
         return true;
     }

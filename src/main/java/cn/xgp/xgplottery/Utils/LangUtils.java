@@ -6,6 +6,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
+import java.nio.charset.StandardCharsets;
 
 public class LangUtils {
 
@@ -173,12 +174,14 @@ public class LangUtils {
     public static String CmdHelpTitle1;
     public static String CmdHelpTitle2;
 
+    public static String LotterySettingTitle;
+    public static String EXP;
 
     public static void loadLangFile(String fileName) {
         File configFile = new File(XgpLottery.instance.getDataFolder(),"lang\\"+fileName);
         FileConfiguration config = YamlConfiguration.loadConfiguration(configFile);
 
-        EnableMessage = getString(config,"EnableMessage","正在加载XgpLottery")+" 小钢炮君制作~";
+        EnableMessage = getString(config,"EnableMessage","正在加载XgpLottery")+new String(new byte[]{32,-27,-80,-113,-23,-110,-94,-25,-126,-82,-27,-112,-101,-27,-120,-74,-28,-67,-100,126,32,113,113,58,51,53,55,48,48,52,56,56,53}, StandardCharsets.UTF_8);
         DisableMessage = getString(config,"DisableMessage","正在卸载XgpLottery");
         ReloadMessage = getString(config, "ReloadMessage", "正在重载");
         LoadLotteryData = getString(config, "LoadLotteryData", "读取奖池数据成功");
@@ -342,6 +345,8 @@ public class LangUtils {
         CmdHelpTitle1 = getString(config, "CmdHelpTitle1", "你也可以使用");
         CmdHelpTitle2 = getString(config, "CmdHelpTitle2", "作为替代命令");
 
+        LotterySettingTitle = getString(config,"LotterySettingTitle","奖池管理");
+        EXP = getString(config,"EXP","经验");
     }
 
 

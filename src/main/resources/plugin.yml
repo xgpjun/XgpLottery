@@ -1,7 +1,7 @@
 name: XgpLottery
 version: ${project.version}
 main: cn.xgp.xgplottery.XgpLottery
-api-version: 1.13
+api-version: '1.13'
 authors: [ 1badsobig ]
 description: A lottery plugin.
 
@@ -10,6 +10,7 @@ softdepend:
   - ParticleLib
   - PlayerPoints
   - Vault
+  - Multiverse-Core
 commands:
   xgplottery:
     description: "XgpLottery's main command"
@@ -27,4 +28,7 @@ permissions:
     default: not op
   xgplottery.show:
     description: "allow to open show GUI"
+    default: not op
+  xgplottery.reward:
+    description: "allow to open reward GUI"
     default: not op

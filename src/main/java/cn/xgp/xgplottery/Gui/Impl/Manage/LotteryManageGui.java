@@ -1,10 +1,8 @@
 package cn.xgp.xgplottery.Gui.Impl.Manage;
 
-import cn.xgp.xgplottery.Gui.Impl.Pool.LotteryPoolGui;
-import cn.xgp.xgplottery.Gui.Impl.Pool.SpecialPoolGui;
-import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
+import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
@@ -14,41 +12,50 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
-//管理奖池GUI
+
+import java.util.ArrayList;
+import java.util.List;
+
+//奖池列表
 public class LotteryManageGui extends LotteryGui {
     private final Inventory inv = Bukkit.createInventory(this,6*9,ChatColor.GOLD+LangUtils.ManageButton1);
-
+    int page;
+    int size;
     @Override
     public @NotNull Inventory getInventory() {
-        loadGui();
-        return inv;
+        return getPage(1);
     }
 
     @Override
     public LotteryGui loadGui() {
         //最大4*7
+        setBorder(inv);
+        inv.setItem(45,previousPage);
+        inv.setItem(53,nextPage);
+        return this;
+    }
+
+    public Inventory getPage(int page){
+        size =(int) Math.ceil( (double)XgpLottery.lotteryList.size() / 28);
+        this.page = Math.max(1, Math.min(page, size));
+        inv.clear();
+        loadGui();
+
+
         int index = 0;
-        for(Lottery lottery:XgpLottery.lotteryList.values()){
-            int maxTime = lottery.getMaxTime();
-            String mt = maxTime>0? String.valueOf(maxTime) :LangUtils.NotSetMaxTime;
-            String sellType = lottery.isPoint()?ChatColor.AQUA+LangUtils.Points:ChatColor.AQUA+LangUtils.Money;
+        List<Lottery> list = new ArrayList<>(XgpLottery.lotteryList.values());
+        for (int i = (this.page - 1) * 28; i<list.size(); i++){
+            Lottery lottery = list.get(i);
             inv.setItem(slot[index],new MyItem(Material.CHEST)
                     .setDisplayName(ChatColor.BLUE+LangUtils.PoolButton1+ChatColor.AQUA + lottery.getName())
-                    .setLore(ChatColor.GOLD+ LangUtils.PoolButton2+ChatColor.RESET+""+ChatColor.GREEN +mt,
-                            ChatColor.GOLD+LangUtils.PoolButton3+ChatColor.AQUA+sellType +ChatColor.GOLD+LangUtils.Price+ChatColor.AQUA+lottery.getValue(),
-                            ChatColor.GOLD+LangUtils.PoolButton4+ChatColor.AQUA+lottery.getAnimationObject(null,null,true).toLore(),
-                            ChatColor.AQUA +LangUtils.PoolButton5,
-                            ChatColor.AQUA +LangUtils.PoolButton6)
+                    .setLore(ChatColor.BLUE+ "点击进入设置")
                     .getItem());
-
             index++;
             if(index==4*7)
                 break;
         }
-        setBorder(inv);
-        return this;
+        return inv;
     }
     public void handleClick(InventoryClickEvent e){
         Player player = (Player) e.getWhoClicked();
@@ -57,24 +64,18 @@ public class LotteryManageGui extends LotteryGui {
             case 0: player.openInventory(new LotteryMenuGui().getInventory());break;
             //退出
             case 8: player.getOpenInventory().close();break;
+            case 45:e.getWhoClicked().openInventory(getPage(this.page-1));break;
+            case 53:e.getWhoClicked().openInventory(getPage(this.page+1));break;
             default:
         }
         ItemStack item = e.getCurrentItem();
         if(item !=null&&item.getType().equals(Material.CHEST)){
-            ItemMeta mata = item.getItemMeta();
-            if(mata!=null){
-                Lottery lottery = XgpLottery.lotteryList.get(mata.getDisplayName().split("§b")[1]);
-                //设置保底数
-                if(e.isShiftClick()&&e.isLeftClick()){
-                    Lottery.setMaxTime(player,lottery);
-                }else if(e.isShiftClick()&&e.isRightClick()){
-                    Lottery.setValue(player,lottery);
-                } else if(e.isLeftClick()&&!e.isShiftClick()){
-                    player.openInventory(new LotteryPoolGui(lottery).getInventory());
-                }else if(e.isRightClick()&&!e.isShiftClick()){
-                    player.openInventory(new SpecialPoolGui(lottery).getInventory());
-                }
-            }
+            int index = findSlot(e.getRawSlot());
+            if(index==-1)
+                return;
+            Lottery lottery = new ArrayList<>(XgpLottery.lotteryList.values()).get((this.page-1)*28+index) ;
+            player.openInventory(new LotterySetting(lottery.getName()).getInventory());
+
         }
     }
 }

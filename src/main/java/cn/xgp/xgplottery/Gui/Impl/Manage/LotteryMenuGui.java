@@ -1,17 +1,17 @@
 package cn.xgp.xgplottery.Gui.Impl.Manage;
 
 
+import cn.xgp.xgplottery.Gui.Impl.Reward.RewardGui;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
-import cn.xgp.xgplottery.Utils.nmsUtils;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.jetbrains.annotations.NotNull;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.NotNull;
 
 //输入menu之后显示的管理菜单
 public class LotteryMenuGui extends LotteryGui {
@@ -26,12 +26,6 @@ public class LotteryMenuGui extends LotteryGui {
     public LotteryGui loadGui(){
         setBorder(Menu);
         //管理奖池
-        Material command;
-        if(nmsUtils.versionToInt<13){
-            command = Material.valueOf("COMMAND");
-        }else {
-            command = Material.COMMAND_BLOCK;
-        }
 
         MyItem manageButton = new MyItem(command);
         Menu.setItem(20,manageButton
@@ -44,6 +38,11 @@ public class LotteryMenuGui extends LotteryGui {
                 .setDisplayName(ChatColor.RED+LangUtils.CreateButton1)
                 .setLore(ChatColor.YELLOW+LangUtils.CreateButton2)
                 .getItem());
+
+        Menu.setItem(24,new MyItem(Material.CHEST).setDisplayName(ChatColor.AQUA+"累抽奖励设置")
+                .addLore("§7[§6 $ §7] §b点击进入")
+                .getItem());
+
         return this;
     }
 
@@ -67,6 +66,7 @@ public class LotteryMenuGui extends LotteryGui {
             case 20: player.openInventory(new LotteryManageGui().getInventory());break;
             //打开创建界面
             case 22: player.openInventory(new LotteryCreateGui().getInventory());break;
+            case 24: player.openInventory(new RewardGui().getInventory()); break;
             default:
         }
     }

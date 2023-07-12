@@ -74,7 +74,7 @@ public class GiveCommand implements TabExecutor {
                 sender.sendMessage(ChatColor.GREEN+LangUtils.GiveSuccessfully+player.getName());
                 break;
             case "open":
-                GiveUtils.open(player, lotteryName);
+                GiveUtils.open(player, lotteryName,false);
                 sender.sendMessage(ChatColor.GREEN+LangUtils.GiveSuccessfully+player.getName());
                 break;
             default:

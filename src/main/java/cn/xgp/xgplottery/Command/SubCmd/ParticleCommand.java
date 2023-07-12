@@ -4,7 +4,7 @@ import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Lottery.BoxParticle;
 import cn.xgp.xgplottery.Utils.ConfigSetting;
 import cn.xgp.xgplottery.Utils.LangUtils;
-import cn.xgp.xgplottery.Utils.nmsUtils;
+import cn.xgp.xgplottery.Utils.NMSUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -24,7 +24,6 @@ public class ParticleCommand implements TabExecutor {
      * /xl particle show
      * /xl particle clear
      */
-
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(!(sender instanceof Player &&sender.hasPermission("xgplottery.manager"))){
@@ -40,7 +39,7 @@ public class ParticleCommand implements TabExecutor {
             return true;
         }
 
-        if(nmsUtils.versionToInt<9){
+        if(NMSUtils.versionToInt<9){
             sender.sendMessage(ChatColor.RED+LangUtils.CantEnableParticle);
             return true;
         }

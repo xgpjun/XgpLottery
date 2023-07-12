@@ -2,10 +2,7 @@ package cn.xgp.xgplottery.Command.SubCmd;
 
 import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Gui.Impl.RecordGui;
-import cn.xgp.xgplottery.Lottery.BoxParticle;
-import cn.xgp.xgplottery.Utils.ConfigSetting;
 import cn.xgp.xgplottery.Utils.LangUtils;
-import cn.xgp.xgplottery.Utils.nmsUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -15,11 +12,11 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.scheduler.BukkitRunnable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RecordCommand implements TabExecutor {
     /***
@@ -48,7 +45,7 @@ public class RecordCommand implements TabExecutor {
         }
         if(!(sender.hasPermission("xgplottery.manager"))||args.length==2){
             Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
-                Inventory inv = new RecordGui(player,args[1]).getInventory();
+                Inventory inv = new RecordGui(player,args[1],null).getInventory();
                 Bukkit.getScheduler().runTask(XgpLottery.instance, () -> player.openInventory(inv));
             });
             return true;
@@ -56,7 +53,7 @@ public class RecordCommand implements TabExecutor {
 
         OfflinePlayer p = Bukkit.getOfflinePlayer(args[2]);
 
-        player.openInventory(new RecordGui(p,args[1]).getInventory());
+        player.openInventory(new RecordGui(p,args[1],null).getInventory());
 
         return true;
 

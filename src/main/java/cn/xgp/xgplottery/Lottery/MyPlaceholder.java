@@ -4,15 +4,9 @@ import cn.xgp.xgplottery.Utils.ConfigSetting;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.TimesUtils;
 import cn.xgp.xgplottery.XgpLottery;
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.UUID;

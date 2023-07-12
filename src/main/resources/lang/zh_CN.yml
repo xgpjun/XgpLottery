@@ -30,12 +30,12 @@ TimeOut: "给你输入的时间已经过了，已取消"
 ReceiveWeight: "请输入新的权重,可以为0。输入‘cancel’取消："
 ChangeWeightSuccessfully: "成功将权重修改为:"
 SetMaxTime: "请输入新的保底次数,输入-1为取消保底次数。输入‘cancel’取消"
-ChangeTimeSuccessfully: "成功将保底次数修改为:"
+ChangeTimeSuccessfully: "成功修改为:"
 SetValue: "请输入新的价格,输入0为取消售卖。输入‘cancel’取消"
 SetValueSuccessfully: "成功将价格次数修改为:"
 LotteryPrefix: "[抽奖小助手]"
 LotteryInformation: "这是你的第%time%次抽奖！"
-BroadcastMsg: "%player% &a在奖池：&b%lotteryName% &a抽到了保底物品，这是他的第&b %time% &a次抽奖"
+BroadcastMsg: "%player% &a在奖池：&b%lotteryName% &a抽到了一个特别的物品，这是他的第&b %time% &a次抽奖"
 BroadcastNotEnableMsg: "你抽到了保底物品！"
 SelectItemAnimation: "物品选择动画"
 ScrollingAnimation: "物品滚动动画"
@@ -90,12 +90,12 @@ WeightSum: "总权重"
 DontHaveGuaranteedAward1: "不可以捏"
 DontHaveGuaranteedAward2: "本奖池还不存在保底物品"
 AnvilText1: "操作指南"
-AnvilText2: "空手左键点击本物品返回列表"
+AnvilText2: "空手点击返回"
 AnvilText3: "右键点击本物品切换售卖方式"
 AnvilText4: "出售方式："
-AnvilText5: "拖动物品点击加入物品"
-AnvilText6: "shift+右键点击[奖品]删除物品"
-AnvilText7: "左键点击[奖品]设置权重（越小概率越低）"
+AnvilText5: "拖动物品到此处点击加入物品"
+AnvilText6: "shift+右键点击删除物品"
+AnvilText7: "左键点击设置权重（越小概率越低）"
 AnvilText8: "Shift+右键点击选择抽奖动画"
 LotteryIsFull: "奖池已满 ，请删除一些后继续添加"
 MenuTitle: "XgpLottery管理菜单"
@@ -162,8 +162,10 @@ CmdConvert: "将本地数据文件上传到数据库(转换为文件)。(请在�
 CmdHelpTitle1: "你也可以使用"
 CmdHelpTitle2: "作为替代命令"
 
+### following are additions in version 1.1.2
 
-
+LotterySettingTitle: "奖池设置"
+EXP: "经验"
 
 
 

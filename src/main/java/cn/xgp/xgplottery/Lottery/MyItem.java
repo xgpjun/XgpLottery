@@ -1,7 +1,7 @@
 package cn.xgp.xgplottery.Lottery;
 
 import cn.xgp.xgplottery.Utils.LangUtils;
-import cn.xgp.xgplottery.Utils.nmsUtils;
+import cn.xgp.xgplottery.Utils.NMSUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -10,7 +10,12 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+
+
 
 public class MyItem {
     private ItemStack item;
@@ -34,9 +39,17 @@ public class MyItem {
         itemMeta.setDisplayName(DisplayName);
         return this;
     }
+    public String getDisplayName(){
+        return itemMeta.getDisplayName();
+    }
 
     public MyItem setLore(String... lore){
         itemMeta.setLore(Arrays.asList(lore));
+        return this;
+    }
+
+    public MyItem setLore(List<String> lore){
+        itemMeta.setLore(lore);
         return this;
     }
 
@@ -55,13 +68,13 @@ public class MyItem {
         return this;
     }
 
-    private List<String> getLoreList() {
+    public List<String> getLoreList() {
         List<String> rawLore = itemMeta.getLore();
         return (rawLore != null) ? new ArrayList<>(rawLore) : new ArrayList<>();
     }
 
     public MyItem addLore(String... lore){
-        return insertLore(-1,lore);
+        return insertLore(getLoreList().size(),lore);
     }
 
     public MyItem setAmount(int amount){
@@ -73,6 +86,7 @@ public class MyItem {
     public ItemStack getItem() {
         item.setItemMeta(itemMeta);
         return item;
+
     }
 
     public void setItem(ItemStack item) {
@@ -82,7 +96,7 @@ public class MyItem {
 
     public MyItem addEnchant(){
         itemMeta.addEnchant(Enchantment.ARROW_INFINITE,19,true);
-        if(nmsUtils.versionToInt>7)
+        if(NMSUtils.versionToInt>7)
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         return this;
     }
@@ -95,6 +109,10 @@ public class MyItem {
             addEnchant();
         }
         return getItem();
+    }
+
+    public static ItemStack getMissingItem(){
+        return new MyItem(Material.STONE).setDisplayName(ChatColor.RED+ "Missing Item!").setLore(ChatColor.AQUA+"If you see this line of lore").addLore(ChatColor.AQUA+ "means the item has missed enchantments/material.").getItem();
     }
 
 }

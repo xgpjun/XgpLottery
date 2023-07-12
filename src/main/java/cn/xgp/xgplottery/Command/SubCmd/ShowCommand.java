@@ -23,9 +23,10 @@ public class ShowCommand implements TabExecutor {
 
             return true;
         }
-        if(args.length!=2){
+        if(args.length!=2&&args.length!=3){
             sender.sendMessage(ChatColor.RED+LangUtils.WrongInput);
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery show "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdShow);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery show "+LangUtils.LotteryName+" sp"+"\n" + ChatColor.GREEN + LangUtils.CmdShow);
             return true;
         }
         String name = args[1];
@@ -35,7 +36,13 @@ public class ShowCommand implements TabExecutor {
             return true;
         }
         Player player = ((Player) sender);
-        player.openInventory(new LotteryPoolShow(lottery).getInventory());
+        if(args.length==3){
+            player.openInventory(new LotteryPoolShow(lottery,lottery.getSpAwards(),null).getInventory());
+        }else {
+            player.openInventory(new LotteryPoolShow(lottery,lottery.getAwards(),null).getInventory());
+        }
+
+
 
 
         return true;

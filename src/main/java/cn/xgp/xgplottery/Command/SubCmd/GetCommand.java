@@ -1,8 +1,10 @@
 package cn.xgp.xgplottery.Command.SubCmd;
 
 import cn.xgp.xgplottery.Command.XgpLotteryCommand;
+import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
+import cn.xgp.xgplottery.Utils.NMSUtils;
 import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
@@ -25,7 +27,6 @@ public class GetCommand implements TabExecutor {
      * /xl get ticket 123
      * /xl get key 123
      */
-
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if(!(sender instanceof Player &&sender.hasPermission("xgplottery.manager"))){
@@ -46,21 +47,24 @@ public class GetCommand implements TabExecutor {
             return true;
         }
         ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
+        Lottery lottery = XgpLottery.lotteryList.get(name);
         if(item.getType()== Material.AIR){
             player.sendMessage(ChatColor.RED+LangUtils.NotFoundItemInHand);
             return true;
         }
         MyItem guiItem = new MyItem(item);
         if(args[1].equals("ticket")){
-            guiItem.setDisplayName(ChatColor.GOLD+name+"-"+LangUtils.TicketName)
-                    .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+LangUtils.TicketLore)
+            guiItem.setDisplayName(lottery.getTicketName())
+                    .setLore(lottery.getTicketLore())
                     .addEnchant();
+            VersionAdapterUtils.setItemInMainHand(player, NMSUtils.addTag( guiItem.getItem(),false,name));
+
         }else {
-            guiItem.setDisplayName(ChatColor.GOLD+name+"-"+LangUtils.KeyName)
-                    .setLore(ChatColor.GOLD+"✦"+ChatColor.AQUA+LangUtils.KeyLore)
+            guiItem.setDisplayName(lottery.getKeyName())
+                    .setLore(lottery.getKeyName())
                     .addEnchant();
+            VersionAdapterUtils.setItemInMainHand(player, NMSUtils.addTag( guiItem.getItem(),true,name));
         }
-        VersionAdapterUtils.setItemInMainHand(player,guiItem.getItem());
         return true;
     }
     @Nullable

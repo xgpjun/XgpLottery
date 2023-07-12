@@ -5,7 +5,10 @@ import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TimesUtils {
@@ -210,5 +213,34 @@ public class TimesUtils {
         }else {
             SqlUtils.clearCurrentTimes(lotteryTimes);
         }
+    }
+
+    public static void addReceiveTimes(Player player,String name){
+        if(!SqlUtils.enable){
+            LotteryTimes lotteryTimes = getReceiveTimes(player.getUniqueId(), name);
+            if(lotteryTimes==null){
+                lotteryTimes = new LotteryTimes(name,player.getUniqueId(),0);
+                XgpLottery.rewardsTimes.add(lotteryTimes);
+            }
+            lotteryTimes.setTimes(lotteryTimes.getTimes() + 1);
+        }
+        else {
+            SqlUtils.addTimes(String.valueOf(player.getUniqueId()),name,"reward");
+        }
+    }
+    public static LotteryTimes getReceiveTimes(UUID uuid,String name){
+        LotteryTimes result =null;
+        if(!SqlUtils.enable){
+            if(!XgpLottery.rewardsTimes.isEmpty())
+                for(LotteryTimes lotteryTimes: XgpLottery.rewardsTimes){
+                    if(lotteryTimes.getUuid().equals(uuid)&&lotteryTimes.getLotteryName().equals(name)){
+                        result = lotteryTimes;
+                    }
+                }
+        }else {
+            int times = SqlUtils.getOneTimes("reward",uuid.toString(),name);
+            result = new LotteryTimes(name,uuid,times);
+        }
+        return result;
     }
 }

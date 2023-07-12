@@ -28,6 +28,7 @@ public class XgpLotteryCommand implements TabExecutor {
         registerSubCommand("particle",new ParticleCommand());
         registerSubCommand("reload",new ReloadCommand());
         registerSubCommand("record",new RecordCommand());
+        registerSubCommand("reward",new RewardCommand());
         registerSubCommand("shop",new ShopCommand());
         registerSubCommand("show",new ShowCommand());
         registerSubCommand("top",new TopCommand());

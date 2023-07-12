@@ -1,6 +1,7 @@
 package cn.xgp.xgplottery.Command.SubCmd;
 
 import cn.xgp.xgplottery.Command.XgpLotteryCommand;
+import cn.xgp.xgplottery.Lottery.Award;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
@@ -56,14 +57,14 @@ public class AddCommand implements TabExecutor {
                 player.sendMessage(ChatColor.RED+LangUtils.LotteryIsFull);
                 return true;
             }
-            lottery.addItem(item.clone());
+            lottery.getAwards().add(new Award(item));
             player.sendMessage(ChatColor.GREEN+LangUtils.AddItemSuccessfully);
         }else {
             if(lottery.getSpAmount()>=45){
                 player.sendMessage(ChatColor.RED+LangUtils.LotteryIsFull);
                 return true;
             }
-            lottery.addSpItem(item.clone());
+            lottery.getSpAwards().add(new Award(item));
             System.out.println(item.getClass());
             player.sendMessage(ChatColor.GREEN+LangUtils.AddItemSuccessfully);
         }

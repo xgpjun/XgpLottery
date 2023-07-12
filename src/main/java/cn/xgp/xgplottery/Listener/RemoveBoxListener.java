@@ -2,8 +2,8 @@ package cn.xgp.xgplottery.Listener;
 
 import cn.xgp.xgplottery.Utils.BoxParticleUtils;
 import cn.xgp.xgplottery.Utils.LangUtils;
-import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
+import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import lombok.AllArgsConstructor;
 import lombok.Data;

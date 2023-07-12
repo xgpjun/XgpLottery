@@ -9,12 +9,12 @@ import java.util.UUID;
 @AllArgsConstructor
 public class LotteryTimes {
 
-    private String lotteryName;
+    private String LotteryName;
     private UUID uuid;
     private int times;
 
-    public LotteryTimes(UUID uuid,String lotteryName){
-        this( lotteryName,uuid,0);
+    public LotteryTimes(UUID uuid,String name){
+        this( name,uuid,0);
     }
 
     public LotteryTimes(UUID uuid){
