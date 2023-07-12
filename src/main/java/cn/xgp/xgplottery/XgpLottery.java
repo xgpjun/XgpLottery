@@ -190,7 +190,7 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
 
 
     @Override
-    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, @NotNull byte[] message) {
+    public void onPluginMessageReceived(@NotNull String channel, @NotNull Player player, byte @NotNull [] message) {
         if (!channel.equals("BungeeCord")) {
             return;
         }
