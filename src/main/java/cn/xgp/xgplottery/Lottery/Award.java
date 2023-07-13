@@ -46,7 +46,10 @@ public class Award {
     }
 
     public ItemStack getRecordDisplayItem(){
-        MyItem i = new MyItem(item).setDisplayName(displayName);
+        MyItem i = new MyItem(item);
+        if(displayName!=null){
+            i.setDisplayName(displayName);
+        }
         if(!commands.isEmpty()){
             i.addLore(ChatColor.BLUE+ "执行命令：");
             for (int x =0;x<commands.size();x++){

@@ -9,7 +9,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class LotteryTimes {
 
-    private String LotteryName;
+    private String lotteryName;
     private UUID uuid;
     private int times;
 

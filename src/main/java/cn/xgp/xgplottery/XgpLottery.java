@@ -194,9 +194,6 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
         if (!channel.equals("BungeeCord")) {
             return;
         }
-        System.out.println(123);
-        System.out.println(Arrays.toString(message));
-
         ByteArrayDataInput in = ByteStreams.newDataInput(message);
         String subChannel = in.readUTF();
         if (subChannel.equals("XgpLottery")) {
