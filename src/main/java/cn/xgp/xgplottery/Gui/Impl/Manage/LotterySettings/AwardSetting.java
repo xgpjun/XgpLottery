@@ -83,7 +83,7 @@ public class AwardSetting extends LotteryGui {
 
         //物品显示名称（在奖池预览）
         String displayName = award.getDisplayName()!=null?award.getDisplayName():ChatColor.GOLD+"暂无展示名";
-        inv.setItem(23,new MyItem(Material.WRITABLE_BOOK)
+        inv.setItem(23,new MyItem(writable_book)
                 .setDisplayName(displayName)
                 .addLore(ChatColor.BLUE+"设置: "+ChatColor.AQUA+"左键点击")
                 .addLore(ChatColor.BLUE+"用于奖池预览与播报模块")

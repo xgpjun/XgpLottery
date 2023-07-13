@@ -245,7 +245,7 @@ public class Lottery {
 
     public List<String> getKeyLore() {
         if(keyLore==null){
-            keyLore = Collections.singletonList(ChatColor.GOLD + "✦" + ChatColor.AQUA + LangUtils.KeyLore);
+            keyLore = new ArrayList<>(Collections.singletonList(ChatColor.GOLD + "✦" + ChatColor.AQUA + LangUtils.KeyLore));
         }
         return keyLore;
     }
@@ -273,7 +273,7 @@ public class Lottery {
 
     public List<String> getTicketLore() {
         if(ticketLore==null){
-            ticketLore = Collections.singletonList(ChatColor.GOLD + "✦" + ChatColor.AQUA + LangUtils.TicketLore);
+            ticketLore = new ArrayList<>(Collections.singletonList(ChatColor.GOLD + "✦" + ChatColor.AQUA + LangUtils.TicketLore));
         }
         return ticketLore;
     }
