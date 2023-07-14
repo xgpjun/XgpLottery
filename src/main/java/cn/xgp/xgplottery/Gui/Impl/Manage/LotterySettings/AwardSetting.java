@@ -47,11 +47,14 @@ public class AwardSetting extends LotteryGui {
                 .getItem());
         //是否给与物品
         String isGiveItem = award.isGiveItem()?"是":"否";
-        inv.setItem(28,new MyItem(item).setDisplayName(ChatColor.GOLD+"是否给予物品")
+        MyItem guiItem = new MyItem(item).setDisplayName(ChatColor.GOLD+"是否给予物品")
                 .setLore(ChatColor.BLUE+"当前状态："+ChatColor.AQUA+isGiveItem)
                 .addLore(ChatColor.BLUE+"切换: "+ChatColor.AQUA+"左键")
-                .setAmount(1)
-                .getItem());
+                .setAmount(1);
+        if(award.isGiveItem()){
+            guiItem.addEnchant();
+        }
+        inv.setItem(28,guiItem.getItem());
 
         //指令
         inv.setItem(12,new MyItem(Material.PAPER).setDisplayName(ChatColor.GOLD+"奖池指令")
@@ -60,10 +63,13 @@ public class AwardSetting extends LotteryGui {
                 .getItem());
         //是否执行指令
         String isExecuteCommands = award.isExecuteCommands()?"是":"否";
-        inv.setItem(21,new MyItem(command).setDisplayName(ChatColor.GOLD+"是否执行指令")
+        guiItem = new MyItem(command).setDisplayName(ChatColor.GOLD+"是否执行指令")
                 .setLore(ChatColor.BLUE+"当前状态："+ChatColor.AQUA+isExecuteCommands)
-                .addLore(ChatColor.BLUE+"切换状态: "+ChatColor.AQUA+"点击本物品切换状态")
-                .getItem());
+                .addLore(ChatColor.BLUE+"切换状态: "+ChatColor.AQUA+"点击本物品切换状态");
+        if(award.isExecuteCommands()){
+            guiItem.addEnchant();
+        }
+        inv.setItem(21,guiItem.getItem());
         //添加指令
         inv.setItem(30,new MyItem(command).setDisplayName(ChatColor.GOLD+"添加奖池指令")
                 .addLore(ChatColor.BLUE+"添加: "+ChatColor.AQUA+"左键点击")
@@ -76,10 +82,13 @@ public class AwardSetting extends LotteryGui {
                 .getItem());
         //是否播报
         String isBroadCast = award.isBroadCast()?"是":"否";
-        inv.setItem(14,new MyItem(Material.NOTE_BLOCK).setDisplayName(ChatColor.GOLD+"是否播报")
+        guiItem = new MyItem(Material.NOTE_BLOCK).setDisplayName(ChatColor.GOLD+"是否播报")
                 .setLore(ChatColor.BLUE+"当前状态："+ChatColor.AQUA+isBroadCast)
-                .addLore(ChatColor.BLUE+"切换: "+ChatColor.AQUA+"左键点击")
-                .getItem());
+                .addLore(ChatColor.BLUE+"切换: "+ChatColor.AQUA+"左键点击");
+        if(award.isBroadCast()){
+            guiItem.addEnchant();
+        }
+        inv.setItem(14,guiItem.getItem());
 
         //物品显示名称（在奖池预览）
         String displayName = award.getDisplayName()!=null?award.getDisplayName():ChatColor.GOLD+"暂无展示名";

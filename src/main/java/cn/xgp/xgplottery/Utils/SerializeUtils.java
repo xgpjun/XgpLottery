@@ -120,6 +120,8 @@ public class SerializeUtils {
             }  catch (Exception e) {
                 XgpLottery.warning(LangUtils.LoadFileError + e.getMessage());
             }
+        }else {
+            XgpLottery.rewards = new ArrayList<>();
         }
     }
 
@@ -158,6 +160,8 @@ public class SerializeUtils {
             } catch (Exception e) {
                 XgpLottery.warning(LangUtils.LoadFileError + e.getMessage());
             }
+        }else {
+            XgpLottery.lotteryBoxList = new CopyOnWriteArrayList<>();
         }
         for(LotteryBox lotteryBox :XgpLottery.lotteryBoxList){
             XgpLottery.locations.add(lotteryBox.getLocation());
@@ -187,37 +191,17 @@ public class SerializeUtils {
         if(!folder.exists()){
             folder.mkdirs();
         }
-
         File file2 = new File(folder, "current.json");
-        try (OutputStream outputStream = Files.newOutputStream(file2.toPath());
-             Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
-            writer.write(timesToJson(XgpLottery.currentTime));
-        } catch (IOException e) {
-            XgpLottery.warning(LangUtils.SaveFileError + e.getMessage());
-        }
-
+        saveTimesByFile(file2,XgpLottery.currentTime);
         File file3 = new File(folder, "total.json");
-        try (OutputStream outputStream = Files.newOutputStream(file3.toPath());
-             Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
-            writer.write(timesToJson(XgpLottery.totalTime));
-        } catch (IOException e) {
-            XgpLottery.warning(LangUtils.SaveFileError + e.getMessage());
-        }
+        saveTimesByFile(file3,XgpLottery.totalTime);
         File file4 = new File(folder,"all.json");
-        try (OutputStream outputStream = Files.newOutputStream(file4.toPath());
-             Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
-            writer.write(timesToJson(XgpLottery.allTimes));
-        } catch (IOException e) {
-            XgpLottery.warning(LangUtils.SaveFileError + e.getMessage());
-        }
+        saveTimesByFile(file4,XgpLottery.allTimes);
         File file5 = new File(folder,"reward.json");
-        try (OutputStream outputStream = Files.newOutputStream(file5.toPath());
-             Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
-            writer.write(timesToJson(XgpLottery.rewardsTimes));
-        } catch (IOException e) {
-            XgpLottery.warning(LangUtils.SaveFileError + e.getMessage());
-        }
+        saveTimesByFile(file5,XgpLottery.rewardsTimes);
     }
+
+
 
     public static void loadDataByFile(){
         File folder = new File(XgpLottery.instance.getDataFolder(), "Data");
@@ -227,17 +211,30 @@ public class SerializeUtils {
         File file2 = new File(folder, "current.json");
         File file3 = new File(folder, "total.json");
         File file4 = new File(folder,"all.json");
+        File file5 = new File(folder,"reward.json");
+        XgpLottery.currentTime = loadTimesByFile(file2);
+        XgpLottery.totalTime = loadTimesByFile(file3);
+        XgpLottery.allTimes = loadTimesByFile(file4);
+        XgpLottery.rewardsTimes = loadTimesByFile(file5);
+    }
 
-        if(file2.exists())
-            try (InputStream inputStream = Files.newInputStream(file2.toPath())) {
-
+    private static void saveTimesByFile(File file,List<LotteryTimes> list){
+        try (OutputStream outputStream = Files.newOutputStream(file.toPath());
+             Writer writer = new OutputStreamWriter(outputStream, StandardCharsets.UTF_8)) {
+            writer.write(timesToJson(list));
+        } catch (IOException e) {
+            XgpLottery.warning(LangUtils.SaveFileError + e.getMessage());
+        }
+    }
+    private static List<LotteryTimes> loadTimesByFile(File file){
+        if(file.exists()){
+            try (InputStream inputStream = Files.newInputStream(file.toPath())) {
                 BufferedReader reader;
                 if(ConfigSetting.versionToInt<120){
-                    reader = new BufferedReader(new FileReader(file2));
+                    reader = new BufferedReader(new FileReader(file));
                 }else {
                     reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
                 }
-
                 StringBuilder jsonBuilder = new StringBuilder();
                 String line;
                 while ((line = reader.readLine()) != null) {
@@ -245,78 +242,17 @@ public class SerializeUtils {
                 }
                 reader.close();
                 String jsonData = jsonBuilder.toString();
-                XgpLottery.currentTime = timesFromJson(jsonData);
+                return timesFromJson(jsonData);
             }  catch (Exception e) {
                 XgpLottery.warning(LangUtils.LoadFileError + e.getMessage());
             }
-        if(file3.exists())
-            try (InputStream inputStream = Files.newInputStream(file3.toPath())) {
-                BufferedReader reader;
-                if(ConfigSetting.versionToInt<120){
-                    reader = new BufferedReader(new FileReader(file3));
-                }else {
-                    reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                }
-                StringBuilder jsonBuilder = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    jsonBuilder.append(line);
-                }
-                reader.close();
-                String jsonData = jsonBuilder.toString();
-                XgpLottery.totalTime = timesFromJson(jsonData);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                XgpLottery.warning(LangUtils.LoadFileError + e.getMessage());
-            }
-
-        if(file4.exists())
-            try (InputStream inputStream = Files.newInputStream(file4.toPath())) {
-
-                BufferedReader reader;
-                if(ConfigSetting.versionToInt<120){
-                    reader = new BufferedReader(new FileReader(file4));
-                }else {
-                    reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
-                }
-                StringBuilder jsonBuilder = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    jsonBuilder.append(line);
-                }
-                reader.close();
-                String jsonData = jsonBuilder.toString();
-                XgpLottery.allTimes = timesFromJson(jsonData);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                XgpLottery.warning(LangUtils.LoadFileError + e.getMessage());
-            }
-
-        File file5 = new File(folder,"reward.json");
-        if(file5.exists())
-            try (InputStream inputStream = Files.newInputStream(file5.toPath());
-                 BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-
-                StringBuilder jsonBuilder = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    jsonBuilder.append(line);
-                }
-                String jsonData = jsonBuilder.toString();
-                XgpLottery.rewardsTimes = timesFromJson(jsonData);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (Exception e) {
-                XgpLottery.warning(LangUtils.LoadFileError + e.getMessage());
-            }
+        }
+        return new CopyOnWriteArrayList<>();
 
     }
 
 
     private static void saveLotteryDataByFile(){
-
         File folder = new File(XgpLottery.instance.getDataFolder(), "Data");
         if(!folder.exists()){
             folder.mkdirs();
@@ -337,8 +273,11 @@ public class SerializeUtils {
             return;
         }
         File file = new File(folder, "lottery.json");
-        if(!file.exists())
+        if(!file.exists()){
+            XgpLottery.lotteryList = new ConcurrentHashMap<>();
             return;
+        }
+
         try (InputStream inputStream = Files.newInputStream(file.toPath());
              BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             StringBuilder jsonBuilder = new StringBuilder();
