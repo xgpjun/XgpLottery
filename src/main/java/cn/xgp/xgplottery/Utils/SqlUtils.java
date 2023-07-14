@@ -23,7 +23,7 @@ public class SqlUtils {
     public static String database;
     public static String username;
     public static String password;
-    private static Connection connection;
+        private static Connection connection;
 
 
     public static void getConnection() {

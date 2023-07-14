@@ -68,12 +68,31 @@ public class MyItem {
         return this;
     }
 
+    public MyItem insertLore(int index,List<String> lore){
+        List<String> loreList = getLoreList();
+
+        if(loreList.isEmpty()){
+            itemMeta.setLore(lore);
+        }else {
+            if(index<0){
+                index = loreList.size()+index;
+            }
+            loreList.addAll(index, lore);
+            itemMeta.setLore(loreList);
+        }
+        return this;
+    }
+
     public List<String> getLoreList() {
         List<String> rawLore = itemMeta.getLore();
         return (rawLore != null) ? new ArrayList<>(rawLore) : new ArrayList<>();
     }
 
     public MyItem addLore(String... lore){
+        return insertLore(getLoreList().size(),lore);
+    }
+
+    public MyItem addLore(List<String> lore){
         return insertLore(getLoreList().size(),lore);
     }
 

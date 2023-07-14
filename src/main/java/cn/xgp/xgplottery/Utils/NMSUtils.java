@@ -74,11 +74,6 @@ public class NMSUtils {
             asNMSCopy = CraftItemStack.getMethod("asNMSCopy", ItemStack.class);
             toString = nbtTagCompound.getMethod("toString");
 
-
-
-
-
-
         } catch (ClassNotFoundException | NoSuchMethodException e) {
             e.printStackTrace();
         }

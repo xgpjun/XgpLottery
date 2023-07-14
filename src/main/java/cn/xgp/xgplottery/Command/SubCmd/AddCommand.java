@@ -53,17 +53,9 @@ public class AddCommand implements TabExecutor {
             return true;
         }
         if(args[1].equals("item")){
-            if(lottery.getAmount()>=45){
-                player.sendMessage(ChatColor.RED+LangUtils.LotteryIsFull);
-                return true;
-            }
             lottery.getAwards().add(new Award(item));
             player.sendMessage(ChatColor.GREEN+LangUtils.AddItemSuccessfully);
         }else {
-            if(lottery.getSpAmount()>=45){
-                player.sendMessage(ChatColor.RED+LangUtils.LotteryIsFull);
-                return true;
-            }
             lottery.getSpAwards().add(new Award(item));
             System.out.println(item.getClass());
             player.sendMessage(ChatColor.GREEN+LangUtils.AddItemSuccessfully);
