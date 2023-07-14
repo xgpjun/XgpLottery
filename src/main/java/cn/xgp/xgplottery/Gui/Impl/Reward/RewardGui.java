@@ -28,7 +28,9 @@ public class RewardGui extends LotteryGui {
     @Override
     public LotteryGui loadGui() {
         setBorder(inv);
-        inv.setItem(49,new MyItem(Material.ANVIL).setDisplayName(ChatColor.GOLD+"添加一个领取逻辑").addLore(ChatColor.BLUE+"点击后输入 "+ChatColor.AQUA+"奖池名称").getItem());
+        inv.setItem(49,new MyItem(Material.ANVIL).setDisplayName(ChatColor.GOLD+"添加一个领取逻辑")
+                .addLore(ChatColor.BLUE+"点击后输入 "+ChatColor.AQUA+"奖池名称与礼包名称")
+                .addLore(ChatColor.RED+"礼包名称不可重复！").getItem());
         inv.setItem(45,previousPage);
         inv.setItem(53,nextPage);
         return this;

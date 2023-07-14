@@ -35,8 +35,8 @@ public class GetCommand implements TabExecutor {
         }
         if(args.length<3||(!args[1].equals("ticket")&&!args[1].equals("key"))){
             sender.sendMessage(ChatColor.RED+LangUtils.WrongInput);
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery get ticket "+LangUtils.LotteryName+ " (false)"+ "\n" + ChatColor.GREEN + "把手中的物品变为抽奖券,添加false为不修改lore与名称");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery get key "+LangUtils.LotteryName+" (false)"+"\n" + ChatColor.GREEN + "把手中的物品变为抽奖钥匙,添加false为不修改lore与名称");
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery get ticket "+LangUtils.LotteryName+  "\n" + ChatColor.GREEN + "把手中的物品变为抽奖券");
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery get key "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + "把手中的物品变为抽奖钥匙");
             return true;
         }
 
@@ -53,20 +53,16 @@ public class GetCommand implements TabExecutor {
             return true;
         }
         MyItem guiItem = new MyItem(item);
-        if(args[1].equals("ticket")){
-            if("false".equals(args[3])) {
-                guiItem.setDisplayName(lottery.getTicketName())
-                        .addLore(lottery.getTicketLore())
-                        .addEnchant();
-            }
+        if("false".equals(args[3])) {
+            guiItem.setDisplayName(lottery.getTicketName())
+                    .addLore(lottery.getTicketLore())
+                    .addEnchant();
             VersionAdapterUtils.setItemInMainHand(player, NMSUtils.addTag( guiItem.getItem(),false,name));
 
         }else {
-            if("false".equals(args[3])){
-                guiItem.setDisplayName(lottery.getKeyName())
-                        .addLore(lottery.getKeyName())
-                        .addEnchant();
-            }
+            guiItem.setDisplayName(lottery.getKeyName())
+                    .addLore(lottery.getKeyName())
+                    .addEnchant();
             VersionAdapterUtils.setItemInMainHand(player, NMSUtils.addTag( guiItem.getItem(),true,name));
         }
         return true;
