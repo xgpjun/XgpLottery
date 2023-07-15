@@ -24,7 +24,6 @@ public class PlayerLotteryGui extends PlayerGui {
     Player player;
     Lottery lottery;
     boolean keyOrTicket;
-
     boolean single;
     boolean multiple;
 

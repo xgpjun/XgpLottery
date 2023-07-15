@@ -4,6 +4,7 @@ import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Gui.PlayerGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.ConfigSetting;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
@@ -96,13 +97,18 @@ public class LotteryShop extends PlayerGui {
         }
 
         ItemStack item = e.getCurrentItem();
-        if(item !=null&&item.getType().equals(Material.CHEST)){
+        if(item !=null&&item.getType().equals(Material.CHEST)) {
             int index = findSlot(e.getRawSlot());
-            if(index==-1)
+            if (index == -1)
                 return;
-            Lottery lottery = new ArrayList<>(XgpLottery.lotteryList.values()).get((this.page-1)*28+index) ;
-            if(isSelling(lottery))
-                player.openInventory(new SetAmountGui(lottery,this,player,1).getInventory());
+            Lottery lottery = new ArrayList<>(XgpLottery.lotteryList.values()).get((this.page - 1) * 28 + index);
+            if (isSelling(lottery)) {
+                if (ConfigSetting.giveLottery)
+                    player.openInventory(new SetAmountGui(lottery, this, player, 1).getInventory());
+                else
+                    lottery.open(player, false, false);
+            }
+
         }
     }
 

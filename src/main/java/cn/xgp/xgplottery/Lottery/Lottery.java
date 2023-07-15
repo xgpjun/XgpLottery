@@ -130,21 +130,29 @@ public class Lottery {
             getMultipleAnimationObject(player,this).playAnimation();
             if(!isCmd){
                 ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
-                if (item.getAmount() <= 10) {
-                    VersionAdapterUtils.setItemInMainHand(player,null);
+                if (item == null)
+                    return;
+                if (item.getAmount() < 10) {
+                    player.sendMessage(ChatColor.RED + "别想投机取巧！");
+                } else if (item.getAmount() == 10) {
+                    VersionAdapterUtils.setItemInMainHand(player, null);
                 } else {
-                    item.setAmount(item.getAmount()-10);
+                    item.setAmount(item.getAmount() - 10);
                 }
             }
         }else {
             getAnimationObject(player,this).playAnimation();
 
-            if(!isCmd){
+            if(!isCmd) {
                 ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
-                if (item.getAmount() <= 1) {
-                    VersionAdapterUtils.setItemInMainHand(player,null);
+                if (item == null)
+                    return;
+                if (item.getAmount() == 0) {
+                    player.sendMessage(ChatColor.RED + "别想投机取巧！");
+                } else if (item.getAmount() == 1) {
+                    VersionAdapterUtils.setItemInMainHand(player, null);
                 } else {
-                    item.setAmount(item.getAmount()-1);
+                    item.setAmount(item.getAmount() - 1);
                 }
             }
         }
