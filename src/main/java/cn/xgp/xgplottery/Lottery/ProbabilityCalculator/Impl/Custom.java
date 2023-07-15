@@ -61,8 +61,8 @@ public class Custom extends ProbabilityCalculator{
         for(Award value : lottery.getAwards()){
             randomWeight -=value.getWeight();
             if(randomWeight<=0){
-                LotteryRecord.addRecord(value.getRecordDisplayItem(),player.getUniqueId(),false,lottery.getName());
-                msg.add(ChatColor.GOLD + LangUtils.LotteryPrefix + ChatColor.AQUA + LangUtils.BroadcastMsg.replace("%player%", player.getName()).replace("%lotteryName%", lottery.getName()).replace("%time%", Integer.toString(TimesUtils.getCurrentTimes(player.getUniqueId(), lottery.getName()))));
+                LotteryRecord.addRecord(value.getRecordDisplayItem(), player.getUniqueId(), false, lottery.getName());
+                msg.add(ChatColor.GOLD + LangUtils.LotteryPrefix + ChatColor.AQUA + LangUtils.BroadcastMsg.replace("%player%", player.getName()).replace("%lotteryName%", lottery.getName()).replace("%time%", Integer.toString(TimesUtils.getCurrentTimes(player.getUniqueId(), lottery.getName()) + 1)));
                 award.add(value);
                 return value;
             }
@@ -76,7 +76,7 @@ public class Custom extends ProbabilityCalculator{
             randomWeight -= value.getWeight();
             if (randomWeight <= 0) {
                 award.add(value);
-                msg.add(ChatColor.GOLD + LangUtils.LotteryPrefix + ChatColor.AQUA + LangUtils.BroadcastMsg.replace("%player%", player.getName()).replace("%lotteryName%", lottery.getName()).replace("%time%", Integer.toString(TimesUtils.getCurrentTimes(player.getUniqueId(), lottery.getName()))));
+                msg.add(ChatColor.GOLD + LangUtils.LotteryPrefix + ChatColor.AQUA + LangUtils.BroadcastMsg.replace("%player%", player.getName()).replace("%lotteryName%", lottery.getName()).replace("%time%", Integer.toString(TimesUtils.getCurrentTimes(player.getUniqueId(), lottery.getName()) + 1)));
                 this.player = player;
                 TimesUtils.clearCurrentTime(lotteryTimes);
                 LotteryRecord.addRecord(value.getRecordDisplayItem(),player.getUniqueId(),true,lottery.getName());

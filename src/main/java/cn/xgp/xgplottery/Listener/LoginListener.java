@@ -21,7 +21,7 @@ public class LoginListener implements Listener {
         Player player = e.getPlayer();
         if(player.isOp()||player.hasPermission("xgplottery.manager")){
             Bukkit.getScheduler().runTaskLaterAsynchronously(XgpLottery.instance,()->{
-                player.sendMessage(ChatColor.DARK_RED+"[XgpLottery] 有新版本可用！ 请去发布贴下载或者在config中设置自动更新。");
+                player.sendMessage(ChatColor.DARK_RED + "[XgpLottery] 有新版本可用！ 请去发布贴下载~");
                 //友情链接
                 sendUrl("https://www.mcbbs.net/thread-1445345-1-1.html",player);
                 sendUrl("https://github.com/xgpjun/XgpLottery/releases",player);

@@ -18,7 +18,7 @@ public class ConfigSetting {
     //检查为旧版本自动赋为true
     public static boolean msgToAdmin;
     public static String version;
-    public static boolean autoUpdate;
+
     public static boolean enableDatabase;
     public static boolean showProbability;
     public static boolean enableParticle;
@@ -38,7 +38,6 @@ public class ConfigSetting {
 
     public static void loadConfig(Configuration config){
         version = config.getString("version");
-        autoUpdate = config.getBoolean("autoUpdate",false);
         enableDatabase = config.getBoolean("enableDatabase",false); //1.1.0新增
         showProbability = config.getBoolean("showProbability",false);
         enableParticle = config.getBoolean("enableParticle",true);
@@ -63,16 +62,19 @@ public class ConfigSetting {
             enableDatabase = false;
             XgpLottery.instance.getConfig().set("version",version);
             XgpLottery.instance.getConfig().set("enableDatabase",false);
-            XgpLottery.instance.getConfig().set("lang","zh_CN.yml");
+            XgpLottery.instance.getConfig().set("lang", "zh_CN.yml");
             XgpLottery.instance.saveConfig();
-            XgpLottery.instance.saveResource("lang\\zh_CN.yml",true);
+            XgpLottery.instance.saveResource("lang\\zh_CN.yml", true);
         }
-        if(versionToInt<120){
+        if (versionToInt < 120) {
             BackupUtils.backup();
             version = "1.2.0";
-            XgpLottery.instance.getConfig().set("version",version);
-            XgpLottery.instance.getConfig().set("autoUpdate",autoUpdate);
+            XgpLottery.instance.getConfig().set("version", version);
             XgpLottery.instance.saveConfig();
+        }
+        if (versionToInt < 121) {
+            version = "1.2.1";
+            XgpLottery.instance.getConfig().set("version", version);
         }
         msg = getXgpWebsite("msg");
 
@@ -82,7 +84,7 @@ public class ConfigSetting {
         } catch (IOException e) {
             XgpLottery.warning("Failed to get GitHub-Api.");
             latestVersion = getXgpWebsite("version");
-        }finally {
+        } finally {
             checkOutdated(latestVersion);
         }
 

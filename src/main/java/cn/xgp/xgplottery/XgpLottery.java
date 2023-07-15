@@ -26,7 +26,6 @@ import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -62,6 +61,10 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
         File zhFile = new File(getDataFolder(), "lang/zh_CN.yml");
         if (!zhFile.exists()) {
             saveResource("lang/zh_CN.yml", false);
+        }
+        File ansiFile = new File(getDataFolder(), "lang/zh_CN-ANSI.yml");
+        if (!ansiFile.exists()) {
+            saveResource("lang/zh_CN-ANSI.yml", false);
         }
         File enFile = new File(getDataFolder(), "lang/en_US.yml");
         if (!enFile.exists()) {
