@@ -3,7 +3,7 @@ version: ${project.version}
 main: cn.xgp.xgplottery.XgpLottery
 api-version: '1.13'
 authors: [ 1badsobig ]
-description: A lottery plugin.
+description: MyPlayer lottery plugin.
 
 softdepend:
   - PlaceholderAPI

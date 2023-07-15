@@ -9,8 +9,8 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-public class NMSUtils {
 
+public class NMSUtils {
 
     private static Class<?> nbtTagCompound;
     private static Class<?> itemStack;

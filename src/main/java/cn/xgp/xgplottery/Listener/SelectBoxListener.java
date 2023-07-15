@@ -41,6 +41,7 @@ public class SelectBoxListener implements Listener {
                 }else{
                     BoxParticleUtils.addBox(new LotteryBox(lottery.getName(),location));
                     player.sendMessage(ChatColor.GREEN+LangUtils.SetBoxSuccessful);
+
                     XgpLottery.locations.add(location);
                     SerializeUtils.saveData();
                 }

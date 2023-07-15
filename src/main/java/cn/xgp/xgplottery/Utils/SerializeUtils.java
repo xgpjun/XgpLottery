@@ -551,7 +551,6 @@ public class SerializeUtils {
             return item;
         }
     }
-
     static class AwardAdapter extends TypeAdapter<Award>{
 
         @Override
@@ -625,7 +624,6 @@ public class SerializeUtils {
     }
 
 }
-
 
 
 

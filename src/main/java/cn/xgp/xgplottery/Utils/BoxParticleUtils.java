@@ -7,17 +7,17 @@ import org.bukkit.Bukkit;
 
 public class BoxParticleUtils {
     public static void addBox(LotteryBox lotteryBox){
+        XgpLottery.lotteryBoxList.add(lotteryBox);
         if(NMSUtils.versionToInt<9)
             return;
-        XgpLottery.lotteryBoxList.add(lotteryBox);
         if(ConfigSetting.enableParticle&& Bukkit.getPluginManager().getPlugin("ParticleLib") != null){
             new BoxParticle(lotteryBox.getLocation()).createParticle();
         }
     }
     public static void removeBox(LotteryBox lotteryBox){
+        XgpLottery.lotteryBoxList.remove(lotteryBox);
         if(NMSUtils.versionToInt<9)
             return;
-        XgpLottery.lotteryBoxList.remove(lotteryBox);
         if(ConfigSetting.enableParticle&&Bukkit.getPluginManager().getPlugin("ParticleLib") != null){
             BoxParticle target=null;
             for(BoxParticle boxParticle:XgpLottery.boxParticleList){

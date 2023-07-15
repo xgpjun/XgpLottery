@@ -33,7 +33,7 @@ public class XgpLotteryCommand implements TabExecutor {
         registerSubCommand("show",new ShowCommand());
         registerSubCommand("top",new TopCommand());
 
-        registerSubCommand("test",new TestCommand());
+        registerSubCommand("MyPlayer", new TestCommand());
     }
 
     public void registerSubCommand(String subCommand, TabExecutor executor) {
