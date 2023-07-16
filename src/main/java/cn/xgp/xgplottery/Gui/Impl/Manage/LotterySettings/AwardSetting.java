@@ -88,16 +88,24 @@ public class AwardSetting extends LotteryGui {
         if(award.isBroadCast()){
             guiItem.addEnchant();
         }
-        inv.setItem(14,guiItem.getItem());
+        inv.setItem(14, guiItem.getItem());
 
         //物品显示名称（在奖池预览）
-        String displayName = award.getDisplayName()!=null?award.getDisplayName():ChatColor.GOLD+"暂无展示名";
-        inv.setItem(23,new MyItem(writable_book)
+        String displayName = award.getDisplayName() != null ? award.getDisplayName() : ChatColor.GOLD + "暂无展示名";
+        inv.setItem(23, new MyItem(writable_book)
                 .setDisplayName(displayName)
-                .addLore(ChatColor.BLUE+"设置: "+ChatColor.AQUA+"左键点击")
-                .addLore(ChatColor.BLUE+"用于奖池预览与播报模块")
-                .addLore(ChatColor.BLUE+"本物品的名称即为展示名，支持颜色符号 &")
+                .addLore(ChatColor.BLUE + "设置: " + ChatColor.AQUA + "左键点击")
+                .addLore(ChatColor.BLUE + "用于奖池预览与播报模块")
+                .addLore(ChatColor.BLUE + "本物品的名称即为展示名，支持颜色符号 &")
                 .getItem());
+        guiItem = new MyItem(writable_book)
+                .setDisplayName(ChatColor.GOLD + "强制显示原物品")
+                .addLore(ChatColor.BLUE + "当前状态:" + ChatColor.AQUA + (award.isShowRaw() ? "是" : "否"))
+                .addLore(ChatColor.GREEN + "如果物品在展示中出现了错误，请打开此项");
+        if (award.isShowRaw()) {
+            guiItem.addEnchant();
+        }
+        inv.setItem(32, guiItem.getItem());
 
         return this;
     }
@@ -158,16 +166,26 @@ public class AwardSetting extends LotteryGui {
                 return;
             }
             //设置显示名称
-            case 23:{
-                ReceiveUtils.setAwardDisplayName(player,this,award);
+            case 23: {
+                ReceiveUtils.setAwardDisplayName(player, this, award);
+                SerializeUtils.saveLotteryData();
+                return;
+            }
+            case 32: {
+                award.setShowRaw(!award.isShowRaw());
+                player.openInventory(this.getInventory());
                 SerializeUtils.saveLotteryData();
                 return;
             }
 
             //上一层
-            case 0: player.openInventory(returnGui.refresh());break;
+            case 0:
+                player.openInventory(returnGui.refresh());
+                break;
             //退出
-            case 8: player.getOpenInventory().close();return;
+            case 8:
+                player.getOpenInventory().close();
+                return;
 
             default:
         }

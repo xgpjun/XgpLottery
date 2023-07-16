@@ -22,6 +22,7 @@ public class Award {
     //是否播报
     private boolean broadCast;
     private String displayName;
+    private boolean isShowRaw;
 
     public Award(ItemStack item ,int weight){
         this.item = item;
@@ -31,6 +32,7 @@ public class Award {
         this.executeCommands = false;
         this.broadCast = false;
         this.displayName = null;
+        this.isShowRaw = false;
     }
     public Award(ItemStack item){
         this(item,1);
@@ -45,15 +47,18 @@ public class Award {
                 .toArray(String[]::new);
     }
 
-    public ItemStack getRecordDisplayItem(){
+    public ItemStack getRecordDisplayItem() {
+        if (this.isShowRaw) {
+            return item.clone();
+        }
         MyItem i = new MyItem(item);
-        if(displayName!=null){
+        if (displayName != null) {
             i.setDisplayName(displayName);
         }
-        if(!commands.isEmpty()){
-            i.addLore(ChatColor.BLUE+ "执行命令：");
-            for (int x =0;x<commands.size();x++){
-                i.addLore((x+1)+": "+commands.get(x));
+        if (!commands.isEmpty()) {
+            i.addLore(ChatColor.BLUE + "执行命令：");
+            for (int x = 0; x < commands.size(); x++) {
+                i.addLore((x + 1) + ": " + commands.get(x));
             }
         }
         return i.getItem();

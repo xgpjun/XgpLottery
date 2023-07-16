@@ -39,7 +39,6 @@ public class SerializeUtils {
     }
 
     public static void saveData(){
-        saveBoxData();
         if(!SqlUtils.enable){
             saveDataByFile();
             saveRewardByFile();
@@ -149,9 +148,7 @@ public class SerializeUtils {
                 while ((line = reader.readLine()) != null) {
                     jsonBuilder.append(line);
                 }
-
                 reader.close();
-
                 String jsonData = jsonBuilder.toString();
                 XgpLottery.lotteryBoxList = boxFromJson(jsonData);
             }
@@ -168,13 +165,13 @@ public class SerializeUtils {
         }
     }
 
-    private static void saveBoxData(){
-        if(XgpLottery.lotteryBoxList.isEmpty()){
+    public static void saveBoxData() {
+        if (XgpLottery.lotteryBoxList.isEmpty()) {
             return;
         }
 
         File folder = new File(XgpLottery.instance.getDataFolder(), "Data");
-        if(!folder.exists()){
+        if (!folder.exists()) {
             folder.mkdirs();
         }
         File file1 = new File(folder, "box.json");
@@ -452,7 +449,7 @@ public class SerializeUtils {
     static class LocationAdapter extends TypeAdapter<Location> {
         @Override
         public void write(JsonWriter json, Location location) throws IOException {
-            if (location == null) {
+            if (location == null || location.getWorld() == null) {
                 json.nullValue();
                 return;
             }
@@ -567,6 +564,7 @@ public class SerializeUtils {
             json.name("executeCommands").value(award.isExecuteCommands());
             json.name("broadCast").value(award.isBroadCast());
             json.name("displayName").value(award.getDisplayName());
+            json.name("isShowRaw").value(award.isShowRaw());
             json.endObject();
 
         }
@@ -580,8 +578,8 @@ public class SerializeUtils {
             ItemStack item =null;
             int weight = 1;
             List<String> commands = new ArrayList<>();
-            boolean giveItem=true,executeCommands=false,broadCast=false;
-            String displayName= null;
+            boolean giveItem = true, executeCommands = false, broadCast = false, isShowRaw = false;
+            String displayName = null;
 
             while (json.hasNext()) {
                 String name = json.nextName();
@@ -610,6 +608,9 @@ public class SerializeUtils {
                     case "displayName":
                         displayName = json.nextString();
                         break;
+                    case "isShowRaw":
+                        isShowRaw = json.nextBoolean();
+                        break;
                     default:
                         json.skipValue();
                         break;
@@ -619,7 +620,7 @@ public class SerializeUtils {
             if(item==null){
                 item = new ItemStack(Material.STONE);
             }
-            return new Award(item,weight,commands,giveItem,executeCommands,broadCast,displayName);
+            return new Award(item, weight, commands, giveItem, executeCommands, broadCast, displayName, isShowRaw);
         }
     }
 

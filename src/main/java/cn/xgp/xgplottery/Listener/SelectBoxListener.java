@@ -43,7 +43,7 @@ public class SelectBoxListener implements Listener {
                     player.sendMessage(ChatColor.GREEN+LangUtils.SetBoxSuccessful);
 
                     XgpLottery.locations.add(location);
-                    SerializeUtils.saveData();
+                    SerializeUtils.saveBoxData();
                 }
                 HandlerList.unregisterAll(this);
             }

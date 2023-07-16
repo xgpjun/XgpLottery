@@ -23,6 +23,7 @@ public class NMSUtils {
     private static Method save;
     private static Method toString;
     private static Method getTag;
+    private static Method setTag; //1.7.10
     private static Method setString;
     private static Method getString;
 
@@ -56,7 +57,8 @@ public class NMSUtils {
                 parse = MojangsonParser.getMethod("parse",String.class);
                 save = itemStack.getMethod("save",nbtTagCompound);
                 getTag = itemStack.getMethod("getTag");
-                setString = nbtTagCompound.getMethod("setString",String.class,String.class);
+                setTag = itemStack.getMethod("setTag", nbtTagCompound);
+                setString = nbtTagCompound.getMethod("setString", String.class, String.class);
                 getString = nbtTagCompound.getMethod("getString",String.class);
             }else {
                 nbtTagCompound = Class.forName("net.minecraft.nbt.NBTTagCompound");
@@ -65,7 +67,8 @@ public class NMSUtils {
                 parse = MojangsonParser.getMethod("a",String.class);
                 save = itemStack.getMethod("b",nbtTagCompound);
                 getTag = itemStack.getMethod("u");
-                setString = nbtTagCompound.getMethod("a",String.class,String.class);
+                setTag = itemStack.getMethod("c", nbtTagCompound);
+                setString = nbtTagCompound.getMethod("a", String.class, String.class);
                 getString = nbtTagCompound.getMethod("l",String.class);
             }
             if(versionToInt>12)
@@ -124,7 +127,6 @@ public class NMSUtils {
     public static ItemStack addTag(ItemStack item,boolean keyOrTicket,String lotteryName){
         try {
             Object nmsItemStack = asNMSCopy.invoke(CraftItemStack,item);
-
             Object tags = getTag.invoke(nmsItemStack);
             if(tags==null){
                 return null;
@@ -132,7 +134,8 @@ public class NMSUtils {
             String key = "XgpLottery"+lotteryName;
             setString.invoke(tags,key,(keyOrTicket?"Key":"Ticket"));
             key = "XgpLottery";
-            setString.invoke(tags,key,"Xgpjun!");
+            setString.invoke(tags, key, "Xgpjun!");
+            setTag.invoke(nmsItemStack, tags);
             return (ItemStack) asCraftMirror.invoke(CraftItemStack,nmsItemStack);
         }catch (Exception e){
             e.printStackTrace();

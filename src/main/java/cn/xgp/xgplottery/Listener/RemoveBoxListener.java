@@ -36,8 +36,8 @@ public class RemoveBoxListener implements Listener {
                     BoxParticleUtils.removeBox(XgpLottery.getLotteryBoxByLocation(location));
                     //delete location
                     XgpLottery.locations.remove(location);
-                    player.sendMessage(ChatColor.GREEN+ LangUtils.RemoveBoxSuccessfully);
-                    SerializeUtils.saveData();
+                    player.sendMessage(ChatColor.GREEN + LangUtils.RemoveBoxSuccessfully);
+                    SerializeUtils.saveBoxData();
                 }else{
                     e.getPlayer().sendMessage(ChatColor.RED+LangUtils.RemoveBoxNotFound);
                 }

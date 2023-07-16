@@ -449,20 +449,20 @@ public class ReceiveUtils {
                 try{
                     String lotteryName = getInput(player).get(15, TimeUnit.SECONDS);
                     lotteryName  = ChatColor.stripColor(lotteryName).trim();
-                    if(lotteryName .equals("cancel")){
-                        player.sendMessage(ChatColor.RED+LangUtils.WrongType);
+                    if (lotteryName.equals("cancel")) {
+                        player.sendMessage(ChatColor.RED + LangUtils.WrongType);
                         return;
                     }
-                    if(!lotteryName .isEmpty()||!XgpLottery.lotteryList.containsKey(lotteryName )){
-                        player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +"请输入礼包的名称,不能重复,输入cancel取消");
+                    if (!lotteryName.isEmpty() && XgpLottery.lotteryList.containsKey(lotteryName)) {
+                        player.sendMessage(ChatColor.GOLD + "[XgpLottery]" + ChatColor.GREEN + "请输入礼包的名称,不能重复,输入cancel取消");
                         String name = getInput(player).get(15, TimeUnit.SECONDS);
                         name = ChatColor.stripColor(name).trim();
-                        if(name.equals("cancel")){
-                            player.sendMessage(ChatColor.RED+LangUtils.WrongType);
+                        if (name.equals("cancel")) {
+                            player.sendMessage(ChatColor.RED + LangUtils.WrongType);
                             return;
                         }
-                        if(CumulativeRewards.getByName(name)!=null){
-                            player.sendMessage(ChatColor.RED+"这个名称已存在，不能重复");
+                        if (CumulativeRewards.getByName(name) != null) {
+                            player.sendMessage(ChatColor.RED + "这个名称已存在，不能重复");
                             return;
                         }
                         XgpLottery.rewards.add(new CumulativeRewards(lotteryName,name));
@@ -499,8 +499,8 @@ public class ReceiveUtils {
                     String times  = getInput(player).get(15, TimeUnit.SECONDS);
                     if(times!=null){
                         set.accept(Integer.parseInt(times));
-                        player.sendMessage(ChatColor.GREEN+LangUtils.ChangeTimeSuccessfully+times+"!");
-                        SerializeUtils.saveData();
+                        player.sendMessage(ChatColor.GREEN + LangUtils.ChangeTimeSuccessfully + times + "!");
+                        SerializeUtils.saveRewardData();
                     }else{
                         player.sendMessage(ChatColor.RED+LangUtils.WrongType);
                     }

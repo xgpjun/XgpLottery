@@ -53,17 +53,16 @@ public class GetCommand implements TabExecutor {
             return true;
         }
         MyItem guiItem = new MyItem(item);
-        if("false".equals(args[3])) {
+        if ("ticket".equals(args[1])) {
             guiItem.setDisplayName(lottery.getTicketName())
                     .addLore(lottery.getTicketLore())
                     .addEnchant();
-            VersionAdapterUtils.setItemInMainHand(player, NMSUtils.addTag( guiItem.getItem(),false,name));
-
-        }else {
+            VersionAdapterUtils.setItemInMainHand(player, NMSUtils.addTag(guiItem.getItem(), false, name));
+        } else {
             guiItem.setDisplayName(lottery.getKeyName())
                     .addLore(lottery.getKeyName())
                     .addEnchant();
-            VersionAdapterUtils.setItemInMainHand(player, NMSUtils.addTag( guiItem.getItem(),true,name));
+            VersionAdapterUtils.setItemInMainHand(player, NMSUtils.addTag(guiItem.getItem(), true, name));
         }
         return true;
     }

@@ -191,7 +191,7 @@ public class SetAmountGui extends PlayerGui {
 
     private boolean takeValue(){
         int cost = amount*value;
-        if(ConfigSetting.giveLottery)
+        if (!ConfigSetting.giveLottery)
             cost = value;
         switch (sellType){
             case POINTS: {

@@ -127,10 +127,9 @@ public class Lottery {
         player.sendMessage(ChatColor.GOLD+LangUtils.LotteryPrefix+ChatColor.GREEN+ LangUtils.LotteryInformation.replace("%time%",Integer.toString(TimesUtils.getCurrentTimes(player.getUniqueId(),getName()))));
         //十连抽
         if(isMultiple){
-            getMultipleAnimationObject(player,this).playAnimation();
             if(!isCmd){
                 ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
-                if (item == null)
+                if (item == null || !NMSUtils.checkTag(item))
                     return;
                 if (item.getAmount() < 10) {
                     player.sendMessage(ChatColor.RED + "别想投机取巧！");
@@ -140,12 +139,11 @@ public class Lottery {
                     item.setAmount(item.getAmount() - 10);
                 }
             }
+            getMultipleAnimationObject(player, this).playAnimation();
         }else {
-            getAnimationObject(player,this).playAnimation();
-
             if(!isCmd) {
                 ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
-                if (item == null)
+                if (item == null || !NMSUtils.checkTag(item))
                     return;
                 if (item.getAmount() == 0) {
                     player.sendMessage(ChatColor.RED + "别想投机取巧！");
@@ -155,6 +153,7 @@ public class Lottery {
                     item.setAmount(item.getAmount() - 1);
                 }
             }
+            getAnimationObject(player, this).playAnimation();
         }
     }
 

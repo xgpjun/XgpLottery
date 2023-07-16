@@ -62,10 +62,6 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
         if (!zhFile.exists()) {
             saveResource("lang/zh_CN.yml", false);
         }
-        File ansiFile = new File(getDataFolder(), "lang/zh_CN-ANSI.yml");
-        if (!ansiFile.exists()) {
-            saveResource("lang/zh_CN-ANSI.yml", false);
-        }
         File enFile = new File(getDataFolder(), "lang/en_US.yml");
         if (!enFile.exists()) {
             saveResource("lang/en_US.yml", false);
