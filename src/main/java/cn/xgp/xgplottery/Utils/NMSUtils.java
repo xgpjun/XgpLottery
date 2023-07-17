@@ -9,7 +9,6 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
-
 public class NMSUtils {
 
     private static Class<?> nbtTagCompound;
@@ -64,12 +63,16 @@ public class NMSUtils {
                 nbtTagCompound = Class.forName("net.minecraft.nbt.NBTTagCompound");
                 itemStack = Class.forName("net.minecraft.world.item.ItemStack");
                 MojangsonParser = Class.forName("net.minecraft.nbt.MojangsonParser");
-                parse = MojangsonParser.getMethod("a",String.class);
-                save = itemStack.getMethod("b",nbtTagCompound);
-                getTag = itemStack.getMethod("u");
+                parse = MojangsonParser.getMethod("a", String.class);
+                save = itemStack.getMethod("b", nbtTagCompound);
+                if (versionToInt < 20) {
+                    getTag = itemStack.getMethod("v");
+                } else {
+                    getTag = itemStack.getMethod("w");
+                }
                 setTag = itemStack.getMethod("c", nbtTagCompound);
                 setString = nbtTagCompound.getMethod("a", String.class, String.class);
-                getString = nbtTagCompound.getMethod("l",String.class);
+                getString = nbtTagCompound.getMethod("l", String.class);
             }
             if(versionToInt>12)
                 a = itemStack.getMethod("a",nbtTagCompound);
@@ -158,13 +161,15 @@ public class NMSUtils {
         return false;
     }
     public static boolean checkTag(ItemStack item){
-        try{
-            Object nmsItemStack = asNMSCopy.invoke(CraftItemStack,item);
+        try {
+            Object nmsItemStack = asNMSCopy.invoke(CraftItemStack, item);
+            if (nmsItemStack == null)
+                return false;
             Object tags = getTag.invoke(nmsItemStack);
-            if(tags==null)
+            if (tags == null)
                 return false;
             String key = "XgpLottery";
-            Object str = getString.invoke(tags,key);
+            Object str = getString.invoke(tags, key);
             return ("Xgpjun!").equals(str);
         }catch (Exception e){
             e.printStackTrace();

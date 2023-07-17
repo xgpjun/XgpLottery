@@ -34,12 +34,21 @@ public class LotteryListener implements Listener {
             Lottery lottery = XgpLottery.lotteryList.get(lotteryName);
 
             if(e.getAction().equals(Action.RIGHT_CLICK_AIR)||e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
+
+                if ("VoidAnimation".equals(lottery.getAnimation())) {
+                    if (lottery.isCheckFull() && VersionAdapterUtils.getPlayerEmptySlot(player) < 1) {
+                        player.sendMessage(ChatColor.AQUA + LangUtils.LotteryPrefix + ChatColor.RED + "背包已满，无法抽奖！");
+                        return;
+                    }
+                    lottery.open(player, false, false);
+                    return;
+                }
                 // 判断物品类型或其他条件
-                if(!player.isSneaking()){
+                if (!player.isSneaking()) {
                     //抽奖界面
-                    player.openInventory(new PlayerLotteryGui(player,lottery,false).getInventory());
-                }else {
-                    sendTextBox(player,lottery);
+                    player.openInventory(new PlayerLotteryGui(player, lottery, false).getInventory());
+                } else {
+                    sendTextBox(player, lottery);
                 }
             }
             if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)||e.getAction().equals(Action.LEFT_CLICK_AIR) ){
@@ -56,8 +65,16 @@ public class LotteryListener implements Listener {
             Lottery lottery = LotteryBox.getLotteryByLocation(location);
             Player player = e.getPlayer();
             if(e.getAction().equals(Action.RIGHT_CLICK_BLOCK)){
-                if(!player.isSneaking()&&lottery!=null){
-                    player.openInventory(new PlayerLotteryGui(player,lottery,true).getInventory());
+                if(!player.isSneaking()&&lottery!=null) {
+                    if ("VoidAnimation".equals(lottery.getAnimation())) {
+                        if (lottery.isCheckFull() && VersionAdapterUtils.getPlayerEmptySlot(player) < 1) {
+                            player.sendMessage(ChatColor.AQUA + LangUtils.LotteryPrefix + ChatColor.RED + "背包已满，无法抽奖！");
+                            return;
+                        }
+                        lottery.open(player, false, false);
+                        return;
+                    }
+                    player.openInventory(new PlayerLotteryGui(player, lottery, true).getInventory());
                 }
             }else if(e.getAction().equals(Action.LEFT_CLICK_BLOCK)){
                 assert lottery != null;

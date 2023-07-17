@@ -33,14 +33,18 @@ public class SelectAnimation extends LotteryGui {
         inv.setItem(10,new MyItem(Material.CHEST)
                 .setDisplayName(ChatColor.AQUA+LangUtils.ScrollingAnimation)
                 .getItem());
-        inv.setItem(11,new MyItem(Material.CHEST)
-                .setDisplayName(ChatColor.AQUA+ LangUtils.SelectItemAnimation)
+        inv.setItem(11, new MyItem(Material.CHEST)
+                .setDisplayName(ChatColor.AQUA + LangUtils.SelectItemAnimation)
                 .getItem());
-        inv.setItem(12,new MyItem(Material.CHEST)
-                .setDisplayName(ChatColor.AQUA+ "多彩抽奖动画")
+        inv.setItem(12, new MyItem(Material.CHEST)
+                .setDisplayName(ChatColor.AQUA + "多彩抽奖动画")
                 .getItem());
-        inv.setItem(13,new MyItem(Material.CHEST)
-                .setDisplayName(ChatColor.AQUA+ "跑马灯抽奖动画")
+        inv.setItem(13, new MyItem(Material.CHEST)
+                .setDisplayName(ChatColor.AQUA + "跑马灯抽奖动画")
+                .getItem());
+        inv.setItem(14, new MyItem(Material.CHEST)
+                .setDisplayName(ChatColor.AQUA + "无动画抽奖")
+                .addLore(ChatColor.GREEN + "此情况下直接右键即获得物品，并限制为单抽")
                 .getItem());
         return this;
     }
@@ -69,8 +73,14 @@ public class SelectAnimation extends LotteryGui {
                 player.openInventory(lotterySetting.getInventory());
                 break;
             }
-            case 13:{
+            case 13: {
                 lottery.setAnimation("MarqueeAnimation");
+                SerializeUtils.saveLotteryData();
+                player.openInventory(lotterySetting.getInventory());
+                break;
+            }
+            case 14: {
+                lottery.setAnimation("VoidAnimation");
                 SerializeUtils.saveLotteryData();
                 player.openInventory(lotterySetting.getInventory());
                 break;

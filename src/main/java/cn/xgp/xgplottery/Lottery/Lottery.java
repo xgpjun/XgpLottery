@@ -92,11 +92,17 @@ public class Lottery {
 
     public LotteryAnimation getAnimationObject(Player player, Lottery lottery) {
         switch (animation){
-            case "MarqueeAnimation": return new MarqueeAnimation(player,lottery);
-            case "SelectItemAnimation": return new SelectItemAnimation(player,lottery);
-            case "ColorfulAnimation": return new ColorfulAnimation(player,lottery);
+            case "MarqueeAnimation":
+                return new MarqueeAnimation(player, lottery);
+            case "SelectItemAnimation":
+                return new SelectItemAnimation(player, lottery);
+            case "ColorfulAnimation":
+                return new ColorfulAnimation(player, lottery);
+            case "VoidAnimation":
+                return new VoidAnimation(player, lottery);
             case "BoxAnimation":
-            default: return new BoxAnimation(player,lottery);
+            default:
+                return new BoxAnimation(player, lottery);
         }
     }
 

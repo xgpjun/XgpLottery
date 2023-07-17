@@ -2,6 +2,9 @@ package cn.xgp.xgplottery.Utils;
 
 import cn.xgp.xgplottery.Lottery.*;
 import cn.xgp.xgplottery.XgpLottery;
+import com.google.common.collect.Iterables;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -11,6 +14,7 @@ import com.google.gson.stream.JsonWriter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.*;
@@ -31,11 +35,12 @@ public class SerializeUtils {
         saveData();
     }
 
-    public static void load(){
+    public static void load() {
         XgpLottery.log(LangUtils.LoadData);
         loadLotteryData();
         loadData();
-        saveTaskId = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, SerializeUtils::save, ConfigSetting.autoSaveTime*3, ConfigSetting.autoSaveTime).getTaskId();
+        if (ConfigSetting.autoSaveTime >= 0)
+            saveTaskId = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, SerializeUtils::save, ConfigSetting.autoSaveTime * 3, ConfigSetting.autoSaveTime).getTaskId();
     }
 
     public static void saveData(){
@@ -436,13 +441,39 @@ public class SerializeUtils {
         return gson.toJson(rewards);
     }
 
-    public static List<CumulativeRewards> rewardFromJson(String json){
+    public static List<CumulativeRewards> rewardFromJson(String json) {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(ItemStack.class, new ItemAdapter())
                 .registerTypeAdapter(Award.class, new AwardAdapter())
                 .create();
-        List<CumulativeRewards> list = gson.fromJson(json,new TypeToken<List<CumulativeRewards>>() {}.getType());
+        List<CumulativeRewards> list = gson.fromJson(json, new TypeToken<List<CumulativeRewards>>() {
+        }.getType());
         return new CopyOnWriteArrayList<>(list);
+    }
+
+    public static void bcSaveSignal() {
+        //For bc
+        ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF("Forward");
+
+        out.writeUTF("ALL");//服务器
+        out.writeUTF("XgpLotterySave");//频道
+        ByteArrayOutputStream msgBytes = new ByteArrayOutputStream();
+        DataOutputStream msgOut = new DataOutputStream(msgBytes);
+
+        try {
+            String msg = "NeedToReload";
+            msgOut.writeUTF(msg);
+            out.writeShort(msgBytes.toByteArray().length);
+            out.write(msgBytes.toByteArray());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        Player player = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
+        if (player != null) {
+            player.sendPluginMessage(XgpLottery.instance, "BungeeCord", out.toByteArray());
+        }
     }
 
 

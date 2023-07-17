@@ -21,7 +21,7 @@ giveLottery: true
 #giveKey：当上面为true时，true为给与玩家抽奖箱钥匙，false为给与玩家奖券
 giveKey: true
 
-#自动保存的秒数
+#自动保存的秒数 为0则取消自动保存， 在跨服请尽量避免跨服保存！ 有概率被子服覆盖导致更改失效
 autoSaveTime: 120
 
 #排行榜更新秒数

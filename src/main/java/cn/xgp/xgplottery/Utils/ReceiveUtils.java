@@ -83,6 +83,7 @@ public class ReceiveUtils {
                 player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN + LangUtils.ReceiveWeight);
                 try{
                     String weight  = getInput(player).get(15, TimeUnit.SECONDS);
+                    weight = ChatColor.stripColor(weight).trim();
                     if(weight!=null&&Integer.parseInt(weight)>=0){
                         award.setWeight(Integer.parseInt(weight));
                         player.sendMessage(ChatColor.GREEN+LangUtils.ChangeWeightSuccessfully+weight+"!");
@@ -116,6 +117,7 @@ public class ReceiveUtils {
                 player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +LangUtils.SetMaxTime);
                 try{
                     String times  = getInput(player).get(15, TimeUnit.SECONDS);
+                    times = ChatColor.stripColor(times).trim();
                     if(times!=null){
                         lottery.setMaxTime(Integer.parseInt(times));
                         player.sendMessage(ChatColor.GREEN+LangUtils.ChangeTimeSuccessfully+times+"!");
@@ -149,6 +151,7 @@ public class ReceiveUtils {
                 player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +LangUtils.SetValue);
                 try{
                     String value  = getInput(player).get(15, TimeUnit.SECONDS);
+                    value = ChatColor.stripColor(value).trim();
                     if(value!=null){
                         lotterySetting.getLottery().setValue(Integer.parseInt(value));
                         player.sendMessage(ChatColor.GREEN+LangUtils.SetValueSuccessfully+value+"!");
@@ -256,6 +259,7 @@ public class ReceiveUtils {
                 }
                 try{
                     String index  = getInput(player).get(15, TimeUnit.SECONDS);
+                    index = ChatColor.stripColor(index).trim();
                     if(index!=null){
                         if("cancel".equals(index)){
                             player.sendMessage(ChatColor.RED+LangUtils.WrongType);
@@ -336,6 +340,7 @@ public class ReceiveUtils {
                 player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +"请输入抽奖上限值，为0则取消限制。输入cancel取消");
                 try{
                     String times  = getInput(player).get(15, TimeUnit.SECONDS);
+                    times = ChatColor.stripColor(times).trim();
                     if(times!=null){
                         lotterySetting.getLottery().setLimitedTimes(Integer.parseInt(times));
                         player.sendMessage(ChatColor.GREEN+LangUtils.ChangeTimeSuccessfully+times+"!");
@@ -408,6 +413,7 @@ public class ReceiveUtils {
                 }
                 try{
                     String index  = getInput(player).get(15, TimeUnit.SECONDS);
+                    index = ChatColor.stripColor(index).trim();
                     if(index!=null){
                         if("cancel".equals(index)){
                             player.sendMessage(ChatColor.RED+LangUtils.WrongType);
@@ -497,6 +503,7 @@ public class ReceiveUtils {
                 player.sendMessage(ChatColor.GOLD+ "[XgpLottery]"+ChatColor.GREEN +"请输入次数。输入cancel取消");
                 try{
                     String times  = getInput(player).get(15, TimeUnit.SECONDS);
+                    times = ChatColor.stripColor(times).trim();
                     if(times!=null){
                         set.accept(Integer.parseInt(times));
                         player.sendMessage(ChatColor.GREEN + LangUtils.ChangeTimeSuccessfully + times + "!");

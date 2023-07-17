@@ -175,12 +175,13 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
 
     public static void reload(){
 
-        Bukkit.getScheduler().cancelTask(SerializeUtils.saveTaskId);
+        if (ConfigSetting.autoSaveTime >= 0)
+            Bukkit.getScheduler().cancelTask(SerializeUtils.saveTaskId);
         instance.reloadConfig();
         ConfigSetting.loadConfig(instance.getConfig());
         log(LangUtils.ReloadMessage);
         SqlUtils.closeConnection();
-        if(ConfigSetting.enableDatabase)
+        if (ConfigSetting.enableDatabase)
             SqlUtils.getConnection();
 
         SerializeUtils.load();
@@ -208,9 +209,22 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+        }
+        if (subChannel.equals("XgpLotterySave")) {
+            // 数据处理
+            short len = in.readShort();
+            byte[] bytes = new byte[len];
+            in.readFully(bytes);
 
-
-
+            DataInputStream msgin = new DataInputStream(new ByteArrayInputStream(bytes));
+            try {
+                String msg = msgin.readUTF();
+                if ("NeedToReload".equals(msg)) {
+                    SerializeUtils.load();
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
     }
 }
