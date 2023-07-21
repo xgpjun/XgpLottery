@@ -1,10 +1,13 @@
 package cn.xgp.xgplottery.Gui;
 
+import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.NMSUtils;
+import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
@@ -65,22 +68,47 @@ public abstract class LotteryGui implements InventoryHolder {
 
     public void setBorder(Inventory gui){
 
-        for(int i:border){
-            gui.setItem(i,borderGlass);
+        for (int i : border) {
+            gui.setItem(i, borderGlass);
         }
-        gui.setItem(0,new MyItem(Material.COMPASS)
-                .setDisplayName(ChatColor.GREEN+LangUtils.PreviousInv1)
-                .setLore(ChatColor.GOLD+ LangUtils.PreviousInv2)
+        gui.setItem(0, new MyItem(Material.COMPASS)
+                .setDisplayName(ChatColor.GREEN + LangUtils.PreviousInv1)
+                .setLore(ChatColor.GOLD + LangUtils.PreviousInv2)
                 .getItem());
 
-        gui.setItem(8,exit);
+        gui.setItem(8, exit);
     }
-    public int findSlot(int tar){
-        for (int i =0;i<slot.length;i++){
-            if(slot[i] == tar)
+
+    public int findSlot(int tar) {
+        for (int i = 0; i < slot.length; i++) {
+            if (slot[i] == tar)
                 return i;
         }
         return -1;
     }
+
+    public boolean takeValue(Lottery lottery, Player player, int cost) {
+        switch (lottery.getSellType()) {
+            case POINTS: {
+                return XgpLottery.ppAPI.take(player.getUniqueId(), cost);
+            }
+            case MONEY: {
+                boolean hasMoney = XgpLottery.eco.has(player, cost);
+                if (hasMoney) {
+                    XgpLottery.eco.withdrawPlayer(player, cost);
+                }
+                return hasMoney;
+            }
+            case EXP: {
+                int rawLevel = player.getLevel();
+                if (rawLevel < cost)
+                    return false;
+                player.setLevel(rawLevel - cost);
+                return true;
+            }
+        }
+        return false;
+    }
+
     public abstract void handleClick(InventoryClickEvent e);
 }

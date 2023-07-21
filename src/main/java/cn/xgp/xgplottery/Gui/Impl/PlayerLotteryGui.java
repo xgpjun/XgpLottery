@@ -5,10 +5,7 @@ import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Gui.PlayerGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.MyItem;
-import cn.xgp.xgplottery.Utils.LangUtils;
-import cn.xgp.xgplottery.Utils.NMSUtils;
-import cn.xgp.xgplottery.Utils.TimesUtils;
-import cn.xgp.xgplottery.Utils.VersionAdapterUtils;
+import cn.xgp.xgplottery.Utils.*;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -43,69 +40,83 @@ public class PlayerLotteryGui extends PlayerGui {
     public LotteryGui loadGui() {
         ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
         int amount = 0;
-        if (item!=null&&item.getItemMeta()!=null){
+        if (item != null && item.getItemMeta() != null) {
             if (NMSUtils.checkTag(item, keyOrTicket, lottery.getName())) {
                 amount = item.getAmount();
             }
         }
         setBorder(inv);
         String lore = "§7[§cx§7] §b您现在无法抽奖:§4抽奖所需物品不足";
-
-
-        int emptySlots = VersionAdapterUtils.getPlayerEmptySlot(player);
-        //判断个数
-        if(amount>0){
-            lore = "§7[§a √ §7] §b点击进行一次抽奖！";
-            single = true;
-            //判断背包是否为满
-            if(lottery.isCheckFull()){
-                if(emptySlots==0){
-                    single=false;
-                    lore = "§7[§c x §7] §b您现在无法抽奖:§4背包空间不足";
-                }
+        if (ConfigSetting.giveLottery) {
+            //判断个数
+            if (amount > 0) {
+                lore = "§7[§a √ §7] §b点击进行一次抽奖！";
+                single = true;
             }
-            if(lottery.getLimitedTimes()>0){
-                if(TimesUtils.getTimes(player.getUniqueId(),lottery.getName())>=lottery.getLimitedTimes()){
-                    lore = "§7[§c x §7] §b您现在无法抽奖:§4抽奖次数已达上限";
-                    single=false;
-                }
+        } else {
+            //售卖
+            lore = "§7[§a √ §7] §b点击购买一次抽奖！";
+            single = true;
+
+        }
+        if (lottery.getLimitedTimes() > 0) {
+            if (TimesUtils.getTimes(player.getUniqueId(), lottery.getName()) >= lottery.getLimitedTimes()) {
+                lore = "§7[§c x §7] §b您现在无法抽奖:§4抽奖次数已达上限";
+                single = false;
+            }
+        }
+        //判断背包是否为满
+        int emptySlots = VersionAdapterUtils.getPlayerEmptySlot(player);
+        if (lottery.isCheckFull()) {
+            if (emptySlots == 0) {
+                single = false;
+                lore = "§7[§c x §7] §b您现在无法抽奖:§4背包空间不足";
             }
         }
 
-        inv.setItem(20,new MyItem(Material.CHEST).setDisplayName(ChatColor.GOLD+"单抽出奇迹！").addLore(lore)
+
+        inv.setItem(20, new MyItem(Material.CHEST).setDisplayName(ChatColor.GOLD + "单抽出奇迹！").addLore(lore)
                 .addEnchant().getItem());
+
 
         lore = "§7[§c x §7] §b您现在无法抽奖:§4抽奖所需物品不足";
 
-        //判断个数
-        if(amount>=10){
-            lore = "§7[§a √ §7] §b点击进行一次十连抽！";
-            multiple = true;
-            //判断背包是否为满
-            if(lottery.isCheckFull()){
-                if(emptySlots<=9){
-                    multiple=false;
-                    lore = "§7[§c x §7] §b您现在无法抽奖:§4背包空间不足";
-                }
+        if (ConfigSetting.giveLottery) {
+            //判断个数
+            if (amount >= 10) {
+                lore = "§7[§a √ §7] §b点击进行一次十连抽！";
+                multiple = true;
             }
-            if(lottery.getLimitedTimes()>0){
-                if(TimesUtils.getTimes(player.getUniqueId(),lottery.getName())+10>lottery.getLimitedTimes()){
-                    lore = "§7[§c x §7] §b您现在无法抽奖:§4抽奖次数剩余不足";
-                    multiple=false;
-                }
+        } else {
+            lore = "§7[§a √ §7] §b点击购买一次十连抽！";
+            multiple = true;
+        }
+
+
+        if (lottery.getLimitedTimes() > 0) {
+            if (TimesUtils.getTimes(player.getUniqueId(), lottery.getName()) + 10 > lottery.getLimitedTimes()) {
+                lore = "§7[§c x §7] §b您现在无法抽奖:§4抽奖次数剩余不足";
+                multiple = false;
+            }
+        }
+        //判断背包是否为满
+        if (lottery.isCheckFull()) {
+            if (emptySlots <= 9) {
+                multiple = false;
+                lore = "§7[§c x §7] §b您现在无法抽奖:§4背包空间不足";
             }
         }
 
-        inv.setItem(24,new MyItem(Material.CHEST).setDisplayName(ChatColor.GOLD+"豪爽十连抽！").addLore(lore)
+        inv.setItem(24, new MyItem(Material.CHEST).setDisplayName(ChatColor.GOLD + "豪爽十连抽！").addLore(lore)
                 .addEnchant().getItem());
         String str;
-        if(lottery.getMaxTime()>0){
+        if (lottery.getMaxTime() > 0) {
             int times = 0;
-            if(TimesUtils.getCurrentLotteryTimes(player.getUniqueId(),lottery.getName())!=null)
-                times = TimesUtils.getCurrentLotteryTimes(player.getUniqueId(),lottery.getName()).getTimes();
-            str = ChatColor.BLUE+ LangUtils.BoxInformation4 +ChatColor.AQUA+lottery.getMaxTime()+ChatColor.BLUE+ LangUtils.BoxInformation5 + ChatColor.AQUA+ times;
-        }else
-            str =  ChatColor.BLUE+ LangUtils.BoxInformation6;
+            if (TimesUtils.getCurrentLotteryTimes(player.getUniqueId(), lottery.getName()) != null)
+                times = TimesUtils.getCurrentLotteryTimes(player.getUniqueId(), lottery.getName()).getTimes();
+            str = ChatColor.BLUE + LangUtils.BoxInformation4 + ChatColor.AQUA + lottery.getMaxTime() + ChatColor.BLUE + LangUtils.BoxInformation5 + ChatColor.AQUA + times;
+        } else
+            str = ChatColor.BLUE + LangUtils.BoxInformation6;
         inv.setItem(22,new MyItem(Material.DIAMOND).setDisplayName(ChatColor.GOLD+"提示信息")
                 .addLore("§7[§e ! §7] "+ChatColor.BLUE+"你需要手持抽奖物品")
                 .addLore(ChatColor.BLUE+"手中数量:"+ChatColor.AQUA+amount)
@@ -136,18 +147,36 @@ public class PlayerLotteryGui extends PlayerGui {
             case 33: player.openInventory(new LotteryPoolShow(lottery,lottery.getSpAwards(),this).getInventory()); break;
             case 20: {
                 loadGui();
-                if(!single){
+                if (!single) {
                     return;
                 }
-                lottery.open(player,false,false);
+                if (!ConfigSetting.giveLottery) {
+                    if (takeValue(lottery, player, lottery.getValue())) {
+                        lottery.open(player, true, false);
+                    } else {
+                        player.closeInventory();
+                        player.sendMessage(ChatColor.GOLD + LangUtils.LotteryPrefix + ChatColor.RED + "你买不起！");
+                    }
+                } else {
+                    lottery.open(player, false, false);
+                }
                 break;
             }
-            case 24:{
+            case 24: {
                 loadGui();
-                if (!multiple){
+                if (!multiple) {
                     return;
                 }
-                lottery.open(player,false,true);
+                if (!ConfigSetting.giveLottery) {
+                    if (takeValue(lottery, player, lottery.getValue() * 10)) {
+                        lottery.open(player, true, true);
+                    } else {
+                        player.closeInventory();
+                        player.sendMessage(ChatColor.GOLD + LangUtils.LotteryPrefix + ChatColor.RED + "你买不起！");
+                    }
+                } else {
+                    lottery.open(player, false, true);
+                }
                 break;
             }
             case 22:{

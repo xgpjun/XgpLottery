@@ -20,13 +20,14 @@ public class HelpCommand implements TabExecutor {
         sender.sendMessage(ChatColor.GREEN+"------XgpLottery"+ChatColor.AQUA+" Help"+ChatColor.GREEN+"------\n"+ChatColor.GOLD+ LangUtils.CmdHelpTitle1+ ChatColor.GREEN+"/xl  /lottery"+ChatColor.GOLD+LangUtils.CmdHelpTitle2);
         if(sender.hasPermission("xgplottery.manager")){
             if(args.length != 2||args[1].equals("1")) {
-                sender.sendMessage(ChatColor.AQUA + "/XgpLottery help "+ LangUtils.Page);
+                sender.sendMessage(ChatColor.AQUA + "/XgpLottery help " + LangUtils.Page);
                 sender.sendMessage(ChatColor.GREEN + LangUtils.CmdHelp);
-                sender.sendMessage(ChatColor.AQUA + "/XgpLottery add item "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdAdd1);
-                sender.sendMessage(ChatColor.AQUA + "/XgpLottery add award "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdAdd2);
-                sender.sendMessage(ChatColor.AQUA + "/XgpLottery box create "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdBox1);
-                sender.sendMessage(ChatColor.AQUA + "/XgpLottery box remove\n" + ChatColor.GREEN + LangUtils.CmdBox2 );
-                sender.sendMessage(ChatColor.AQUA + "/XgpLottery change "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdChange);
+                sender.sendMessage(ChatColor.AQUA + "/XgpLottery add item " + LangUtils.LotteryName + "\n" + ChatColor.GREEN + LangUtils.CmdAdd1);
+                sender.sendMessage(ChatColor.AQUA + "/XgpLottery add award " + LangUtils.LotteryName + "\n" + ChatColor.GREEN + LangUtils.CmdAdd2);
+                sender.sendMessage(ChatColor.AQUA + "/XgpLottery box create " + LangUtils.LotteryName + "\n" + ChatColor.GREEN + LangUtils.CmdBox1);
+                sender.sendMessage(ChatColor.AQUA + "/XgpLottery box remove\n" + ChatColor.GREEN + LangUtils.CmdBox2);
+                sender.sendMessage(ChatColor.AQUA + "/XgpLottery box list\n" + ChatColor.GREEN + "查看抽奖箱列表");
+                sender.sendMessage(ChatColor.AQUA + "/XgpLottery change " + LangUtils.LotteryName + "\n" + ChatColor.GREEN + LangUtils.CmdChange);
                 sender.sendMessage(ChatColor.GREEN + "------<1 / 4>------");
             }else if (args[1].equals("2")) {
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery delete "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdDelete);
