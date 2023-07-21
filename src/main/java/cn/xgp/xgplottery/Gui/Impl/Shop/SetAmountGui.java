@@ -9,7 +9,6 @@ import cn.xgp.xgplottery.Utils.ConfigSetting;
 import cn.xgp.xgplottery.Utils.GiveUtils;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
-import net.milkbowl.vault.economy.EconomyResponse;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -147,11 +146,11 @@ public class SetAmountGui extends PlayerGui {
                 break;
             }
             case 31:{
-                if(takeValue()){
+                if (takeValue(lottery, player, amount * value)) {
                     GiveUtils.giveLottery(player, lottery.getName(), amount);
                     player.closeInventory();
-                }else {
-                    inv.setItem(31,new MyItem(command).setDisplayName(ChatColor.RED+"你买不起！").setLore("§7[§4 x §7] §b骚年，你不能这样做！").getItem());
+                } else {
+                    inv.setItem(31, new MyItem(command).setDisplayName(ChatColor.RED + "你买不起！").setLore("§7[§4 x §7] §b骚年，你不能这样做！").getItem());
                 }
                 break;
             }
@@ -189,28 +188,6 @@ public class SetAmountGui extends PlayerGui {
         return cost<=getAccount();
     }
 
-    private boolean takeValue(){
-        int cost = amount*value;
-        if (!ConfigSetting.giveLottery)
-            cost = value;
-        switch (sellType){
-            case POINTS: {
-                return XgpLottery.ppAPI.take(player.getUniqueId(),cost);
-            }
-            case MONEY:{
-                EconomyResponse r = XgpLottery.eco.withdrawPlayer(player, cost);
-                return r.transactionSuccess();
-            }
-            case EXP:{
-                int rawLevel = player.getLevel();
-                if(rawLevel<cost)
-                    return false;
-                player.setLevel(rawLevel-cost);
-                return true;
-            }
-        }
-        return false;
-    }
 
     private int getMax(){
         int max = getAccount()/value;

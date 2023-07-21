@@ -130,7 +130,7 @@ public class Lottery {
             player.sendMessage(ChatColor.RED+LangUtils.PoolIsEmpty);
             return;
         }
-        player.sendMessage(ChatColor.GOLD+LangUtils.LotteryPrefix+ChatColor.GREEN+ LangUtils.LotteryInformation.replace("%time%",Integer.toString(TimesUtils.getCurrentTimes(player.getUniqueId(),getName()))));
+        player.sendMessage(ChatColor.GOLD + LangUtils.LotteryPrefix + ChatColor.GREEN + LangUtils.LotteryInformation.replace("%time%", Integer.toString(TimesUtils.getCurrentTimes(player.getUniqueId(), getName()) + 1)));
         //十连抽
         if(isMultiple){
             if(!isCmd){

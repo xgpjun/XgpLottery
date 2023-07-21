@@ -63,22 +63,22 @@ public class LotteryShop extends PlayerGui {
 
             inv.setItem(slot[index],new MyItem(Material.CHEST).setDisplayName(ChatColor.BLUE+LangUtils.PoolButton1+ChatColor.AQUA + lottery.getName())
                     .setLore(value,
-                            ChatColor.GOLD+LangUtils.SaleType+" :" +sellType,
+                            ChatColor.GOLD + LangUtils.SaleType + " :" + sellType,
                             "§7[§e √ §7] §6点击购买！")
                     .getItem());
             index++;
-            if(index==4*7)
+            if (index == 4 * 7)
                 break;
         }
 
         //显示服务器经济系统信息
-        String points = XgpLottery.ppAPI!=null? LangUtils.Points+ChatColor.AQUA+ XgpLottery.ppAPI.look(player.getUniqueId()) :LangUtils.NoMoneyAPI;
-        String money = XgpLottery.eco!=null?LangUtils.Money+ChatColor.AQUA+ XgpLottery.eco.getBalance(player) :LangUtils.NoPointsAPI;
-        inv.setItem(0,new MyItem(Material.DIAMOND)
-                .setDisplayName(ChatColor.GOLD+LangUtils.PersonalInformation)
-                .setLore(ChatColor.GOLD+": "+money,
-                        ChatColor.GOLD+": "+points)
-                        .addLore(ChatColor.BLUE+"XP: "+ChatColor.AQUA+ player.getLevel())
+        String points = XgpLottery.ppAPI != null ? LangUtils.Points + ChatColor.AQUA + ": " + XgpLottery.ppAPI.look(player.getUniqueId()) : LangUtils.NoMoneyAPI;
+        String money = XgpLottery.eco != null ? LangUtils.Money + ChatColor.AQUA + ": " + XgpLottery.eco.getBalance(player) : LangUtils.NoPointsAPI;
+        inv.setItem(0, new MyItem(Material.DIAMOND)
+                .setDisplayName(ChatColor.GOLD + LangUtils.PersonalInformation)
+                .setLore(ChatColor.GOLD + money,
+                        ChatColor.GOLD + points)
+                .addLore(ChatColor.BLUE + "XP: " + ChatColor.AQUA + player.getLevel())
                 .addEnchant()
                 .getItem());
         return inv;
@@ -105,8 +105,12 @@ public class LotteryShop extends PlayerGui {
             if (isSelling(lottery)) {
                 if (ConfigSetting.giveLottery)
                     player.openInventory(new SetAmountGui(lottery, this, player, 1).getInventory());
-                else
-                    lottery.open(player, false, false);
+                else {
+                    if (takeValue(lottery, player, lottery.getValue())) {
+                        lottery.open(player, true, false);
+                    }
+                }
+
             }
 
         }
