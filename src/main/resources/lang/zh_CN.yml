@@ -162,10 +162,12 @@ CmdConvert: "将本地数据文件上传到数据库(转换为文件)。(请在�
 CmdHelpTitle1: "你也可以使用"
 CmdHelpTitle2: "作为替代命令"
 
-### following are additions in version 1.1.2
+### following are additions in version 1.2.5
 
 LotterySettingTitle: "奖池设置"
 EXP: "经验"
+CmdBox3: "查看抽奖箱列表"
+CmdReward1: "打开累计抽奖回馈界面！"
 
 
 

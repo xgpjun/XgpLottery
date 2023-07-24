@@ -75,6 +75,7 @@ public class ConfigSetting {
         if (versionToInt < 123) {
             version = pluginVersion;
             XgpLottery.instance.getConfig().set("version", version);
+            XgpLottery.instance.saveConfig();
         }
         msg = getXgpWebsite("msg");
 

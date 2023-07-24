@@ -2,10 +2,10 @@ package cn.xgp.xgplottery.Listener;
 
 import cn.xgp.xgplottery.Utils.ConfigSetting;
 import cn.xgp.xgplottery.XgpLottery;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -34,7 +34,7 @@ public class LoginListener implements Listener {
     void sendUrl(String url, Player player){
 
         TextComponent urlMsg = new TextComponent(net.md_5.bungee.api.ChatColor.AQUA+url);
-        urlMsg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(net.md_5.bungee.api.ChatColor.GOLD+"点击访问！")));
+        urlMsg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new BaseComponent[]{new TextComponent(net.md_5.bungee.api.ChatColor.GOLD+"点击访问！")}));
         urlMsg.setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL,url));
         TextComponent message = new TextComponent(net.md_5.bungee.api.ChatColor.BLUE+"下载地址:");
         message.addExtra(urlMsg);

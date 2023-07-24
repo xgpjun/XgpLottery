@@ -45,7 +45,7 @@ public class BoxCommand implements TabExecutor {
 
         Player player = (Player) sender;
         if (args.length == 2) {
-            if (args[1].equals("create")) {
+            if (args[1].equals("remove")) {
                 player.sendMessage(ChatColor.AQUA + LangUtils.LotteryPrefix + ChatColor.GREEN + LangUtils.CreateBox);
                 Bukkit.getPluginManager().registerEvents(new RemoveBoxListener(player.getUniqueId()), XgpLottery.instance);
                 return true;

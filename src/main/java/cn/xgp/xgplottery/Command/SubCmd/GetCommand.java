@@ -35,8 +35,8 @@ public class GetCommand implements TabExecutor {
         }
         if(args.length<3||(!args[1].equals("ticket")&&!args[1].equals("key"))){
             sender.sendMessage(ChatColor.RED+LangUtils.WrongInput);
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery get ticket "+LangUtils.LotteryName+  "\n" + ChatColor.GREEN + "把手中的物品变为抽奖券");
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery get key "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + "把手中的物品变为抽奖钥匙");
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery get ticket "+LangUtils.LotteryName+  "\n" + ChatColor.GREEN + LangUtils.CmdGet1);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery get key "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdGet2);
             return true;
         }
 
