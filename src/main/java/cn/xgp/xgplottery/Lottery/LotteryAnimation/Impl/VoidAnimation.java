@@ -3,6 +3,7 @@ package cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Utils.GiveUtils;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import org.bukkit.entity.Player;
 
 public class VoidAnimation extends LotteryAnimation {
@@ -13,7 +14,7 @@ public class VoidAnimation extends LotteryAnimation {
 
     @Override
     public String toLore() {
-        return "无动画抽奖";
+        return LangUtils.VoidAnimation;
     }
 
     @Override

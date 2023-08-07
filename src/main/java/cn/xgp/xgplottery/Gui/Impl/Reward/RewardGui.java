@@ -4,10 +4,10 @@ import cn.xgp.xgplottery.Gui.Impl.Manage.LotteryMenuGui;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.CumulativeRewards;
 import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.ReceiveUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class RewardGui extends LotteryGui {
-    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ "累抽奖励设置!");
+    private final Inventory inv = Bukkit.createInventory(this,6*9, LangUtils.Reward1);
     int page;
     int size;
 
@@ -28,9 +28,9 @@ public class RewardGui extends LotteryGui {
     @Override
     public LotteryGui loadGui() {
         setBorder(inv);
-        inv.setItem(49,new MyItem(Material.ANVIL).setDisplayName(ChatColor.GOLD+"添加一个领取逻辑")
-                .addLore(ChatColor.BLUE+"点击后输入 "+ChatColor.AQUA+"奖池名称与礼包名称")
-                .addLore(ChatColor.RED+"礼包名称不可重复！").getItem());
+        inv.setItem(49,new MyItem(Material.ANVIL).setDisplayName(LangUtils.Reward13)
+                .addLore(LangUtils.Reward14)
+                .addLore(LangUtils.Reward15).getItem());
         inv.setItem(45,previousPage);
         inv.setItem(53,nextPage);
         return this;
@@ -45,15 +45,15 @@ public class RewardGui extends LotteryGui {
         for (int i = (this.page - 1) * 28; i<XgpLottery.rewards.size(); i++){
             CumulativeRewards rewards = XgpLottery.rewards.get(i);
 
-            String str1 = rewards.getNeededTimes()==0?"未设置": String.valueOf(rewards.getNeededTimes());
-            String str2 = rewards.getLimit()==0?"无限": String.valueOf(rewards.getLimit());
+            String str1 = rewards.getNeededTimes()==0?LangUtils.Reward3: String.valueOf(rewards.getNeededTimes());
+            String str2 = rewards.getLimit()==0?LangUtils.Reward4: String.valueOf(rewards.getLimit());
 
             inv.setItem(slot[index],new MyItem(Material.CHEST)
-                    .setDisplayName(ChatColor.GOLD+"礼包奖池名称: "+ChatColor.AQUA + rewards.getLotteryName())
-                    .addLore(ChatColor.BLUE+ "左键点击进入设置")
-                            .addLore(ChatColor.RED+"Shift+右键删除本礼包")
-                            .addLore(ChatColor.BLUE+"需要的抽奖次数: "+ChatColor.AQUA+str1)
-                            .addLore(ChatColor.BLUE+"领取的上限次数: "+ChatColor.AQUA+str2)
+                    .setDisplayName(LangUtils.Reward5 + rewards.getLotteryName())
+                    .addLore(LangUtils.Reward16)
+                            .addLore(LangUtils.Reward17)
+                            .addLore(LangUtils.Reward9+str1)
+                            .addLore(LangUtils.Reward10+str2)
                     .getItem());
             index++;
             if(index==4*7)

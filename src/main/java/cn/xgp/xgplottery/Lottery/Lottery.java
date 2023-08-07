@@ -112,6 +112,7 @@ public class Lottery {
         switch (multipleAnimation){
             case "MultipleSelectItemAnimation": return new MultipleSelectItemAnimation(player,lottery);
             case "SimpleMultipleAnimation": return new SimpleMultipleAnimation(player,lottery);
+            case "BoxMultipleAnimation": return new BoxMultipleAnimation(player,lottery);
             case "DefaultMultipleAnimation":
             default: return new DefaultMultipleAnimation(player,lottery);
         }
@@ -239,7 +240,10 @@ public class Lottery {
     public ItemStack getKeyItemStack(){
         if(keyMaterial==null)
             keyMaterial = NMSUtils.toNBTString(new ItemStack(Material.BONE));
-        return NMSUtils.toItem(keyMaterial);
+        ItemStack item = NMSUtils.toItem(keyMaterial);
+        if(item==null||item.getItemMeta()==null)
+            item = new ItemStack(Material.BONE);
+        return item;
     }
 
     public void setKeyItemStack(ItemStack itemStack) {
@@ -267,7 +271,10 @@ public class Lottery {
     public ItemStack getTicketItemStack(){
         if(ticketMaterial==null)
             ticketMaterial = NMSUtils.toNBTString(new ItemStack(Material.PAPER));
-        return NMSUtils.toItem(ticketMaterial);
+        ItemStack item = NMSUtils.toItem(ticketMaterial);
+        if(item==null||item.getItemMeta()==null)
+            item = new ItemStack(Material.PAPER);
+        return item;
     }
 
     public void setTicketItemStack(ItemStack itemStack) {

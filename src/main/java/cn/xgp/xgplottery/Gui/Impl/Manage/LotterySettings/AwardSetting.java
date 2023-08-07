@@ -4,6 +4,7 @@ import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Gui.PoolGui;
 import cn.xgp.xgplottery.Lottery.Award;
 import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.ReceiveUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import org.bukkit.Bukkit;
@@ -19,7 +20,7 @@ import java.util.List;
 
 public class AwardSetting extends LotteryGui {
     Award award;
-    Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ "奖品设置！");
+    Inventory inv = Bukkit.createInventory(this,6*9, LangUtils.AwardSetting);
     PoolGui returnGui;
 
     public AwardSetting(List<Award> awards,int index,PoolGui returnGui){
@@ -41,15 +42,15 @@ public class AwardSetting extends LotteryGui {
         //物品
         inv.setItem(10,new MyItem(item).getItem());
         //设置物品
-        inv.setItem(19,new MyItem(item).setDisplayName(ChatColor.GOLD+"上方是具体发放的物品")
-                .addLore(ChatColor.BLUE+"设置物品: "+ChatColor.AQUA+"拖动物品在此处点击")
+        inv.setItem(19,new MyItem(item).setDisplayName(LangUtils.AwardItem1)
+                .addLore(LangUtils.AwardItem2)
                 .setAmount(1)
                 .getItem());
         //是否给与物品
-        String isGiveItem = award.isGiveItem()?"是":"否";
-        MyItem guiItem = new MyItem(item).setDisplayName(ChatColor.GOLD+"是否给予物品")
-                .setLore(ChatColor.BLUE+"当前状态："+ChatColor.AQUA+isGiveItem)
-                .addLore(ChatColor.BLUE+"切换: "+ChatColor.AQUA+"左键")
+        String isGiveItem = award.isGiveItem()?LangUtils.True:LangUtils.False;
+        MyItem guiItem = new MyItem(item).setDisplayName(LangUtils.AwardItem3)
+                .setLore(LangUtils.AwardItem4+ChatColor.AQUA+isGiveItem)
+                .addLore(LangUtils.Operation+LangUtils.LeftClick)
                 .setAmount(1);
         if(award.isGiveItem()){
             guiItem.addEnchant();
@@ -57,51 +58,51 @@ public class AwardSetting extends LotteryGui {
         inv.setItem(28,guiItem.getItem());
 
         //指令
-        inv.setItem(12,new MyItem(Material.PAPER).setDisplayName(ChatColor.GOLD+"奖池指令")
-                .setLore(ChatColor.BLUE+"依次执行的指令：")
+        inv.setItem(12,new MyItem(Material.PAPER).setDisplayName(LangUtils.AwardCmd1)
+                .setLore(LangUtils.AwardCmd2)
                 .addLore(award.getCommandsString())
                 .getItem());
         //是否执行指令
-        String isExecuteCommands = award.isExecuteCommands()?"是":"否";
-        guiItem = new MyItem(command).setDisplayName(ChatColor.GOLD+"是否执行指令")
-                .setLore(ChatColor.BLUE+"当前状态："+ChatColor.AQUA+isExecuteCommands)
-                .addLore(ChatColor.BLUE+"切换状态: "+ChatColor.AQUA+"点击本物品切换状态");
+        String isExecuteCommands = award.isExecuteCommands()?LangUtils.True:LangUtils.False;
+        guiItem = new MyItem(command).setDisplayName(LangUtils.AwardCmd3)
+                .setLore(LangUtils.AwardCmd4+ChatColor.AQUA+isExecuteCommands)
+                .addLore(LangUtils.Operation+LangUtils.LeftClick);
         if(award.isExecuteCommands()){
             guiItem.addEnchant();
         }
         inv.setItem(21,guiItem.getItem());
         //添加指令
-        inv.setItem(30,new MyItem(command).setDisplayName(ChatColor.GOLD+"添加奖池指令")
-                .addLore(ChatColor.BLUE+"添加: "+ChatColor.AQUA+"左键点击")
-                .addLore(ChatColor.BLUE+"支持占位符如: "+ChatColor.AQUA+"%player_name%")
-                .addLore(ChatColor.GREEN+"添加一个命令，以控制台执行")
+        inv.setItem(30,new MyItem(command).setDisplayName(LangUtils.AwardCmd5)
+                .addLore(LangUtils.Operation+LangUtils.LeftClick)
+                .addLore(LangUtils.AwardCmd6)
+                .addLore(LangUtils.AwardCmd7)
                 .getItem());
         //删除指令
-        inv.setItem(39,new MyItem(command).setDisplayName(ChatColor.GOLD+"删除奖池指令")
-                .addLore(ChatColor.BLUE+"删除一条指令: "+ChatColor.AQUA+"左键点击")
+        inv.setItem(39,new MyItem(command).setDisplayName(LangUtils.AwardCmd8)
+                .addLore(LangUtils.Operation+LangUtils.LeftClick)
                 .getItem());
         //是否播报
-        String isBroadCast = award.isBroadCast()?"是":"否";
-        guiItem = new MyItem(Material.NOTE_BLOCK).setDisplayName(ChatColor.GOLD+"是否播报")
-                .setLore(ChatColor.BLUE+"当前状态："+ChatColor.AQUA+isBroadCast)
-                .addLore(ChatColor.BLUE+"切换: "+ChatColor.AQUA+"左键点击");
+        String isBroadCast = award.isBroadCast()?LangUtils.True:LangUtils.False;
+        guiItem = new MyItem(Material.NOTE_BLOCK).setDisplayName(LangUtils.AwardBroadCast1)
+                .setLore(LangUtils.AwardCmd4+ChatColor.AQUA+isBroadCast)
+                .addLore(LangUtils.Operation+LangUtils.LeftClick);
         if(award.isBroadCast()){
             guiItem.addEnchant();
         }
         inv.setItem(14, guiItem.getItem());
 
         //物品显示名称（在奖池预览）
-        String displayName = award.getDisplayName() != null ? award.getDisplayName() : ChatColor.GOLD + "暂无展示名";
+        String displayName = award.getDisplayName() != null ? award.getDisplayName() : LangUtils.AwardDisplayName1;
         inv.setItem(23, new MyItem(writable_book)
                 .setDisplayName(displayName)
-                .addLore(ChatColor.BLUE + "设置: " + ChatColor.AQUA + "左键点击")
-                .addLore(ChatColor.BLUE + "用于奖池预览与播报模块")
-                .addLore(ChatColor.BLUE + "本物品的名称即为展示名，支持颜色符号 &")
+                .addLore(LangUtils.Operation+LangUtils.LeftClick)
+                .addLore(LangUtils.AwardDisplayName2)
+                .addLore(LangUtils.AwardDisplayName3)
                 .getItem());
         guiItem = new MyItem(writable_book)
-                .setDisplayName(ChatColor.GOLD + "强制显示原物品")
-                .addLore(ChatColor.BLUE + "当前状态:" + ChatColor.AQUA + (award.isShowRaw() ? "是" : "否"))
-                .addLore(ChatColor.GREEN + "如果物品在展示中出现了错误，请打开此项");
+                .setDisplayName(LangUtils.AwardShowRawItem1)
+                .addLore(LangUtils.AwardCmd4 + ChatColor.AQUA + (award.isShowRaw() ? LangUtils.True:LangUtils.False))
+                .addLore(LangUtils.AwardShowRawItem2);
         if (award.isShowRaw()) {
             guiItem.addEnchant();
         }

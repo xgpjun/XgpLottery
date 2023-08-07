@@ -43,8 +43,6 @@ public class TimesUtils {
 
     public static int getTimes(UUID uuid ,String lotteryName){
         LotteryTimes result = getLotteryTimes(uuid,lotteryName);
-        if(result==null)
-            return 0;
         return result.getTimes();
     }
 
@@ -61,6 +59,8 @@ public class TimesUtils {
             int times = SqlUtils.getOneTimes("total",uuid.toString(),lotteryName);
             result = new LotteryTimes(lotteryName,uuid,times);
         }
+        if(result==null)
+            result = new LotteryTimes(lotteryName,uuid,0);
 
         return result;
     }
@@ -119,6 +119,7 @@ public class TimesUtils {
             allTimes.setTimes(allTimes.getTimes()+1);
             currentTimes.setTimes(currentTimes.getTimes() + 1);
             lotteryTimes.setTimes(lotteryTimes.getTimes() + 1);
+            SerializeUtils.saveData();
         }
         else {
             SqlUtils.addTimes(String.valueOf(player.getUniqueId()),"all","all");
@@ -168,6 +169,7 @@ public class TimesUtils {
             for (LotteryTimes lotteryTimes : cTimes) {
                 XgpLottery.currentTime.remove(lotteryTimes);
             }
+            SerializeUtils.saveData();
         }else {
             SqlUtils.deleteTimes(lotteryName,"current");
             SqlUtils.deleteTimes(lotteryName,"total");
@@ -210,6 +212,7 @@ public class TimesUtils {
     public static void clearCurrentTime(LotteryTimes lotteryTimes){
         if(!SqlUtils.enable){
             lotteryTimes.setTimes(0);
+            SerializeUtils.saveData();
         }else {
             SqlUtils.clearCurrentTimes(lotteryTimes);
         }
@@ -223,6 +226,7 @@ public class TimesUtils {
                 XgpLottery.rewardsTimes.add(lotteryTimes);
             }
             lotteryTimes.setTimes(lotteryTimes.getTimes() + 1);
+            SerializeUtils.saveData();
         }
         else {
             SqlUtils.addTimes(String.valueOf(player.getUniqueId()),name,"reward");

@@ -5,10 +5,10 @@ import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Award;
 import cn.xgp.xgplottery.Lottery.CumulativeRewards;
 import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.ReceiveUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class RewardSetting extends LotteryGui {
-    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ "累抽奖励设置!");
+    private final Inventory inv = Bukkit.createInventory(this,6*9, LangUtils.Reward1);
     private final List<Award> awards;
     private final CumulativeRewards rewards;
     private final RewardGui returnGui;
@@ -38,26 +38,26 @@ public class RewardSetting extends LotteryGui {
     @Override
     public LotteryGui loadGui() {
         setBorder(inv);
-        inv.setItem(49,new MyItem(Material.ANVIL).setDisplayName(ChatColor.GOLD+"操作指南！")
-                        .addLore(ChatColor.BLUE+"点击本物品返回")
-                        .addLore(ChatColor.BLUE+"添加奖品: "+ChatColor.AQUA+"将一个物品放在此处！")
+        inv.setItem(49,new MyItem(Material.ANVIL).setDisplayName(LangUtils.AnvilText1)
+                        .addLore(LangUtils.AnvilText2)
+                        .addLore(LangUtils.AnvilText5 )
                 .getItem());
-
-        inv.setItem(47,new MyItem(Material.ANVIL).setDisplayName(ChatColor.GOLD+"需要的抽奖次数！")
-                .addLore(ChatColor.BLUE+"更改:"+ChatColor.AQUA+"左键")
-                        .addLore(ChatColor.GREEN+"每到达一次这个数值皆可领一次,0为取消领取")
+        String str1 = rewards.getNeededTimes()==0?LangUtils.Reward3: String.valueOf(rewards.getNeededTimes());
+        inv.setItem(47,new MyItem(Material.ANVIL).setDisplayName(LangUtils.Reward9+str1)
+                .addLore(LangUtils.Operation+LangUtils.LeftClick)
+                        .addLore(LangUtils.Reward18)
                 .getItem());
-
-        inv.setItem(51,new MyItem(Material.ANVIL).setDisplayName(ChatColor.GOLD+"可领取的次数")
-                .addLore(ChatColor.BLUE+"更改:"+ChatColor.AQUA+"左键")
-                .addLore(ChatColor.GREEN+"0为无限领取次数")
+        String str2 = rewards.getLimit()==0?LangUtils.Reward4: String.valueOf(rewards.getLimit());
+        inv.setItem(51,new MyItem(Material.ANVIL).setDisplayName(LangUtils.Reward10+str2)
+                .addLore(LangUtils.Operation+LangUtils.LeftClick)
+                .addLore(LangUtils.Reward19)
                 .getItem());
 
         for (int i = 0; i< awards.size(); i++){
             Award award = awards.get(i);
             inv.setItem(slot[i],new MyItem(award.getRecordDisplayItem())
-                    .addLore(ChatColor.BLUE+ "设置奖品具体信息:"+ChatColor.AQUA+"左键点击!")
-                            .addLore(ChatColor.BLUE+ "删除奖项"+ChatColor.RED+"Shift+右键点击!")
+                    .addLore(LangUtils.Reward20)
+                            .addLore(LangUtils.Reward21)
                     .getItem());
             if(i==4*7)
                 break;

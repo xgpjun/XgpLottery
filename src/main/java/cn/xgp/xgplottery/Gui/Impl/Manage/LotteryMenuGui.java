@@ -39,8 +39,8 @@ public class LotteryMenuGui extends LotteryGui {
                 .setLore(ChatColor.YELLOW+LangUtils.CreateButton2)
                 .getItem());
 
-        Menu.setItem(24,new MyItem(Material.CHEST).setDisplayName(ChatColor.AQUA+"累抽奖励设置")
-                .addLore("§7[§6 $ §7] §b点击进入")
+        Menu.setItem(24,new MyItem(Material.CHEST).setDisplayName(LangUtils.Reward1)
+                .addLore(LangUtils.Reward2)
                 .getItem());
 
         return this;

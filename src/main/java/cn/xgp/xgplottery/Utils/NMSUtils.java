@@ -10,7 +10,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 public class NMSUtils {
-
     private static Class<?> nbtTagCompound;
     private static Class<?> itemStack;
     private static Class<?> MojangsonParser;
@@ -23,6 +22,7 @@ public class NMSUtils {
     private static Method toString;
     private static Method getTag;
     private static Method setTag; //1.7.10
+
     private static Method setString;
     private static Method getString;
 
@@ -65,12 +65,19 @@ public class NMSUtils {
                 MojangsonParser = Class.forName("net.minecraft.nbt.MojangsonParser");
                 parse = MojangsonParser.getMethod("a", String.class);
                 save = itemStack.getMethod("b", nbtTagCompound);
-                if (versionToInt < 20) {
-                    getTag = itemStack.getMethod("v");
-                } else {
-                    getTag = itemStack.getMethod("w");
+                switch (versionToInt){
+                    case 20:
+                        getTag = itemStack.getMethod("w");break;
+                    case 19:
+                    case 18:
+                        getTag = itemStack.getMethod("u");break;
+                    case 17:
+                        getTag = itemStack.getMethod("getOrCreateTag");break;
                 }
-                setTag = itemStack.getMethod("c", nbtTagCompound);
+                if(versionToInt==17)
+                    setTag = itemStack.getMethod("setTag",nbtTagCompound);
+                else
+                    setTag = itemStack.getMethod("c", nbtTagCompound);
                 setString = nbtTagCompound.getMethod("a", String.class, String.class);
                 getString = nbtTagCompound.getMethod("l", String.class);
             }
@@ -132,7 +139,7 @@ public class NMSUtils {
             Object nmsItemStack = asNMSCopy.invoke(CraftItemStack,item);
             Object tags = getTag.invoke(nmsItemStack);
             if(tags==null){
-                return null;
+                tags = nbtTagCompound.newInstance();
             }
             String key = "XgpLottery"+lotteryName;
             setString.invoke(tags,key,(keyOrTicket?"Key":"Ticket"));

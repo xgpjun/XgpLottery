@@ -38,7 +38,7 @@ public class GiveCommand implements TabExecutor {
             sender.sendMessage(ChatColor.RED+LangUtils.WrongInput);
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery give "+LangUtils.PlayerName+" key "+LangUtils.LotteryName+" "+LangUtils.Amount+"\n" + ChatColor.GREEN + LangUtils.CmdGive1);
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery give "+LangUtils.PlayerName+" ticket "+LangUtils.LotteryName+" "+LangUtils.Amount+"\n" + ChatColor.GREEN + LangUtils.CmdGive2);
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery give "+LangUtils.PlayerName+" open "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdGive3);
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery give "+LangUtils.PlayerName+" open "+LangUtils.LotteryName+" (multiple)\n" + ChatColor.GREEN + LangUtils.CmdGive3);
             return true;
         }
         Player player = Bukkit.getPlayer(args[1]);
@@ -55,28 +55,41 @@ public class GiveCommand implements TabExecutor {
             return true;
         }
         lotteryName = lottery.getName();
-        if (args.length == 5) {
-            try {
-                amount = Integer.parseInt(args[4]);
-            } catch (NumberFormatException e) {
-                sender.sendMessage(ChatColor.RED + LangUtils.WrongInput);
-                sender.sendMessage(ChatColor.RED + LangUtils.CmdHelpMsg);
-                return true;
-            }
-        }
         switch (option) {
-            case "key":
+            case "key":{
+                if (args.length == 5) {
+                    try {
+                        amount = Integer.parseInt(args[4]);
+                    } catch (NumberFormatException e) {
+                        sender.sendMessage(ChatColor.RED + LangUtils.WrongInput);
+                        sender.sendMessage(ChatColor.RED + LangUtils.CmdHelpMsg);
+                        return true;
+                    }
+                }
                 GiveUtils.giveKey(player, lotteryName, amount);
                 sender.sendMessage(ChatColor.GREEN+LangUtils.GiveSuccessfully+player.getName());
                 break;
-            case "ticket":
+            }
+
+            case "ticket":{
+                if (args.length == 5) {
+                    try {
+                        amount = Integer.parseInt(args[4]);
+                    } catch (NumberFormatException e) {
+                        sender.sendMessage(ChatColor.RED + LangUtils.WrongInput);
+                        sender.sendMessage(ChatColor.RED + LangUtils.CmdHelpMsg);
+                        return true;
+                    }
+                }
                 GiveUtils.giveTicket(player, lotteryName, amount);
                 sender.sendMessage(ChatColor.GREEN+LangUtils.GiveSuccessfully+player.getName());
                 break;
-            case "open":
-                GiveUtils.open(player, lotteryName,false);
+            }
+            case "open":{
+                GiveUtils.open(player,lotteryName, args.length == 5);
                 sender.sendMessage(ChatColor.GREEN+LangUtils.GiveSuccessfully+player.getName());
                 break;
+            }
             default:
                 sender.sendMessage(ChatColor.RED + LangUtils.WrongInput);
         }
@@ -98,6 +111,10 @@ public class GiveCommand implements TabExecutor {
         }
         if(args.length==5&&(args[3].equals("key")||args[3].equals("ticket"))){
             return Collections.singletonList(LangUtils.Amount);
+        }
+        if(args.length==5&&args[3].equals("open")){
+            List<String> strings = new ArrayList<>(Collections.singletonList("multiple"));
+            return XgpLotteryCommand.filter(strings,args);
         }
         return new ArrayList<>();
     }

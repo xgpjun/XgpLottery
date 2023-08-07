@@ -37,7 +37,7 @@ public class LotteryListener implements Listener {
 
                 if ("VoidAnimation".equals(lottery.getAnimation())) {
                     if (lottery.isCheckFull() && VersionAdapterUtils.getPlayerEmptySlot(player) < 1) {
-                        player.sendMessage(ChatColor.AQUA + LangUtils.LotteryPrefix + ChatColor.RED + "背包已满，无法抽奖！");
+                        player.sendMessage(LangUtils.PlayerGui5);
                         return;
                     }
                     lottery.open(player, false, false);
@@ -68,7 +68,7 @@ public class LotteryListener implements Listener {
                 if(!player.isSneaking()&&lottery!=null) {
                     if ("VoidAnimation".equals(lottery.getAnimation())) {
                         if (lottery.isCheckFull() && VersionAdapterUtils.getPlayerEmptySlot(player) < 1) {
-                            player.sendMessage(ChatColor.AQUA + LangUtils.LotteryPrefix + ChatColor.RED + "背包已满，无法抽奖！");
+                            player.sendMessage(LangUtils.PlayerGui5);
                             return;
                         }
                         lottery.open(player, false, false);

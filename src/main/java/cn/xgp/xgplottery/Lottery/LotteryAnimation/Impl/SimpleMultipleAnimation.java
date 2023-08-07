@@ -4,6 +4,7 @@ import cn.xgp.xgplottery.Gui.Impl.Anim.SimpleMultipleAnimGui;
 import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.MultipleAnimation;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -18,7 +19,7 @@ public class SimpleMultipleAnimation extends MultipleAnimation {
 
     @Override
     public String toLore() {
-        return "简易十连抽动画";
+        return LangUtils.SimpleMultipleAnimation;
     }
 
     @Override

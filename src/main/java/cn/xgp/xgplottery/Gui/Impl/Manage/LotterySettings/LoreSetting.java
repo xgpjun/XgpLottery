@@ -20,7 +20,7 @@ import java.util.List;
 
 @AllArgsConstructor
 public class LoreSetting extends LotteryGui {
-    private final Inventory inv = Bukkit.createInventory(this,3*9, ChatColor.GOLD+"修改Lore");
+    private final Inventory inv = Bukkit.createInventory(this,3*9, LangUtils.LoreSetting1);
 
     @Getter
     private List<String> loreList;
@@ -42,16 +42,16 @@ public class LoreSetting extends LotteryGui {
                 .getItem());
         inv.setItem(8,exit);
         inv.setItem(11,new MyItem(Material.PAPER)
-                .setDisplayName(ChatColor.GOLD+"下方为现在的lore")
+                .setDisplayName(LangUtils.LoreSetting2)
                 .setLore(loreList)
                 .getItem());
         inv.setItem(13,new MyItem(Material.PAPER)
-                .setDisplayName(ChatColor.GOLD+"添加一行lore")
-                .addLore(ChatColor.BLUE+"添加: "+ChatColor.AQUA+"左键点击")
+                .setDisplayName(LangUtils.LoreSetting3)
+                .addLore(LangUtils.Operation+LangUtils.LeftClick)
                 .getItem());
         inv.setItem(15,new MyItem(Material.PAPER)
-                .setDisplayName(ChatColor.GOLD+"删除一行lore")
-                .addLore(ChatColor.BLUE+"删除: "+ChatColor.AQUA+"左键点击")
+                .setDisplayName(LangUtils.LoreSetting4)
+                .addLore(LangUtils.Operation+LangUtils.LeftClick)
                 .getItem());
         return null;
     }

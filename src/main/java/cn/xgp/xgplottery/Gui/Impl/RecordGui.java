@@ -29,7 +29,7 @@ public class RecordGui extends PlayerGui {
         this.lotteryName = lotteryName;
         itemList = new LotteryRecord(player.getUniqueId(),lotteryName).getRecord();
         Collections.reverse(itemList);
-        inv = Bukkit.createInventory(this,6*9, ChatColor.AQUA+ player.getName()+ChatColor.GOLD+ LangUtils.RecordTitle.replace("%lotteryName%",ChatColor.AQUA+ lotteryName+ChatColor.GOLD));
+        inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ LangUtils.RecordTitle.replace("%lotteryName%", lotteryName).replace("%player%",player.getName()));
         size =  (int) Math.ceil( (double)itemList.size() / 45);
         this.returnGui = returnGui;
     }

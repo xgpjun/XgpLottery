@@ -72,7 +72,7 @@ public class ConfigSetting {
             XgpLottery.instance.getConfig().set("version", version);
             XgpLottery.instance.saveConfig();
         }
-        if (versionToInt < 123) {
+        if (versionToInt < 125) {
             version = pluginVersion;
             XgpLottery.instance.getConfig().set("version", version);
             XgpLottery.instance.saveConfig();

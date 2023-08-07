@@ -37,14 +37,14 @@ public class SelectAnimation extends LotteryGui {
                 .setDisplayName(ChatColor.AQUA + LangUtils.SelectItemAnimation)
                 .getItem());
         inv.setItem(12, new MyItem(Material.CHEST)
-                .setDisplayName(ChatColor.AQUA + "多彩抽奖动画")
+                .setDisplayName(ChatColor.AQUA + LangUtils.ColorfulAnimation)
                 .getItem());
         inv.setItem(13, new MyItem(Material.CHEST)
-                .setDisplayName(ChatColor.AQUA + "跑马灯抽奖动画")
+                .setDisplayName(ChatColor.AQUA + LangUtils.MarqueeAnimation)
                 .getItem());
         inv.setItem(14, new MyItem(Material.CHEST)
-                .setDisplayName(ChatColor.AQUA + "无动画抽奖")
-                .addLore(ChatColor.GREEN + "此情况下直接右键即获得物品，并限制为单抽")
+                .setDisplayName(ChatColor.AQUA + LangUtils.VoidAnimation)
+                .addLore(LangUtils.VoidAnimation2)
                 .getItem());
         return this;
     }

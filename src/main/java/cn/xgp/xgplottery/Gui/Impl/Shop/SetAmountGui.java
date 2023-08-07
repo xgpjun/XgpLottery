@@ -57,27 +57,27 @@ public class SetAmountGui extends PlayerGui {
         updateData();
 
         //确认交易
-        inv.setItem(31,new MyItem(command).setDisplayName(ChatColor.GOLD+"成交！")
-                .setLore("§7[§a √ §7] §b点击完成交易！")
+        inv.setItem(31,new MyItem(command).setDisplayName(LangUtils.Shop2)
+                .setLore(LangUtils.Shop3)
                 .getItem());
-        inv.setItem(37,new MyItem(Material.ANVIL).setDisplayName(ChatColor.GOLD+"[最小]")
-                .setLore("§7[§a-§7] §b点击减少购买数量")
+        inv.setItem(37,new MyItem(Material.ANVIL).setDisplayName(LangUtils.Shop4)
+                .setLore(LangUtils.Shop5)
                 .getItem());
-        inv.setItem(38,new MyItem(Material.ANVIL).setDisplayName(ChatColor.GOLD+"[-10]")
-                .setLore("§7[§a-§7] §b点击减少购买数量")
+        inv.setItem(38,new MyItem(Material.ANVIL).setDisplayName(LangUtils.Shop6)
+                .setLore(LangUtils.Shop5)
                 .getItem());
-        inv.setItem(39,new MyItem(Material.ANVIL).setDisplayName(ChatColor.GOLD+"[-1]")
-                .setLore("§7[§a-§7] §b点击减少购买数量")
+        inv.setItem(39,new MyItem(Material.ANVIL).setDisplayName(LangUtils.Shop7)
+                .setLore(LangUtils.Shop5)
                 .getItem());
 
-        inv.setItem(41,new MyItem(Material.ANVIL).setDisplayName(ChatColor.GOLD+"[+1]")
-                .setLore("§7[§a+§7] §b点击增加购买数量")
+        inv.setItem(41,new MyItem(Material.ANVIL).setDisplayName(LangUtils.Shop8)
+                .setLore(LangUtils.Shop10)
                 .getItem());
-        inv.setItem(42,new MyItem(Material.ANVIL).setDisplayName(ChatColor.GOLD+"[+10]")
-                .setLore("§7[§a+§7] §b点击增加购买数量")
+        inv.setItem(42,new MyItem(Material.ANVIL).setDisplayName(LangUtils.Shop9)
+                .setLore(LangUtils.Shop10)
                 .getItem());
-        inv.setItem(43,new MyItem(Material.ANVIL).setDisplayName(ChatColor.GOLD+"[最大]")
-                .setLore("§7[§a+§7] §b点击增加购买数量")
+        inv.setItem(43,new MyItem(Material.ANVIL).setDisplayName(LangUtils.Shop11)
+                .setLore(LangUtils.Shop10)
                 .getItem());
         return null;
     }
@@ -150,7 +150,7 @@ public class SetAmountGui extends PlayerGui {
                     GiveUtils.giveLottery(player, lottery.getName(), amount);
                     player.closeInventory();
                 } else {
-                    inv.setItem(31, new MyItem(command).setDisplayName(ChatColor.RED + "你买不起！").setLore("§7[§4 x §7] §b骚年，你不能这样做！").getItem());
+                    inv.setItem(31, new MyItem(command).setDisplayName(LangUtils.CantAfford).setLore(LangUtils.Shop12).getItem());
                 }
                 break;
             }
@@ -161,11 +161,11 @@ public class SetAmountGui extends PlayerGui {
     private void updateData(){
         //现在购买的数量
         inv.setItem(13,new MyItem(Material.DIAMOND)
-                .setDisplayName(ChatColor.GOLD+"购买数量")
+                .setDisplayName(LangUtils.Shop13)
                 .setAmount(amount)
-                .addLore(ChatColor.BLUE+"数量: "+ChatColor.AQUA+amount)
-                .addLore(ChatColor.BLUE+"花费: "+ChatColor.AQUA+value*amount+sellType.getSellType())
-                        .addLore(ChatColor.BLUE+"你拥有: "+ChatColor.AQUA+getAccount()+sellType.getSellType())
+                .addLore(LangUtils.Shop14+amount)
+                .addLore(LangUtils.Shop15+value*amount+sellType.getSellType())
+                        .addLore(LangUtils.Shop16+getAccount()+sellType.getSellType())
                 .getItem());
     }
 

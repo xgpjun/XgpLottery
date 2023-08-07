@@ -26,7 +26,7 @@ public class HelpCommand implements TabExecutor {
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery add award " + LangUtils.LotteryName + "\n" + ChatColor.GREEN + LangUtils.CmdAdd2);
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery box create " + LangUtils.LotteryName + "\n" + ChatColor.GREEN + LangUtils.CmdBox1);
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery box remove\n" + ChatColor.GREEN + LangUtils.CmdBox2);
-                sender.sendMessage(ChatColor.AQUA + "/XgpLottery box list\n" + ChatColor.GREEN + "查看抽奖箱列表");
+                sender.sendMessage(ChatColor.AQUA + "/XgpLottery box list\n" + ChatColor.GREEN + LangUtils.CmdBox3);
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery change " + LangUtils.LotteryName + "\n" + ChatColor.GREEN + LangUtils.CmdChange);
                 sender.sendMessage(ChatColor.GREEN + "------<1 / 4>------");
             }else if (args[1].equals("2")) {
@@ -35,7 +35,7 @@ public class HelpCommand implements TabExecutor {
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery get key "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdGet2);
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery give "+LangUtils.PlayerName+" key "+LangUtils.LotteryName+" "+LangUtils.Amount+"\n" + ChatColor.GREEN + LangUtils.CmdGive1);
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery give "+LangUtils.PlayerName+" ticket "+LangUtils.LotteryName+" "+LangUtils.Amount+"\n" + ChatColor.GREEN + LangUtils.CmdGive2);
-                sender.sendMessage(ChatColor.AQUA + "/XgpLottery give "+LangUtils.PlayerName+" open "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdGive3);
+                sender.sendMessage(ChatColor.AQUA + "/XgpLottery give "+LangUtils.PlayerName+" open "+LangUtils.LotteryName+" (multiple)\n" + ChatColor.GREEN + LangUtils.CmdGive3);
 
                 sender.sendMessage(ChatColor.GREEN + "------<2 / 4>------");
             }else if(args[1].equals("3")){
@@ -48,7 +48,7 @@ public class HelpCommand implements TabExecutor {
                 sender.sendMessage(ChatColor.GREEN + "------<3 / 4>------");
             }else if(args[1].equals("4")){
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery record "+LangUtils.LotteryName+" "+LangUtils.PlayerName+"\n" + ChatColor.GREEN + LangUtils.CmdRecord2);
-                sender.sendMessage(ChatColor.AQUA + "/XgpLottery reward\n" + ChatColor.GREEN + "打开累计抽奖回馈界面！");
+                sender.sendMessage(ChatColor.AQUA + "/XgpLottery reward\n" + ChatColor.GREEN + LangUtils.CmdReward1);
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery shop\n" + ChatColor.GREEN + LangUtils.CmdShop);
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery show "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdShow);
                 sender.sendMessage(ChatColor.AQUA + "/XgpLottery show "+LangUtils.LotteryName+" sp"+"\n" + ChatColor.GREEN + LangUtils.CmdShow);
@@ -61,7 +61,7 @@ public class HelpCommand implements TabExecutor {
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery show "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdShow);
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery show "+LangUtils.LotteryName+" sp"+"\n" + ChatColor.GREEN + LangUtils.CmdShow);
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery record "+LangUtils.LotteryName+"\n" + ChatColor.GREEN + LangUtils.CmdRecord1);
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery reward\n" + ChatColor.GREEN + "打开累计抽奖回馈界面！");
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery reward\n" + ChatColor.GREEN + LangUtils.CmdReward1);
         }
         return true;
     }

@@ -15,6 +15,7 @@ import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -83,7 +84,7 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
         ConfigSetting.loadConfig(getConfig());
 
         if(ConfigSetting.enableDatabase)
-            SqlUtils.getConnection();
+            SqlUtils.init();
 
 
         SerializeUtils.load();
@@ -120,6 +121,7 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
 
         SqlUtils.closeConnection();
         log(LangUtils.DisableMessage);
+        HandlerList.unregisterAll(this);
         Bukkit.getScheduler().cancelTask(SerializeUtils.saveTaskId);
         Bukkit.getScheduler().cancelTask(TimesUtils.taskId);
 
@@ -182,7 +184,7 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
         log(LangUtils.ReloadMessage);
         SqlUtils.closeConnection();
         if (ConfigSetting.enableDatabase)
-            SqlUtils.getConnection();
+            SqlUtils.init();
 
         SerializeUtils.load();
         enableDepend();
@@ -220,7 +222,7 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
             try {
                 String msg = msgin.readUTF();
                 if ("NeedToReload".equals(msg)) {
-                    SerializeUtils.load();
+                    SerializeUtils.loadLotteryData();
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

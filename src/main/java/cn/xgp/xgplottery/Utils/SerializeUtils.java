@@ -2,6 +2,7 @@ package cn.xgp.xgplottery.Utils;
 
 import cn.xgp.xgplottery.Lottery.*;
 import cn.xgp.xgplottery.XgpLottery;
+import cn.xgp.xgplottery.common.Memory;
 import com.google.common.collect.Iterables;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -39,18 +40,23 @@ public class SerializeUtils {
         XgpLottery.log(LangUtils.LoadData);
         loadLotteryData();
         loadData();
-        if (ConfigSetting.autoSaveTime >= 0)
+        if (ConfigSetting.autoSaveTime > 0)
             saveTaskId = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, SerializeUtils::save, ConfigSetting.autoSaveTime * 3, ConfigSetting.autoSaveTime).getTaskId();
     }
 
     public static void saveData(){
+        if(Memory.checkFreeSpace()){
+            Memory.broadcast();
+            return;
+        }
         if(!SqlUtils.enable){
             saveDataByFile();
             saveRewardByFile();
         }
     }
     public static void loadData(){
-        loadBoxData();
+        Bukkit.getScheduler().runTask(XgpLottery.instance,SerializeUtils::loadBoxData);
+//        loadBoxData();
         if(!SqlUtils.enable){
             loadDataByFile();
             loadRewardByFile();
@@ -58,10 +64,15 @@ public class SerializeUtils {
     }
 
     public static void saveLotteryData(){
+        if(Memory.checkFreeSpace()){
+            Memory.broadcast();
+            return;
+        }
         if(!SqlUtils.enable){
             saveLotteryDataByFile();
         }else {
             SqlUtils.saveLottery();
+            //bcSaveSignal();
         }
     }
     public static void loadLotteryData(){
@@ -74,6 +85,10 @@ public class SerializeUtils {
 
 
     public static void saveRewardData(){
+        if(Memory.checkFreeSpace()){
+            Memory.broadcast();
+            return;
+        }
         if(!SqlUtils.enable){
             saveRewardByFile();
         }else {
@@ -166,6 +181,8 @@ public class SerializeUtils {
             XgpLottery.lotteryBoxList = new CopyOnWriteArrayList<>();
         }
         for(LotteryBox lotteryBox :XgpLottery.lotteryBoxList){
+            if (lotteryBox==null)
+                continue;
             XgpLottery.locations.add(lotteryBox.getLocation());
         }
     }

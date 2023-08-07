@@ -49,7 +49,7 @@ public class LotteryManageGui extends LotteryGui {
             Lottery lottery = list.get(i);
             inv.setItem(slot[index],new MyItem(Material.CHEST)
                     .setDisplayName(ChatColor.BLUE+LangUtils.PoolButton1+ChatColor.AQUA + lottery.getName())
-                    .setLore(ChatColor.BLUE+ "点击进入设置")
+                    .setLore(LangUtils.ClickToSet)
                     .getItem());
             index++;
             if(index==4*7)

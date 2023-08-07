@@ -4,6 +4,7 @@ import cn.xgp.xgplottery.Gui.Impl.Anim.ColorfulAnimGui;
 import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,7 +18,7 @@ public class ColorfulAnimation extends LotteryAnimation {
 
     @Override
     public String toLore() {
-        return "多彩抽奖动画";
+        return LangUtils.ColorfulAnimation;
     }
 
     @Override

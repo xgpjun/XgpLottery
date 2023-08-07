@@ -4,6 +4,7 @@ import cn.xgp.xgplottery.Gui.Impl.Anim.MultipleSelectItemGui;
 import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.MultipleAnimation;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -17,7 +18,7 @@ public class MultipleSelectItemAnimation extends MultipleAnimation {
 
     @Override
     public String toLore() {
-        return "十连选择动画";
+        return LangUtils.MultipleSelectItemAnimation;
     }
 
     @Override

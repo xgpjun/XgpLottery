@@ -35,7 +35,7 @@ public class ColorfulAnimGui extends AnimHolder{
 
     @Override
     public LotteryGui loadGui() {
-        IntStream.range(0,54).forEach(i->inv.setItem(i,new MyItem(glasses[0]).setDisplayName(ChatColor.GOLD+"点击!").setLore(ChatColor.GRAY+"别想把我拿走>_<").getItem() ));
+        IntStream.range(0,54).forEach(i->inv.setItem(i,new MyItem(glasses[0]).setDisplayName(LangUtils.Click).setLore(LangUtils.BorderGlass4).getItem() ));
         batch.add(new int[]{0});
         batch.add(new int[]{10});
         batch.add(new int[]{11});
@@ -66,8 +66,8 @@ public class ColorfulAnimGui extends AnimHolder{
     public void startAnim(Player player){
         IntStream.range(0,54).forEach(i->inv.setItem(i,null));
         taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
-            final ItemStack colorGlass = new MyItem(glasses[isSpecial?1:10]).setDisplayName(ChatColor.GOLD+" ").setLore(ChatColor.GRAY+"别想把我拿走>_<").getItem();
-            final ItemStack glass = new MyItem(glasses[3]).setDisplayName(ChatColor.GOLD+" ").setLore(ChatColor.GRAY+"别想把我拿走>_<").getItem();
+            final ItemStack colorGlass = new MyItem(glasses[isSpecial?1:10]).setDisplayName(LangUtils.BorderGlass3).setLore(LangUtils.BorderGlass4).getItem();
+            final ItemStack glass = new MyItem(glasses[3]).setDisplayName(LangUtils.BorderGlass3).setLore(LangUtils.BorderGlass4).getItem();
             int counter = 0;
             @Override
             public void run() {

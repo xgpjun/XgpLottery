@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class PlayerLotteryGui extends PlayerGui {
-    final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+"做出选择吧！");
+    final Inventory inv = Bukkit.createInventory(this,6*9, LangUtils.PlayerGuiTitle);
     Player player;
     Lottery lottery;
     boolean keyOrTicket;
@@ -46,22 +46,22 @@ public class PlayerLotteryGui extends PlayerGui {
             }
         }
         setBorder(inv);
-        String lore = "§7[§cx§7] §b您现在无法抽奖:§4抽奖所需物品不足";
+        String lore =LangUtils.PlayerGui1;
         if (ConfigSetting.giveLottery) {
             //判断个数
             if (amount > 0) {
-                lore = "§7[§a √ §7] §b点击进行一次抽奖！";
+                lore = LangUtils.PlayerGui2;
                 single = true;
             }
         } else {
             //售卖
-            lore = "§7[§a √ §7] §b点击购买一次抽奖！";
+            lore = LangUtils.PlayerGui3;
             single = true;
 
         }
         if (lottery.getLimitedTimes() > 0) {
             if (TimesUtils.getTimes(player.getUniqueId(), lottery.getName()) >= lottery.getLimitedTimes()) {
-                lore = "§7[§c x §7] §b您现在无法抽奖:§4抽奖次数已达上限";
+                lore = LangUtils.PlayerGui4;
                 single = false;
             }
         }
@@ -70,32 +70,32 @@ public class PlayerLotteryGui extends PlayerGui {
         if (lottery.isCheckFull()) {
             if (emptySlots == 0) {
                 single = false;
-                lore = "§7[§c x §7] §b您现在无法抽奖:§4背包空间不足";
+                lore = LangUtils.PlayerGui5;
             }
         }
 
 
-        inv.setItem(20, new MyItem(Material.CHEST).setDisplayName(ChatColor.GOLD + "单抽出奇迹！").addLore(lore)
+        inv.setItem(20, new MyItem(Material.CHEST).setDisplayName(LangUtils.PlayerGui6).addLore(lore)
                 .addEnchant().getItem());
 
 
-        lore = "§7[§c x §7] §b您现在无法抽奖:§4抽奖所需物品不足";
+        lore = LangUtils.PlayerGui7;
 
         if (ConfigSetting.giveLottery) {
             //判断个数
             if (amount >= 10) {
-                lore = "§7[§a √ §7] §b点击进行一次十连抽！";
+                lore = LangUtils.PlayerGui8;
                 multiple = true;
             }
         } else {
-            lore = "§7[§a √ §7] §b点击购买一次十连抽！";
+            lore = LangUtils.PlayerGui9;
             multiple = true;
         }
 
 
         if (lottery.getLimitedTimes() > 0) {
             if (TimesUtils.getTimes(player.getUniqueId(), lottery.getName()) + 10 > lottery.getLimitedTimes()) {
-                lore = "§7[§c x §7] §b您现在无法抽奖:§4抽奖次数剩余不足";
+                lore = LangUtils.PlayerGui10;
                 multiple = false;
             }
         }
@@ -103,11 +103,11 @@ public class PlayerLotteryGui extends PlayerGui {
         if (lottery.isCheckFull()) {
             if (emptySlots <= 9) {
                 multiple = false;
-                lore = "§7[§c x §7] §b您现在无法抽奖:§4背包空间不足";
+                lore = LangUtils.PlayerGui11;
             }
         }
 
-        inv.setItem(24, new MyItem(Material.CHEST).setDisplayName(ChatColor.GOLD + "豪爽十连抽！").addLore(lore)
+        inv.setItem(24, new MyItem(Material.CHEST).setDisplayName(LangUtils.PlayerGui12).addLore(lore)
                 .addEnchant().getItem());
         String str;
         if (lottery.getMaxTime() > 0) {
@@ -117,19 +117,19 @@ public class PlayerLotteryGui extends PlayerGui {
             str = ChatColor.BLUE + LangUtils.BoxInformation4 + ChatColor.AQUA + lottery.getMaxTime() + ChatColor.BLUE + LangUtils.BoxInformation5 + ChatColor.AQUA + times;
         } else
             str = ChatColor.BLUE + LangUtils.BoxInformation6;
-        inv.setItem(22,new MyItem(Material.DIAMOND).setDisplayName(ChatColor.GOLD+"提示信息")
-                .addLore("§7[§e ! §7] "+ChatColor.BLUE+"你需要手持抽奖物品")
-                .addLore(ChatColor.BLUE+"手中数量:"+ChatColor.AQUA+amount)
+        inv.setItem(22,new MyItem(Material.DIAMOND).setDisplayName(LangUtils.PlayerGui13)
+                .addLore(LangUtils.PlayerGui14)
+                .addLore(LangUtils.PlayerGui15+amount)
                 .addLore(str)
                 .getItem());
 
 
-        inv.setItem(29,new MyItem(Material.CHEST).setDisplayName(ChatColor.GOLD+"查看普通物品池")
-                .setLore("§7[§e ? §7] §b左键点击！ §a或者你其实不在意这些？").getItem());
-        inv.setItem(33,new MyItem(Material.CHEST).setDisplayName(ChatColor.GOLD+"查看保底物品池")
-                .setLore("§7[§e ? §7] §b左键点击！ §a或者你其实不在意这些？").getItem());
-        inv.setItem(31,new MyItem(Material.PAPER).setDisplayName(ChatColor.GOLD+"查看抽奖记录")
-                .setLore("§7[§e ? §7] §b左键点击！ §a或者你其实不在意这些？").getItem());
+        inv.setItem(29,new MyItem(Material.CHEST).setDisplayName(LangUtils.PlayerGui16)
+                .setLore(LangUtils.PlayerGui19).getItem());
+        inv.setItem(33,new MyItem(Material.CHEST).setDisplayName(LangUtils.PlayerGui17)
+                .setLore(LangUtils.PlayerGui19).getItem());
+        inv.setItem(31,new MyItem(Material.PAPER).setDisplayName(LangUtils.PlayerGui18)
+                .setLore(LangUtils.PlayerGui19).getItem());
         return this;
     }
 
@@ -155,7 +155,7 @@ public class PlayerLotteryGui extends PlayerGui {
                         lottery.open(player, true, false);
                     } else {
                         player.closeInventory();
-                        player.sendMessage(ChatColor.GOLD + LangUtils.LotteryPrefix + ChatColor.RED + "你买不起！");
+                        player.sendMessage(ChatColor.GOLD + LangUtils.LotteryPrefix + LangUtils.CantAfford);
                     }
                 } else {
                     lottery.open(player, false, false);
@@ -172,7 +172,7 @@ public class PlayerLotteryGui extends PlayerGui {
                         lottery.open(player, true, true);
                     } else {
                         player.closeInventory();
-                        player.sendMessage(ChatColor.GOLD + LangUtils.LotteryPrefix + ChatColor.RED + "你买不起！");
+                        player.sendMessage(ChatColor.GOLD + LangUtils.LotteryPrefix + LangUtils.CantAfford);
                     }
                 } else {
                     lottery.open(player, false, true);

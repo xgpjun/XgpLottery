@@ -7,5 +7,6 @@ public class Metrics {
         int pluginId = 18492;
         org.bstats.bukkit.Metrics metrics = new org.bstats.bukkit.Metrics(XgpLottery.instance, pluginId);
         metrics.addCustomChart(new org.bstats.bukkit.Metrics.SimplePie("chart_id", () -> "My value"));
+        metrics.addCustomChart(new org.bstats.bukkit.Metrics.SimplePie("isfolia",()->"false"));
     }
 }

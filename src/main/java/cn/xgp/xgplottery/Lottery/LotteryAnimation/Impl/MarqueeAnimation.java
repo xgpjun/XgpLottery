@@ -4,6 +4,7 @@ import cn.xgp.xgplottery.Gui.Impl.Anim.MarqueeAnimGui;
 import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.MathUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
@@ -20,7 +21,7 @@ public class MarqueeAnimation extends LotteryAnimation {
 
     @Override
     public String toLore() {
-        return "跑马灯动画";
+        return LangUtils.MarqueeAnimation;
     }
 
     @Override

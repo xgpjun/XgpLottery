@@ -84,9 +84,9 @@ public class LotteryPoolGui extends PoolGui {
             inv.setItem(i, guiItem
                     .addLore(ChatColor.GOLD +LangUtils.Weight+"/"+LangUtils.WeightSum+ChatColor.AQUA+":"+ChatColor.GREEN+weight +"/"+sum)
                     .addLore(ChatColor.GOLD +LangUtils.Probability+ChatColor.GREEN+str)
-                    .addLore(ChatColor.BLUE+"奖品详细设置:"+ChatColor.AQUA+"Shift+左键")
-                    .addLore(ChatColor.BLUE+"设置权重:"+ChatColor.AQUA+"左键")
-                    .addLore(ChatColor.BLUE+"删除奖品:"+ChatColor.RED+"Shift+右键")
+                    .addLore(LangUtils.LotteryPool1)
+                    .addLore(LangUtils.LotteryPool2)
+                    .addLore(LangUtils.LotteryPool3)
                     .getItem());
         }
         return inv;

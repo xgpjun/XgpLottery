@@ -22,7 +22,7 @@ public class RewardCommand implements TabExecutor {
         }
         if(args.length!=1){
             sender.sendMessage(ChatColor.RED + LangUtils.WrongInput);
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery reward\n" + ChatColor.GREEN + "打开累计抽奖回馈界面！");
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery reward\n" + ChatColor.GREEN + LangUtils.CmdReward1);
             return true;
         }
         Player player = (Player) sender;
