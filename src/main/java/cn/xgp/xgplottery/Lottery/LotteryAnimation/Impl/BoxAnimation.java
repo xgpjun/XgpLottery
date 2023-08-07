@@ -7,6 +7,7 @@ import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -15,6 +16,8 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class BoxAnimation extends LotteryAnimation {
 
@@ -37,17 +40,16 @@ public class BoxAnimation extends LotteryAnimation {
         //get award
         showItemList.set(20,awards.get(0).getRecordDisplayItem());
         player.openInventory(inventory);
-        taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
+        taskID = Bukkit.getAsyncScheduler().runAtFixedRate(XgpLottery.instance, new Consumer<ScheduledTask>() {
             int j = 0;
             @Override
-            public void run() {
-
+            public void accept(ScheduledTask scheduledTask) {
                 for (int i = 9; i < 18; i++) {
-                    MyItem myItem = new MyItem(showItemList.get(i-9+j));
-                    if(i==13)
-                        inventory.setItem(i,myItem.addEnchant().getItem());
+                    MyItem myItem = new MyItem(showItemList.get(i - 9 + j));
+                    if (i == 13)
+                        inventory.setItem(i, myItem.addEnchant().getItem());
                     else
-                        inventory.setItem(i,myItem.getItem());
+                        inventory.setItem(i, myItem.getItem());
                 }
                 j++;
                 if (j >= showItemList.size() - 9) {
@@ -57,16 +59,13 @@ public class BoxAnimation extends LotteryAnimation {
                     setStop(true);
                 }
                 float pitch = (float) Math.pow(2.0, j / 18.0);
-                player.playSound(player.getLocation(), sound,1.0f,pitch);
+                player.playSound(player.getLocation(), sound, 1.0f, pitch);
                 if (isStop()) {
                     cancelTask();
-                    player.playSound(player.getLocation(), finish,1.0f,1.0f);
+                    player.playSound(player.getLocation(), finish, 1.0f, 1.0f);
                 }
-
             }
-
-
-        }, 0L, 5L).getTaskId();
+        },0L,250L, TimeUnit.MILLISECONDS);
         CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this,true);
         Bukkit.getPluginManager().registerEvents(closeListener,XgpLottery.instance);
     }

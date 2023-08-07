@@ -13,6 +13,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.util.concurrent.TimeUnit;
+
 public class LoginListener implements Listener {
 
     @EventHandler
@@ -20,14 +22,14 @@ public class LoginListener implements Listener {
         if(!ConfigSetting.msgToAdmin){return;}
         Player player = e.getPlayer();
         if(player.isOp()||player.hasPermission("xgplottery.manager")){
-            Bukkit.getScheduler().runTaskLaterAsynchronously(XgpLottery.instance,()->{
+            Bukkit.getAsyncScheduler().runDelayed(XgpLottery.instance,scheduledTask -> {
                 player.sendMessage(ChatColor.DARK_RED + "[XgpLottery] 有新版本可用！ 请去发布贴下载~");
                 //友情链接
                 sendUrl("https://www.mcbbs.net/thread-1445345-1-1.html",player);
                 sendUrl("https://github.com/xgpjun/XgpLottery/releases",player);
                 if(!ConfigSetting.msg.equals("1.0.0"))
                     player.sendMessage(ChatColor.BLUE+"[XgpLottery] 新版本信息："+ChatColor.GREEN+ ConfigSetting.msg);
-            },60);
+            },3, TimeUnit.SECONDS);
         }
     }
 

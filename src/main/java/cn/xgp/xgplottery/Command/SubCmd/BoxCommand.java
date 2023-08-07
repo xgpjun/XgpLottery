@@ -39,7 +39,7 @@ public class BoxCommand implements TabExecutor {
             sender.sendMessage(ChatColor.RED + LangUtils.WrongInput);
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery box create " + LangUtils.LotteryName + "\n" + ChatColor.GREEN + LangUtils.CmdBox1);
             sender.sendMessage(ChatColor.AQUA + "/XgpLottery box remove\n" + ChatColor.GREEN + LangUtils.CmdBox2);
-            sender.sendMessage(ChatColor.AQUA + "/XgpLottery box list\n" + ChatColor.GREEN + "查看抽奖箱列表");
+            sender.sendMessage(ChatColor.AQUA + "/XgpLottery box list\n" + ChatColor.GREEN + LangUtils.CmdBox3);
             return true;
         }
 
@@ -66,7 +66,7 @@ public class BoxCommand implements TabExecutor {
                 try {
                     int index = Integer.parseInt(args[2]);
                     Location location = XgpLottery.lotteryBoxList.get(index).getLocation();
-                    player.teleport(location.add(0, 2, 0));
+                    player.teleportAsync(location.add(0.5,2,0.5));
                     return true;
                 } catch (Exception e) {
                     XgpLottery.log(e.getMessage());

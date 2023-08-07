@@ -15,6 +15,7 @@ import org.black_ixx.playerpoints.PlayerPointsAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
+import org.bukkit.event.HandlerList;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -83,7 +84,7 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
         ConfigSetting.loadConfig(getConfig());
 
         if(ConfigSetting.enableDatabase)
-            SqlUtils.getConnection();
+            SqlUtils.init();
 
 
         SerializeUtils.load();
@@ -99,13 +100,10 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
 
         //注册监听器
         Bukkit.getPluginManager().registerEvents(new GuiListener(),this);
-
         Bukkit.getPluginManager().registerEvents(new LotteryListener(),this);
-
         Bukkit.getPluginManager().registerEvents(new LoginListener(),this);
 
-        Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance, ConfigSetting::updateConfig);
-
+        Bukkit.getAsyncScheduler().runNow(instance, scheduledTask -> ConfigSetting.updateConfig());
         //bc
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
         this.getServer().getMessenger().registerIncomingPluginChannel(this, "BungeeCord", this);
@@ -120,8 +118,8 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
 
         SqlUtils.closeConnection();
         log(LangUtils.DisableMessage);
-        Bukkit.getScheduler().cancelTask(SerializeUtils.saveTaskId);
-        Bukkit.getScheduler().cancelTask(TimesUtils.taskId);
+        HandlerList.unregisterAll(this);
+        TimesUtils.taskId.cancel();
 
     }
 
@@ -174,15 +172,12 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
     }
 
     public static void reload(){
-
-        if (ConfigSetting.autoSaveTime >= 0)
-            Bukkit.getScheduler().cancelTask(SerializeUtils.saveTaskId);
         instance.reloadConfig();
         ConfigSetting.loadConfig(instance.getConfig());
         log(LangUtils.ReloadMessage);
         SqlUtils.closeConnection();
         if (ConfigSetting.enableDatabase)
-            SqlUtils.getConnection();
+            SqlUtils.init();
 
         SerializeUtils.load();
         enableDepend();
@@ -220,7 +215,7 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
             try {
                 String msg = msgin.readUTF();
                 if ("NeedToReload".equals(msg)) {
-                    SerializeUtils.load();
+                    SerializeUtils.loadLotteryData();
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);

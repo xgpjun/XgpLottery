@@ -45,7 +45,7 @@ public class ConfigSetting {
         giveKey = config.getBoolean("giveKey",false);
         shop = config.getBoolean("shop",true);
         autoSaveTime = config.getLong("autoSaveTime",120L)*20;
-        autoUpdateTopTime = config.getLong("autoUpdateTopTime",120L)*20;
+        autoUpdateTopTime = config.getLong("autoUpdateTopTime",120L);
         autoSaveMsg = config.getBoolean("autoSaveMsg",true);
         broadcast = config.getBoolean("broadcast",true);
         recordAmount = config.getInt("recordAmount",500); //1.1.0新增
@@ -72,7 +72,7 @@ public class ConfigSetting {
             XgpLottery.instance.getConfig().set("version", version);
             XgpLottery.instance.saveConfig();
         }
-        if (versionToInt < 123) {
+        if (versionToInt < 125) {
             version = pluginVersion;
             XgpLottery.instance.getConfig().set("version", version);
             XgpLottery.instance.saveConfig();

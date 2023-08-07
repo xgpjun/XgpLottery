@@ -40,7 +40,7 @@ public class MarqueeAnimGui extends AnimHolder{
         }
         temp = inv.getItem(index);
         if (temp != null) {
-            inv.setItem(index,new MyItem(glasses[5]).setDisplayName(ChatColor.GREEN+String.valueOf(ChatColor.BOLD)+"选择中").getItem());
+            inv.setItem(index,new MyItem(glasses[5]).setDisplayName(LangUtils.Selecting).getItem());
         }
     }
 }

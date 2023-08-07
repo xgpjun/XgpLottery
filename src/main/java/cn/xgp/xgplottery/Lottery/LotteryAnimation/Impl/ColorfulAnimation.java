@@ -4,9 +4,12 @@ import cn.xgp.xgplottery.Gui.Impl.Anim.ColorfulAnimGui;
 import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+
+import java.util.concurrent.TimeUnit;
 
 public class ColorfulAnimation extends LotteryAnimation {
 
@@ -17,7 +20,7 @@ public class ColorfulAnimation extends LotteryAnimation {
 
     @Override
     public String toLore() {
-        return "多彩抽奖动画";
+        return LangUtils.ColorfulAnimation;
     }
 
     @Override
@@ -25,7 +28,7 @@ public class ColorfulAnimation extends LotteryAnimation {
         awards.add(getOneAward());
         ColorfulAnimGui gui = new ColorfulAnimGui(calculator.isSpecial(),awards.get(0).getRecordDisplayItem());
         player.openInventory(gui.getInventory());
-        taskID = Bukkit.getScheduler().runTaskLater(XgpLottery.instance, () -> player.closeInventory(),4000L).getTaskId();
+        taskID = Bukkit.getAsyncScheduler().runDelayed(XgpLottery.instance,scheduledTask -> player.closeInventory(),40, TimeUnit.SECONDS);
 
         CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this,true);
         Bukkit.getPluginManager().registerEvents(closeListener, XgpLottery.instance);

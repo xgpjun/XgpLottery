@@ -3,7 +3,6 @@ package cn.xgp.xgplottery.Gui;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
-import cn.xgp.xgplottery.Utils.NMSUtils;
 import cn.xgp.xgplottery.XgpLottery;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -33,37 +32,17 @@ public abstract class LotteryGui implements InventoryHolder {
 
 
     static {
-        if(NMSUtils.versionToInt<13){
-            Material stainedGlassPane = Material.valueOf("STAINED_GLASS_PANE");
-            borderGlass = new MyItem(stainedGlassPane,1,(byte)7)
-                    .setDisplayName(ChatColor.GRAY+ LangUtils.BorderGlass1)
-                    .setLore(ChatColor.GRAY+ LangUtils.BorderGlass2)
+        borderGlass = new MyItem(Material.GRAY_STAINED_GLASS_PANE)
+                .setDisplayName(ChatColor.GRAY+LangUtils.BorderGlass1)
+                .setLore(ChatColor.GRAY+ LangUtils.BorderGlass2)
+                .getItem();
+        exit = new MyItem(Material.BARRIER)
+                    .setDisplayName(ChatColor.RED+LangUtils.Exit1)
+                    .setLore(ChatColor.GOLD+ LangUtils.Exit2)
                     .getItem();
-        }else {
-            borderGlass = new MyItem(Material.GRAY_STAINED_GLASS_PANE)
-                    .setDisplayName(ChatColor.GRAY+LangUtils.BorderGlass1)
-                    .setLore(ChatColor.GRAY+ LangUtils.BorderGlass2)
-                    .getItem();
-        }
+        command = Material.COMMAND_BLOCK;
+        writable_book = Material.WRITABLE_BOOK;
 
-        if(NMSUtils.versionToInt<8){
-            exit = new MyItem(Material.BEDROCK)
-                    .setDisplayName(ChatColor.RED+LangUtils.Exit1)
-                    .setLore(ChatColor.GOLD+ LangUtils.Exit2)
-                    .getItem();
-        }else {
-            exit = new MyItem(Material.BARRIER)
-                    .setDisplayName(ChatColor.RED+LangUtils.Exit1)
-                    .setLore(ChatColor.GOLD+ LangUtils.Exit2)
-                    .getItem();
-        }
-        if(NMSUtils.versionToInt<13){
-            command = Material.valueOf("COMMAND");
-            writable_book = Material.valueOf("BOOK_AND_QUILL");
-        }else {
-            command = Material.COMMAND_BLOCK;
-            writable_book = Material.WRITABLE_BOOK;
-        }
     }
 
     public void setBorder(Inventory gui){

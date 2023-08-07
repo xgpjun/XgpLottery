@@ -49,13 +49,13 @@ public class SelectItemGui extends AnimHolder{
             player.playSound(player.getLocation(), LotteryAnimation.getFinish(),1.0f,1.0f);
             GiveUtils.giveAward(player,selectItemAnimation.getAwards().get(0));
             selectItemAnimation.getCalculator().sendMessage();
-            Bukkit.getScheduler().runTaskLater(XgpLottery.instance,()->{
+            player.getScheduler().runDelayed(XgpLottery.instance,scheduledTask -> {
                 for(int i=0;i<54;i++){
                     if(e.getRawSlot()==i)
                         continue;
                     inv.setItem(i,selectItemAnimation.getLottery().showFakeItem());
                 }
-            },40);
+            },null,40);
 
         }
     }

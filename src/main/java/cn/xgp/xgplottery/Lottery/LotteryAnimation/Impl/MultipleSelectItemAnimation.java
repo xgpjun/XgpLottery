@@ -4,10 +4,14 @@ import cn.xgp.xgplottery.Gui.Impl.Anim.MultipleSelectItemGui;
 import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.MultipleAnimation;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class MultipleSelectItemAnimation extends MultipleAnimation {
@@ -17,7 +21,7 @@ public class MultipleSelectItemAnimation extends MultipleAnimation {
 
     @Override
     public String toLore() {
-        return "十连选择动画";
+        return LangUtils.MultipleSelectItemAnimation;
     }
 
     @Override
@@ -25,10 +29,11 @@ public class MultipleSelectItemAnimation extends MultipleAnimation {
         IntStream.range(0, 10).forEach(i -> awards.add(getOneAward()));
         MultipleSelectItemGui gui = new MultipleSelectItemGui(this);
         player.openInventory(gui.getInventory());
-        taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
-            int counter = 0;
+        taskID = Bukkit.getAsyncScheduler().runAtFixedRate(XgpLottery.instance, new Consumer<ScheduledTask>() {
+            int counter=0;
+
             @Override
-            public void run() {
+            public void accept(ScheduledTask scheduledTask) {
                 counter++;
                 gui.glassChange();
                 float pitch = (float) Math.pow(2.0, counter / 18.0);
@@ -39,7 +44,7 @@ public class MultipleSelectItemAnimation extends MultipleAnimation {
                     cancelTask();
                 }
             }
-        }, 0L, 5L).getTaskId();
+        },0L,250L, TimeUnit.MILLISECONDS);
         CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this,true);
         Bukkit.getPluginManager().registerEvents(closeListener,XgpLottery.instance);
     }

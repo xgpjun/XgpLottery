@@ -9,24 +9,14 @@ import org.bukkit.inventory.ItemStack;
 public class VersionAdapterUtils {
 
     public static boolean ifMainHand(PlayerInteractEvent e){
-        if(NMSUtils.versionToInt<9)
-            return true;
-        else
-            return EquipmentSlot.HAND.equals(e.getHand());
+        return EquipmentSlot.HAND.equals(e.getHand());
     }
     public static void setItemInMainHand(Player player,ItemStack itemStack){
-        if(NMSUtils.versionToInt<9){
-            player.setItemInHand(itemStack);
-        }else {
-            player.getInventory().setItemInMainHand(itemStack);
-        }
+        player.getInventory().setItemInMainHand(itemStack);
     }
 
     public static ItemStack getItemInMainHand(Player player){
-        if(NMSUtils.versionToInt<9)
-            return player.getItemInHand();
-        else
-            return player.getInventory().getItemInMainHand();
+        return player.getInventory().getItemInMainHand();
     }
     public static int getPlayerEmptySlot(Player player){
         ItemStack[] items = player.getInventory().getContents();
@@ -42,13 +32,9 @@ public class VersionAdapterUtils {
                 emptySlots--;
             }
         }
-        if(NMSUtils.versionToInt<9){
-            return emptySlots;
-        }
-        else{
-            if(player.getInventory().getItemInOffHand()==null||player.getInventory().getItemInOffHand().getItemMeta()==null)
-                emptySlots--;
-            return emptySlots;
-        }
+        if(player.getInventory().getItemInOffHand().getItemMeta() == null)
+            emptySlots--;
+        return emptySlots;
+
     }
 }

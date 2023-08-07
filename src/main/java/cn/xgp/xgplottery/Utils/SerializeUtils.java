@@ -2,9 +2,7 @@ package cn.xgp.xgplottery.Utils;
 
 import cn.xgp.xgplottery.Lottery.*;
 import cn.xgp.xgplottery.XgpLottery;
-import com.google.common.collect.Iterables;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
+import cn.xgp.xgplottery.common.Memory;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.TypeAdapter;
@@ -14,7 +12,6 @@ import com.google.gson.stream.JsonWriter;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import java.io.*;
@@ -26,7 +23,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SerializeUtils {
 
-    public static int saveTaskId;
 
     public static void save(){
         if(!XgpLottery.lotteryList.isEmpty()){
@@ -39,18 +35,20 @@ public class SerializeUtils {
         XgpLottery.log(LangUtils.LoadData);
         loadLotteryData();
         loadData();
-        if (ConfigSetting.autoSaveTime >= 0)
-            saveTaskId = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, SerializeUtils::save, ConfigSetting.autoSaveTime * 3, ConfigSetting.autoSaveTime).getTaskId();
     }
 
     public static void saveData(){
+        if(Memory.checkFreeSpace()){
+            Memory.broadcast();
+            return;
+        }
         if(!SqlUtils.enable){
             saveDataByFile();
             saveRewardByFile();
         }
     }
     public static void loadData(){
-        loadBoxData();
+        Bukkit.getAsyncScheduler().runNow(XgpLottery.instance,task-> SerializeUtils.loadBoxData());
         if(!SqlUtils.enable){
             loadDataByFile();
             loadRewardByFile();
@@ -58,10 +56,15 @@ public class SerializeUtils {
     }
 
     public static void saveLotteryData(){
+        if(Memory.checkFreeSpace()){
+            Memory.broadcast();
+            return;
+        }
         if(!SqlUtils.enable){
             saveLotteryDataByFile();
         }else {
             SqlUtils.saveLottery();
+            //bcSaveSignal();
         }
     }
     public static void loadLotteryData(){
@@ -74,6 +77,10 @@ public class SerializeUtils {
 
 
     public static void saveRewardData(){
+        if(Memory.checkFreeSpace()){
+            Memory.broadcast();
+            return;
+        }
         if(!SqlUtils.enable){
             saveRewardByFile();
         }else {
@@ -166,6 +173,8 @@ public class SerializeUtils {
             XgpLottery.lotteryBoxList = new CopyOnWriteArrayList<>();
         }
         for(LotteryBox lotteryBox :XgpLottery.lotteryBoxList){
+            if (lotteryBox==null)
+                continue;
             XgpLottery.locations.add(lotteryBox.getLocation());
         }
     }
@@ -287,16 +296,9 @@ public class SerializeUtils {
             while ((line = reader.readLine()) != null) {
                 jsonBuilder.append(line);
             }
-            //TODO 1.20+会更改，此处为了不丢失以前的版本的数据
             String jsonData = jsonBuilder.toString();
-            if(ConfigSetting.versionToInt<120){
-                List<LotteryNbtConverter> dataList = lotteryFromJson(jsonData);
-                for(LotteryNbtConverter lotteryNbtConverter:dataList){
-                    XgpLottery.lotteryList.put(lotteryNbtConverter.getName(),lotteryNbtConverter.toLottery());
-                }
-            } else {
-                XgpLottery.lotteryList = lotteryFromJson_new(jsonData);
-            }
+            XgpLottery.lotteryList = lotteryFromJson_new(jsonData);
+
         } catch (IOException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -401,7 +403,8 @@ public class SerializeUtils {
         Gson gson = new GsonBuilder()
                 .registerTypeAdapter(Location.class, new LocationAdapter())
                 .create();
-        return gson.fromJson(json, new TypeToken<List<LotteryBox>>() {}.getType());
+        List<LotteryBox> list = gson.fromJson(json, new TypeToken<List<LotteryBox>>() {}.getType());
+        return new CopyOnWriteArrayList<>(list);
     }
 
     public static String lotteryToJson(List<Lottery> list){
@@ -413,10 +416,6 @@ public class SerializeUtils {
         return gson.toJson(list);
     }
 
-    public static List<LotteryNbtConverter> lotteryFromJson(String json){
-        Gson gson = new Gson();
-        return gson.fromJson(json,new TypeToken<List<LotteryNbtConverter>>() {}.getType());
-    }
     public static Map<String,Lottery> lotteryFromJson_new(String json){
         Gson gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -450,32 +449,6 @@ public class SerializeUtils {
         }.getType());
         return new CopyOnWriteArrayList<>(list);
     }
-
-    public static void bcSaveSignal() {
-        //For bc
-        ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF("Forward");
-
-        out.writeUTF("ALL");//服务器
-        out.writeUTF("XgpLotterySave");//频道
-        ByteArrayOutputStream msgBytes = new ByteArrayOutputStream();
-        DataOutputStream msgOut = new DataOutputStream(msgBytes);
-
-        try {
-            String msg = "NeedToReload";
-            msgOut.writeUTF(msg);
-            out.writeShort(msgBytes.toByteArray().length);
-            out.write(msgBytes.toByteArray());
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        Player player = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
-        if (player != null) {
-            player.sendPluginMessage(XgpLottery.instance, "BungeeCord", out.toByteArray());
-        }
-    }
-
 
     static class LocationAdapter extends TypeAdapter<Location> {
         @Override
@@ -617,7 +590,7 @@ public class SerializeUtils {
                 switch (name) {
                     case "item":
                         ItemStack itemStack = NMSUtils.toItem(json.nextString());
-                        if(itemStack.getItemMeta()==null)
+                        if (itemStack.getItemMeta() == null)
                             itemStack = MyItem.getMissingItem();
                         item = itemStack;
                         break;

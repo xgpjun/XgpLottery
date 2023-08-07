@@ -8,6 +8,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -21,18 +22,13 @@ public class MyItem {
     private ItemStack item;
     private final ItemMeta itemMeta;
 
-    public MyItem(Material material,int amount,byte damage){
-        item = new ItemStack(material,amount,damage);
-        itemMeta = item.getItemMeta();
-    }
-
     public MyItem(Material material){
         item = new ItemStack(material);
         itemMeta = item.getItemMeta();
     }
-    public MyItem(ItemStack item){
+    public MyItem(@NotNull ItemStack item){
         this.item = item.clone();
-        itemMeta = item.getItemMeta();
+        itemMeta = this.item.getItemMeta();
     }
 
     public MyItem setDisplayName(String DisplayName){

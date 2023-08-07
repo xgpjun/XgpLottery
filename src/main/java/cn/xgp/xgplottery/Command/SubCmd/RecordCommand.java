@@ -44,10 +44,8 @@ public class RecordCommand implements TabExecutor {
             return true;
         }
         if(!(sender.hasPermission("xgplottery.manager"))||args.length==2){
-            Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance,()->{
-                Inventory inv = new RecordGui(player,args[1],null).getInventory();
-                Bukkit.getScheduler().runTask(XgpLottery.instance, () -> player.openInventory(inv));
-            });
+            Inventory inv = new RecordGui(player,args[1],null).getInventory();
+            player.openInventory(inv);
             return true;
         }
 

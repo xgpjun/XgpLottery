@@ -30,21 +30,10 @@ public class Lottery {
     private String multipleAnimation;
     private int maxTime;                    //保底次数
 
-    @Deprecated
-    private transient List<ItemStack> items;                       //储存奖池物品
-    @Deprecated
-    private transient List<Integer> weights;
-    @Deprecated
-    private transient List<ItemStack> spItems;
-    @Deprecated
-    private transient List<Integer> spWeights;
-
     private List<Award> awards;
     private List<Award> spAwards;
 
     private int value;
-    @Deprecated
-    private transient boolean isPoint;
 
     private String keyMaterial ;
     private String keyName;
@@ -69,22 +58,7 @@ public class Lottery {
         this.limitedTimes = limitedTimes;
         this.isCheckFull = isCheckFull;
     }
-    /**
-     * 旧版本数据结构反序列化
-     *
-     */
-    @Deprecated
-    public Lottery(String name,String animation,int maxTime,List<ItemStack> items,List<Integer> weights,List<ItemStack> spItems,List<Integer> spWeights,int value,boolean isPoint){
-        this.name = name;
-        this.animation = animation;
-        this.maxTime = maxTime;
-        this.items = items;
-        this.spItems = spItems;
-        this.weights = weights;
-        this.spWeights = spWeights;
-        this.value = value;
-        this.isPoint = isPoint;
-    }
+
 
     public static Lottery getDefaultLottery(String name){
         return new Lottery(name,"BoxAnimation","DefaultMultipleAnimation",-1, new ArrayList<>(), new ArrayList<>(),0,SellType.POINTS,0,false);
@@ -112,6 +86,7 @@ public class Lottery {
         switch (multipleAnimation){
             case "MultipleSelectItemAnimation": return new MultipleSelectItemAnimation(player,lottery);
             case "SimpleMultipleAnimation": return new SimpleMultipleAnimation(player,lottery);
+            case "BoxMultipleAnimation": return new BoxMultipleAnimation(player,lottery);
             case "DefaultMultipleAnimation":
             default: return new DefaultMultipleAnimation(player,lottery);
         }
@@ -135,7 +110,7 @@ public class Lottery {
         if(isMultiple){
             if(!isCmd){
                 ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
-                if (item == null || !NMSUtils.checkTag(item))
+                if (!NMSUtils.checkTag(item))
                     return;
                 if (item.getAmount() < 10) {
                     player.sendMessage(ChatColor.RED + "别想投机取巧！");
@@ -163,37 +138,9 @@ public class Lottery {
         }
     }
 
-
-
     public ProbabilityCalculator getCalculatorObject() {
         return new Custom();
     }
-
-    @Deprecated
-    public void addItem(ItemStack item){
-        if(items ==null)
-            items = new ArrayList<>();
-        items.add(item);
-        if(weights == null)
-            weights = new ArrayList<>();
-        weights.add(1);
-    }
-    @Deprecated
-    public void addSpItem(ItemStack item){
-        if(spItems==null)
-            spItems = new ArrayList<>();
-        spItems.add(item);
-        if(spWeights == null)
-            spWeights = new ArrayList<>();
-        spWeights.add(1);
-    }
-
-    @Deprecated
-    public void delSpItem(int index){
-        spItems.remove(index);
-        spWeights.remove(index);
-    }
-
 
     public int getAmount(){
         return awards.size();
@@ -222,24 +169,13 @@ public class Lottery {
         return addition;
     }
 
-    @Deprecated
-    public List<Integer> getSpWeights() {
-        if(spWeights==null)
-            spWeights = new ArrayList<>();
-        return spWeights;
-    }
-
-    @Deprecated
-    public List<Integer> getWeights() {
-        if(weights==null)
-            weights = new ArrayList<>();
-        return weights;
-    }
-
     public ItemStack getKeyItemStack(){
         if(keyMaterial==null)
             keyMaterial = NMSUtils.toNBTString(new ItemStack(Material.BONE));
-        return NMSUtils.toItem(keyMaterial);
+        ItemStack item = NMSUtils.toItem(keyMaterial);
+        if(item==null||item.getItemMeta()==null)
+            item = new ItemStack(Material.BONE);
+        return item;
     }
 
     public void setKeyItemStack(ItemStack itemStack) {
@@ -267,7 +203,10 @@ public class Lottery {
     public ItemStack getTicketItemStack(){
         if(ticketMaterial==null)
             ticketMaterial = NMSUtils.toNBTString(new ItemStack(Material.PAPER));
-        return NMSUtils.toItem(ticketMaterial);
+        ItemStack item = NMSUtils.toItem(ticketMaterial);
+        if(item==null||item.getItemMeta()==null)
+            item = new ItemStack(Material.PAPER);
+        return item;
     }
 
     public void setTicketItemStack(ItemStack itemStack) {
@@ -290,18 +229,10 @@ public class Lottery {
         }
         return ticketLore;
     }
-    @Deprecated
-    public boolean isKey(ItemStack itemStack){
-        return getKeyName().equals(new MyItem(itemStack).getDisplayName())&&getKeyLore().equals(new MyItem(itemStack).getLoreList());
-    }
 
     public SellType getSellType() {
         if(sellType==null){
-            if(isPoint){
-                sellType=SellType.POINTS;
-            }else {
-                sellType=SellType.MONEY;
-            }
+            sellType=SellType.POINTS;
         }
         return sellType;
     }

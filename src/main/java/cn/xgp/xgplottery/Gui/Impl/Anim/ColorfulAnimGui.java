@@ -5,6 +5,7 @@ import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -15,6 +16,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class ColorfulAnimGui extends AnimHolder{
@@ -22,7 +25,7 @@ public class ColorfulAnimGui extends AnimHolder{
     ItemStack award;
     List<int[]> batch = new ArrayList<>();
     private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ LangUtils.SelectItemGuiTitle);
-    int taskID;
+    ScheduledTask taskID;
     public ColorfulAnimGui(boolean isSpecial,ItemStack award){
         this.award = award;
         this.isSpecial = isSpecial;
@@ -35,7 +38,7 @@ public class ColorfulAnimGui extends AnimHolder{
 
     @Override
     public LotteryGui loadGui() {
-        IntStream.range(0,54).forEach(i->inv.setItem(i,new MyItem(glasses[0]).setDisplayName(ChatColor.GOLD+"点击!").setLore(ChatColor.GRAY+"别想把我拿走>_<").getItem() ));
+        IntStream.range(0,54).forEach(i->inv.setItem(i,new MyItem(glasses[0]).setDisplayName(LangUtils.Click).setLore(LangUtils.BorderGlass4).getItem() ));
         batch.add(new int[]{0});
         batch.add(new int[]{10});
         batch.add(new int[]{11});
@@ -65,12 +68,12 @@ public class ColorfulAnimGui extends AnimHolder{
 
     public void startAnim(Player player){
         IntStream.range(0,54).forEach(i->inv.setItem(i,null));
-        taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
-            final ItemStack colorGlass = new MyItem(glasses[isSpecial?1:10]).setDisplayName(ChatColor.GOLD+" ").setLore(ChatColor.GRAY+"别想把我拿走>_<").getItem();
-            final ItemStack glass = new MyItem(glasses[3]).setDisplayName(ChatColor.GOLD+" ").setLore(ChatColor.GRAY+"别想把我拿走>_<").getItem();
+        taskID = Bukkit.getAsyncScheduler().runAtFixedRate(XgpLottery.instance, new Consumer<ScheduledTask>() {
+            final ItemStack colorGlass = new MyItem(glasses[isSpecial?1:10]).setDisplayName(LangUtils.BorderGlass3).setLore(LangUtils.BorderGlass4).getItem();
+            final ItemStack glass = new MyItem(glasses[3]).setDisplayName(LangUtils.BorderGlass3).setLore(LangUtils.BorderGlass4).getItem();
             int counter = 0;
             @Override
-            public void run() {
+            public void accept(ScheduledTask scheduledTask) {
                 if(counter<=8){
                     for (int index:batch.get(counter)){
                         if(counter<4){
@@ -95,10 +98,10 @@ public class ColorfulAnimGui extends AnimHolder{
                     cancelTask();
                 }
             }
-        }, 10L, 15L).getTaskId();
+        },500L,750L, TimeUnit.MILLISECONDS);
     }
     void cancelTask() {
-        Bukkit.getScheduler().cancelTask(taskID);
+        taskID.cancel();
     }
 
 }

@@ -53,7 +53,7 @@ public class MultipleSelectItemGui extends AnimHolder{
             player.playSound(player.getLocation(), LotteryAnimation.getFinish(),1.0f,1.0f);
             chosenSlot.add(slot);
             if(chosenCount==10){
-                Bukkit.getScheduler().runTaskLater(XgpLottery.instance, this::setRandomAward,40);
+                player.getScheduler().runDelayed(XgpLottery.instance,scheduledTask -> this.setRandomAward(),null,40);
             }
         }
     }

@@ -5,6 +5,7 @@ import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.MathUtils;
 import cn.xgp.xgplottery.XgpLottery;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -12,12 +13,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class SimpleMultipleAnimGui extends AnimHolder{
     private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ LangUtils.SelectItemGuiTitle);
     int index = 0;
-    int taskID;
+    ScheduledTask taskID;
 
     @Override
     public @NotNull Inventory getInventory() {
@@ -46,10 +49,10 @@ public class SimpleMultipleAnimGui extends AnimHolder{
         index++;
 
         if(index==10){
-            taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
+            taskID = Bukkit.getAsyncScheduler().runAtFixedRate(XgpLottery.instance, new Consumer<ScheduledTask>() {
                 int counter=0;
                 @Override
-                public void run() {
+                public void accept(ScheduledTask scheduledTask) {
                     counter++;
                     ItemStack glass = new MyItem(glasses[MathUtils.getRandomInt(0,15)]).setDisplayName(ChatColor.GOLD+"恭喜！").getItem();
                     IntStream.range(0,27).forEach(i->{
@@ -61,11 +64,11 @@ public class SimpleMultipleAnimGui extends AnimHolder{
                         cancelTask();
                     }
                 }
-            },0L,5L).getTaskId();
+            },0,250, TimeUnit.MILLISECONDS);
         }
     }
 
     void cancelTask() {
-        Bukkit.getScheduler().cancelTask(taskID);
+        taskID.cancel();
     }
 }

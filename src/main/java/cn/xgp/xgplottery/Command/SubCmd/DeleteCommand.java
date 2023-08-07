@@ -4,7 +4,6 @@ import cn.xgp.xgplottery.Command.XgpLotteryCommand;
 import cn.xgp.xgplottery.Lottery.BoxParticle;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryBox;
-import cn.xgp.xgplottery.Lottery.LotteryTimes;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import cn.xgp.xgplottery.Utils.TimesUtils;

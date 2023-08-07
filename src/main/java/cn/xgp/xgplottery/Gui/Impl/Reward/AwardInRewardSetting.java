@@ -3,6 +3,7 @@ package cn.xgp.xgplottery.Gui.Impl.Reward;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Award;
 import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.ReceiveUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 @AllArgsConstructor
 public class AwardInRewardSetting extends LotteryGui {
     Award award;
-    final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ "奖品设置！");
+    final Inventory inv = Bukkit.createInventory(this,6*9, LangUtils.AwardSetting);
     LotteryGui returnGui;
     @Override
     public @NotNull Inventory getInventory() {
@@ -33,38 +34,38 @@ public class AwardInRewardSetting extends LotteryGui {
         //物品
         inv.setItem(10,new MyItem(item).getItem());
         //设置物品
-        inv.setItem(19,new MyItem(item).setDisplayName(ChatColor.GOLD+"设置物品")
-                .setLore(ChatColor.BLUE+"设置物品："+ChatColor.AQUA+"拖动物品在此处点击")
-                .addLore(ChatColor.BLUE+"上方的物品是具体发放的物品")
+        inv.setItem(19,new MyItem(item).setDisplayName(LangUtils.AwardSetting)
+                .setLore(LangUtils.AwardItem2)
+                .addLore(LangUtils.AwardItem1)
                 .setAmount(1)
                 .getItem());
         //是否给与物品
-        String isGiveItem = award.isGiveItem()?"是":"否";
-        inv.setItem(28,new MyItem(item).setDisplayName(ChatColor.GOLD+"是否给予物品")
-                .setLore(ChatColor.BLUE+"当前状态："+ChatColor.AQUA+isGiveItem)
-                .addLore(ChatColor.BLUE+"点击本物品切换状态")
+        String isGiveItem = award.isGiveItem()?LangUtils.True:LangUtils.False;
+        inv.setItem(28,new MyItem(item).setDisplayName(LangUtils.AwardItem3)
+                .setLore(LangUtils.AwardItem4+isGiveItem)
+                .addLore(LangUtils.Operation+LangUtils.LeftClick)
                 .setAmount(1)
                 .getItem());
 
         //指令
-        inv.setItem(12,new MyItem(Material.PAPER).setDisplayName(ChatColor.GOLD+"奖池指令")
-                .setLore(ChatColor.BLUE+"依次执行的指令：")
+        inv.setItem(12,new MyItem(Material.PAPER).setDisplayName(LangUtils.AwardCmd1)
+                .setLore(LangUtils.AwardCmd2)
                 .addLore(award.getCommandsString())
                 .getItem());
         //是否执行指令
-        String isExecuteCommands = award.isExecuteCommands()?"是":"否";
-        inv.setItem(21,new MyItem(command).setDisplayName(ChatColor.GOLD+"是否执行指令")
-                .setLore(ChatColor.BLUE+"当前状态："+ChatColor.AQUA+isExecuteCommands)
-                .addLore(ChatColor.BLUE+"点击本物品切换状态")
+        String isExecuteCommands = award.isExecuteCommands()?LangUtils.True:LangUtils.False;
+        inv.setItem(21,new MyItem(command).setDisplayName(LangUtils.AwardCmd3)
+                .setLore(LangUtils.AwardItem4+isExecuteCommands)
+                .addLore(LangUtils.Operation+LangUtils.LeftClick)
                 .getItem());
         //添加指令
-        inv.setItem(30,new MyItem(command).setDisplayName(ChatColor.GOLD+"添加奖池指令")
-                .setLore(ChatColor.BLUE+"添加一个命令，以控制台执行")
-                .addLore(ChatColor.BLUE+"支持占位符: 如%Player%")
+        inv.setItem(30,new MyItem(command).setDisplayName(LangUtils.AwardCmd5)
+                .setLore(LangUtils.AwardCmd6)
+                .addLore(LangUtils.AwardCmd7)
                 .getItem());
         //删除指令
-        inv.setItem(39,new MyItem(command).setDisplayName(ChatColor.GOLD+"删除奖池指令")
-                .setLore(ChatColor.BLUE+"点击删除指令")
+        inv.setItem(39,new MyItem(command).setDisplayName(LangUtils.AwardCmd8)
+                .setLore(LangUtils.Operation+LangUtils.LeftClick)
                 .getItem());
         //物品显示名称（在奖池预览）
         String displayName = award.getDisplayName()!=null?award.getDisplayName():ChatColor.GOLD+"暂无展示名";

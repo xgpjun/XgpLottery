@@ -2,6 +2,7 @@ package cn.xgp.xgplottery.Utils;
 
 import cn.xgp.xgplottery.Lottery.LotteryTimes;
 import cn.xgp.xgplottery.XgpLottery;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
@@ -10,10 +11,11 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
 
 public class TimesUtils {
 
-    public static int taskId;
+    public static ScheduledTask taskId;
     private static List<LotteryTimes> allTimesTop;
 
     public static void setAllTimesTop(){
@@ -43,8 +45,6 @@ public class TimesUtils {
 
     public static int getTimes(UUID uuid ,String lotteryName){
         LotteryTimes result = getLotteryTimes(uuid,lotteryName);
-        if(result==null)
-            return 0;
         return result.getTimes();
     }
 
@@ -61,6 +61,8 @@ public class TimesUtils {
             int times = SqlUtils.getOneTimes("total",uuid.toString(),lotteryName);
             result = new LotteryTimes(lotteryName,uuid,times);
         }
+        if(result==null)
+            result = new LotteryTimes(lotteryName,uuid,0);
 
         return result;
     }
@@ -119,6 +121,7 @@ public class TimesUtils {
             allTimes.setTimes(allTimes.getTimes()+1);
             currentTimes.setTimes(currentTimes.getTimes() + 1);
             lotteryTimes.setTimes(lotteryTimes.getTimes() + 1);
+            SerializeUtils.saveData();
         }
         else {
             SqlUtils.addTimes(String.valueOf(player.getUniqueId()),"all","all");
@@ -143,7 +146,7 @@ public class TimesUtils {
     }
 
     public static void autoLoadTop(){
-        taskId = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, TimesUtils::setAllTimesTop, 200, ConfigSetting.autoUpdateTopTime).getTaskId();
+        taskId = Bukkit.getAsyncScheduler().runAtFixedRate(XgpLottery.instance,scheduledTask -> TimesUtils.setAllTimesTop(),200, ConfigSetting.autoUpdateTopTime, TimeUnit.SECONDS);
     }
 
     public static void deleteTimes(String lotteryName){
@@ -210,6 +213,7 @@ public class TimesUtils {
     public static void clearCurrentTime(LotteryTimes lotteryTimes){
         if(!SqlUtils.enable){
             lotteryTimes.setTimes(0);
+            SerializeUtils.saveData();
         }else {
             SqlUtils.clearCurrentTimes(lotteryTimes);
         }
@@ -223,6 +227,7 @@ public class TimesUtils {
                 XgpLottery.rewardsTimes.add(lotteryTimes);
             }
             lotteryTimes.setTimes(lotteryTimes.getTimes() + 1);
+            SerializeUtils.saveData();
         }
         else {
             SqlUtils.addTimes(String.valueOf(player.getUniqueId()),name,"reward");

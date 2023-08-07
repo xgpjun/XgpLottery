@@ -75,7 +75,8 @@ public class GiveUtils {
                 if(Bukkit.getPluginManager().getPlugin("PlaceholderAPI")!=null){
                     cmd = PlaceholderAPI.setPlaceholders(player,cmd);
                 }
-                XgpLottery.instance.getServer().dispatchCommand(XgpLottery.instance.getServer().getConsoleSender(), cmd);
+                String finalCmd = cmd;
+                Bukkit.getGlobalRegionScheduler().run(XgpLottery.instance, scheduledTask -> XgpLottery.instance.getServer().dispatchCommand(XgpLottery.instance.getServer().getConsoleSender(), finalCmd));
                 player.sendMessage(ChatColor.GOLD+LangUtils.LotteryPrefix+"抽到了: "+ChatColor.GREEN+cmd);
                 XgpLottery.log(player.getName()+"抽到了: "+cmd);
             }

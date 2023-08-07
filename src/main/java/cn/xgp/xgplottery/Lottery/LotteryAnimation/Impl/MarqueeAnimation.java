@@ -4,11 +4,15 @@ import cn.xgp.xgplottery.Gui.Impl.Anim.MarqueeAnimGui;
 import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.MathUtils;
 import cn.xgp.xgplottery.XgpLottery;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class MarqueeAnimation extends LotteryAnimation {
@@ -20,7 +24,7 @@ public class MarqueeAnimation extends LotteryAnimation {
 
     @Override
     public String toLore() {
-        return "跑马灯动画";
+        return LangUtils.MarqueeAnimation;
     }
 
     @Override
@@ -34,10 +38,10 @@ public class MarqueeAnimation extends LotteryAnimation {
         });
         gui.getInventory().setItem(awardSlot,awards.get(0).getRecordDisplayItem());
         int totalStep = 54+awardSlot;
-        taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
+        taskID = Bukkit.getAsyncScheduler().runAtFixedRate(XgpLottery.instance, new Consumer<ScheduledTask>() {
             int counter,step = 0;
             @Override
-            public void run() {
+            public void accept(ScheduledTask scheduledTask) {
                 if(step==totalStep){
                     player.playSound(player.getLocation(), finish,1.0f,1.0f);
                     setStop(true);
@@ -50,9 +54,8 @@ public class MarqueeAnimation extends LotteryAnimation {
                     gui.nexStep(step%54);
                     step++;
                 }
-
             }
-        }, 0L, 5L).getTaskId();
+        },0L,250L, TimeUnit.MILLISECONDS);
         CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this,true);
         Bukkit.getPluginManager().registerEvents(closeListener,XgpLottery.instance);
     }

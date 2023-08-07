@@ -4,10 +4,14 @@ import cn.xgp.xgplottery.Gui.Impl.Anim.SimpleMultipleAnimGui;
 import cn.xgp.xgplottery.Listener.CloseListener;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.MultipleAnimation;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
 public class SimpleMultipleAnimation extends MultipleAnimation {
@@ -18,7 +22,7 @@ public class SimpleMultipleAnimation extends MultipleAnimation {
 
     @Override
     public String toLore() {
-        return "简易十连抽动画";
+        return LangUtils.SimpleMultipleAnimation;
     }
 
     @Override
@@ -27,10 +31,11 @@ public class SimpleMultipleAnimation extends MultipleAnimation {
         SimpleMultipleAnimGui gui = new SimpleMultipleAnimGui();
 
         player.openInventory(gui.getInventory());
-        taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
-            int counter = 0;
+        taskID = Bukkit.getAsyncScheduler().runAtFixedRate(XgpLottery.instance, new Consumer<ScheduledTask>() {
+            int counter=0;
+
             @Override
-            public void run() {
+            public void accept(ScheduledTask scheduledTask) {
                 gui.setNextItem(awards.get(counter).getRecordDisplayItem());
                 float pitch = (float) Math.pow(2.0, counter / 10.0);
                 player.playSound(player.getLocation(), sound,0.2f,pitch);
@@ -40,9 +45,8 @@ public class SimpleMultipleAnimation extends MultipleAnimation {
                     setStop(true);
                     cancelTask();
                 }
-
             }
-        }, 30L, 20L).getTaskId();
+        },1500L,1000L, TimeUnit.MILLISECONDS);
         CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this,true);
         Bukkit.getPluginManager().registerEvents(closeListener,XgpLottery.instance);
     }

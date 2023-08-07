@@ -4,8 +4,8 @@ import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Gui.PlayerGui;
 import cn.xgp.xgplottery.Lottery.Award;
 import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 public class RewardShow extends PlayerGui {
-    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ "累抽奖励!");
+    private final Inventory inv = Bukkit.createInventory(this,6*9, LangUtils.Reward);
     private final List<Award> awards;
     private final PlayerRewardGui returnGui;
 
@@ -32,8 +32,8 @@ public class RewardShow extends PlayerGui {
     @Override
     public LotteryGui loadGui() {
         setBorder(inv);
-        inv.setItem(49,new MyItem(Material.DIAMOND).setDisplayName(ChatColor.GOLD+"操作指南！")
-                .addLore(ChatColor.BLUE+"点击本物品返回")
+        inv.setItem(49,new MyItem(Material.DIAMOND).setDisplayName(LangUtils.AnvilText1)
+                .addLore(LangUtils.AnvilText2)
                 .getItem());
 
 

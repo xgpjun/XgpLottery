@@ -1,12 +1,12 @@
 package cn.xgp.xgplottery.Listener;
 
 import cn.xgp.xgplottery.XgpLottery;
-import org.bukkit.Bukkit;
+import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -14,16 +14,15 @@ import java.util.concurrent.CompletableFuture;
 public class GetNameListener implements Listener {
     private final UUID uuid;
     private final CompletableFuture<String> future;
-    private final BukkitTask timeoutTask;
+    private final ScheduledTask timeoutTask;
 
-    public GetNameListener(UUID uuid, CompletableFuture<String> future,long time) {
-        this.uuid = uuid;
+    public GetNameListener(Player player, CompletableFuture<String> future, long time) {
+        this.uuid = player.getUniqueId();
         this.future = future;
-
-        this.timeoutTask = Bukkit.getScheduler().runTaskLater(XgpLottery.instance,()->{
+        timeoutTask = player.getScheduler().runDelayed(XgpLottery.instance, task->{
             HandlerList.unregisterAll(this);
             future.complete("cancel");
-        },time*20);
+        },null,time*20);
     }
 
     @EventHandler

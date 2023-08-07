@@ -3,10 +3,12 @@ package cn.xgp.xgplottery.Gui.Impl.Select;
 import cn.xgp.xgplottery.Gui.Impl.Manage.LotterySetting;
 import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.Lottery;
+import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.BoxMultipleAnimation;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.DefaultMultipleAnimation;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.MultipleSelectItemAnimation;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.Impl.SimpleMultipleAnimation;
 import cn.xgp.xgplottery.Lottery.MyItem;
+import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.Utils.SerializeUtils;
 import lombok.AllArgsConstructor;
 import org.bukkit.Bukkit;
@@ -19,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
 public class SelectMultipleAnimation extends LotteryGui {
-    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+"十连抽动画选择");
+    private final Inventory inv = Bukkit.createInventory(this,6*9, LangUtils.MultipleAnimationSelect);
     private final Lottery lottery;
     private LotterySetting lotterySetting;
 
@@ -40,6 +42,9 @@ public class SelectMultipleAnimation extends LotteryGui {
                 .getItem());
         inv.setItem(12,new MyItem(Material.CHEST)
                 .setDisplayName(ChatColor.AQUA+ new MultipleSelectItemAnimation(null,null).toLore())
+                .getItem());
+        inv.setItem(13,new MyItem(Material.CHEST)
+                .setDisplayName(ChatColor.AQUA+ new BoxMultipleAnimation(null,null).toLore())
                 .getItem());
         return this;
     }
@@ -66,6 +71,12 @@ public class SelectMultipleAnimation extends LotteryGui {
             }
             case 12:{
                 lottery.setMultipleAnimation("MultipleSelectItemAnimation");
+                SerializeUtils.saveLotteryData();
+                player.openInventory(lotterySetting.getInventory());
+                break;
+            }
+            case 13:{
+                lottery.setMultipleAnimation("BoxMultipleAnimation");
                 SerializeUtils.saveLotteryData();
                 player.openInventory(lotterySetting.getInventory());
                 break;

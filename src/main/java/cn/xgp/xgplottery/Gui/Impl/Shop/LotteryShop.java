@@ -64,7 +64,7 @@ public class LotteryShop extends PlayerGui {
             inv.setItem(slot[index],new MyItem(Material.CHEST).setDisplayName(ChatColor.BLUE+LangUtils.PoolButton1+ChatColor.AQUA + lottery.getName())
                     .setLore(value,
                             ChatColor.GOLD + LangUtils.SaleType + " :" + sellType,
-                            "§7[§e √ §7] §6点击购买！")
+                            LangUtils.Shop1)
                     .getItem());
             index++;
             if (index == 4 * 7)
