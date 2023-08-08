@@ -16,7 +16,7 @@ public class DatabaseManager {
         HikariConfig config = new HikariConfig();
         File configFile = new File(XgpLottery.instance.getDataFolder(), "database.yml");
         FileConfiguration dataConfig = YamlConfiguration.loadConfiguration(configFile);
-        String url ="jdbc:mysql://" + dataConfig.getString("mysql.url") + "/" + dataConfig.getString("database")+"?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai";
+        String url ="jdbc:mysql://" + dataConfig.getString("url") + "/" + dataConfig.getString("database")+"?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai";
         config.setJdbcUrl(url);
         config.setDriverClassName(dataConfig.getString("driver"));
         config.setUsername(dataConfig.getString("username"));

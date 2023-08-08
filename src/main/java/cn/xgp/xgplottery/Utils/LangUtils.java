@@ -1,7 +1,6 @@
 package cn.xgp.xgplottery.Utils;
 
 import cn.xgp.xgplottery.XgpLottery;
-import lombok.Data;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -9,7 +8,6 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
 
-@Data
 public class LangUtils {
 
     public static String EnableMessage;
