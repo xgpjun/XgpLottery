@@ -4,9 +4,12 @@ version: ${project.version}
 #语言文本
 lang: zh_CN.yml
 
-#是否使用数据库
+#是否使用mysql数据库
 enableDatabase: false
-
+#是否使用sqlite, 会被上方覆盖
+enableSqlite: false
+#sqlite的位置，使用绝对位置,例如: "D:\XgpLottery\data",默认为插件文件夹。
+sqlite: ""
 #是否向玩家展示概率
 showProbability: false
 #是否显示粒子特效

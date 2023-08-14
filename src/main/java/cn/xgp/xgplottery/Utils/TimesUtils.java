@@ -2,7 +2,7 @@ package cn.xgp.xgplottery.Utils;
 
 import cn.xgp.xgplottery.Lottery.LotteryTimes;
 import cn.xgp.xgplottery.XgpLottery;
-import org.bukkit.Bukkit;
+import cn.xgp.xgplottery.common.FoliaLib.Wrapper.Task;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -13,7 +13,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class TimesUtils {
 
-    public static int taskId;
+    public static Task task;
     private static List<LotteryTimes> allTimesTop;
 
     public static void setAllTimesTop(){
@@ -51,6 +51,9 @@ public class TimesUtils {
         if(!SqlUtils.enable){
             if(!XgpLottery.totalTime.isEmpty())
                 for(LotteryTimes lotteryTimes: XgpLottery.totalTime){
+                    if(lotteryTimes==null||lotteryTimes.getUuid()==null||lotteryTimes.getLotteryName()==null){
+                        continue;
+                    }
                     if(lotteryTimes.getUuid().equals(uuid)&&lotteryTimes.getLotteryName().equals(lotteryName)){
                         result = lotteryTimes;
                     }
@@ -70,6 +73,9 @@ public class TimesUtils {
         if(!SqlUtils.enable){
             if(!XgpLottery.currentTime.isEmpty())
                 for(LotteryTimes lotteryTimes: XgpLottery.currentTime){
+                    if(lotteryTimes==null||lotteryTimes.getUuid()==null||lotteryTimes.getLotteryName()==null){
+                        continue;
+                    }
                     if(lotteryTimes.getUuid().equals(uuid)&&lotteryTimes.getLotteryName().equals(lotteryName)){
                         result = lotteryTimes;
                     }
@@ -87,6 +93,9 @@ public class TimesUtils {
         if(!SqlUtils.enable){
             if(!XgpLottery.allTimes.isEmpty())
                 for(LotteryTimes lotteryTimes: XgpLottery.allTimes){
+                    if(lotteryTimes==null||lotteryTimes.getUuid()==null){
+                        continue;
+                    }
                     if(lotteryTimes.getUuid().equals(uuid)){
                         result = lotteryTimes;
                     }
@@ -144,7 +153,8 @@ public class TimesUtils {
     }
 
     public static void autoLoadTop(){
-        taskId = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, TimesUtils::setAllTimesTop, 200, ConfigSetting.autoUpdateTopTime).getTaskId();
+        task = XgpLottery.foliaLibAPI.getScheduler().runTaskTimer(TimesUtils::setAllTimesTop,200,ConfigSetting.autoUpdateTopTime);
+
     }
 
     public static void deleteTimes(String lotteryName){

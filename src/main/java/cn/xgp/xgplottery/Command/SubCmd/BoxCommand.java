@@ -66,7 +66,7 @@ public class BoxCommand implements TabExecutor {
                 try {
                     int index = Integer.parseInt(args[2]);
                     Location location = XgpLottery.lotteryBoxList.get(index).getLocation();
-                    player.teleport(location.add(0.5,2,0.5));
+                    XgpLottery.foliaLibAPI.teleport(player,location.add(0.5,2,0.5));
                     return true;
                 } catch (Exception e) {
                     XgpLottery.log(e.getMessage());

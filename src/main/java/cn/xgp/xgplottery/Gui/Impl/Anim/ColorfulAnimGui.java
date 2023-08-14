@@ -5,8 +5,8 @@ import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import cn.xgp.xgplottery.XgpLottery;
+import cn.xgp.xgplottery.common.FoliaLib.Wrapper.Task;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
@@ -21,8 +21,8 @@ public class ColorfulAnimGui extends AnimHolder{
     boolean isBegin,isSpecial;
     ItemStack award;
     List<int[]> batch = new ArrayList<>();
-    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ LangUtils.SelectItemGuiTitle);
-    int taskID;
+    private final Inventory inv = Bukkit.createInventory(this,6*9, LangUtils.SelectItemGuiTitle);
+    Task taskID;
     public ColorfulAnimGui(boolean isSpecial,ItemStack award){
         this.award = award;
         this.isSpecial = isSpecial;
@@ -65,7 +65,7 @@ public class ColorfulAnimGui extends AnimHolder{
 
     public void startAnim(Player player){
         IntStream.range(0,54).forEach(i->inv.setItem(i,null));
-        taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
+        taskID = XgpLottery.foliaLibAPI.getScheduler().runTaskTimer(new Runnable() {
             final ItemStack colorGlass = new MyItem(glasses[isSpecial?1:10]).setDisplayName(LangUtils.BorderGlass3).setLore(LangUtils.BorderGlass4).getItem();
             final ItemStack glass = new MyItem(glasses[3]).setDisplayName(LangUtils.BorderGlass3).setLore(LangUtils.BorderGlass4).getItem();
             int counter = 0;
@@ -95,10 +95,10 @@ public class ColorfulAnimGui extends AnimHolder{
                     cancelTask();
                 }
             }
-        }, 10L, 15L).getTaskId();
+        }, 10L, 15L);
     }
     void cancelTask() {
-        Bukkit.getScheduler().cancelTask(taskID);
+        taskID.cancel();
     }
 
 }

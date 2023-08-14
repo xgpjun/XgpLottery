@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.stream.IntStream;
 
 public class SimpleMultipleAnimGui extends AnimHolder{
-    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ LangUtils.SelectItemGuiTitle);
+    private final Inventory inv = Bukkit.createInventory(this,6*9, LangUtils.SelectItemGuiTitle2);
     int index = 0;
     int taskID;
 

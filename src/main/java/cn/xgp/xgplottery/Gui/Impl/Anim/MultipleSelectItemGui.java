@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 public class MultipleSelectItemGui extends AnimHolder{
-    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ LangUtils.SelectItemGuiTitle);
+    private final Inventory inv = Bukkit.createInventory(this,6*9, LangUtils.SelectItemGuiTitle2);
     private final MultipleSelectItemAnimation animation;
     private int chosenCount = 0;
     private final List<Integer> chosenSlot = new ArrayList<>();

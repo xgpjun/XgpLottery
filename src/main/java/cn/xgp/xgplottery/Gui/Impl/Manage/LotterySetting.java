@@ -107,7 +107,7 @@ public class LotterySetting extends LotteryGui {
         //修改十连抽动画
         inv.setItem(21,new MyItem(Material.ITEM_FRAME)
                 .setDisplayName(LangUtils.LotterySetting19)
-                .setLore(LangUtils.LotterySetting18+getLottery().getAnimationObject().toLore())
+                .setLore(LangUtils.LotterySetting18+getLottery().getMultipleAnimationObject().toLore())
                 .addLore(LangUtils.LotterySetting2)
                 .addEnchant()
                 .getItem());

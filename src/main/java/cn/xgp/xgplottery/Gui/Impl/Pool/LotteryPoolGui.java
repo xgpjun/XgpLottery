@@ -26,7 +26,7 @@ import java.util.List;
 public class LotteryPoolGui extends PoolGui {
     private final Inventory inv;
     private final Lottery lottery;
-    private final List<Award> awards;
+    private List<Award> awards;
     int page;
     int size;
 
@@ -48,6 +48,8 @@ public class LotteryPoolGui extends PoolGui {
         }
         inv.setItem(45,previousPage);
         inv.setItem(53,nextPage);
+        inv.setItem(47,new MyItem(Material.HOPPER).setDisplayName(LangUtils.SortAscending).getItem());
+        inv.setItem(51,new MyItem(Material.HOPPER).setDisplayName(LangUtils.SortDescending).getItem());
         return this;
     }
 
@@ -150,6 +152,12 @@ public class LotteryPoolGui extends PoolGui {
             e.getWhoClicked().openInventory(getPage(this.page-1));
         }else if(e.getRawSlot()==53){
             e.getWhoClicked().openInventory(getPage(this.page+1));
+        }else if(e.getRawSlot()==47){
+            awards.sort((o1, o2) -> o1.getWeight()-o2.getWeight());
+            player.openInventory(getPage(page));
+        }else if(e.getRawSlot()==51){
+            awards.sort((o1, o2) -> o2.getWeight()-o1.getWeight());
+            player.openInventory(getPage(page));
         }
     }
 

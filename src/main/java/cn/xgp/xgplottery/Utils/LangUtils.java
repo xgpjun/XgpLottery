@@ -308,6 +308,9 @@ public class LangUtils {
     public static String PlayerGui17;
     public static String PlayerGui18;
     public static String PlayerGui19;
+    public static String SortAscending;
+    public static String SortDescending;
+    public static String SelectItemGuiTitle2;
     //following are additions in version 1.2.5
 
 
@@ -613,7 +616,9 @@ public class LangUtils {
         PlayerGui17 = getString(config,"PlayerGui17"," 查看保底物品池");
         PlayerGui18 = getString(config,"PlayerGui18"," 查看抽奖记录");
         PlayerGui19 = getString(config,"PlayerGui19"," §7[§e ? §7] §b左键点击！ §a或者你其实不在意这些？");
-
+        SortAscending = getString(config,"SortAscending","&6按权重升序排列");
+        SortDescending= getString(config,"SortDescending","&6按权重降序排列");
+        SelectItemGuiTitle2 = getString(config,"SelectItemGuiTitle2", "&6十连祈愿!");
     }
     static String getString(FileConfiguration config, String path,String def){
         return ChatColor.translateAlternateColorCodes('&',config.getString(path,def));

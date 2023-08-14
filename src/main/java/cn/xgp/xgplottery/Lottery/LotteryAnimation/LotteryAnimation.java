@@ -5,9 +5,9 @@ import cn.xgp.xgplottery.Lottery.Award;
 import cn.xgp.xgplottery.Lottery.Lottery;
 import cn.xgp.xgplottery.Lottery.ProbabilityCalculator.ProbabilityCalculator;
 import cn.xgp.xgplottery.Utils.NMSUtils;
+import cn.xgp.xgplottery.common.FoliaLib.Wrapper.Task;
 import lombok.Getter;
 import lombok.Setter;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -29,7 +29,7 @@ public abstract class LotteryAnimation {
     protected static Sound finish;
 
     protected List<Award> awards;
-    protected int taskID;
+    protected Task taskID;
 
 
     public LotteryAnimation(Player player, Lottery lottery){
@@ -48,7 +48,7 @@ public abstract class LotteryAnimation {
         return calculator.getAward(lottery,player);
     }
     protected void cancelTask() {
-        Bukkit.getScheduler().cancelTask(taskID);
+        taskID.cancel();
     }
     static
     {

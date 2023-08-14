@@ -4,7 +4,7 @@ import cn.xgp.xgplottery.Gui.Impl.Anim.AnimHolder;
 import cn.xgp.xgplottery.Lottery.Award;
 import cn.xgp.xgplottery.Lottery.LotteryAnimation.LotteryAnimation;
 import cn.xgp.xgplottery.Utils.GiveUtils;
-import org.bukkit.Bukkit;
+import cn.xgp.xgplottery.common.FoliaLib.Wrapper.Task;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -22,13 +22,13 @@ import java.util.UUID;
  * 具体发放奖品实现的类
  */
 public class CloseListener implements Listener {
-    private final int taskId;
+    private final Task taskId;
     private final UUID uuid;
     private final List<Award> awards;
     private final LotteryAnimation anim;
     private final boolean isTimer;
 
-    public CloseListener(int taskId,UUID uuid,LotteryAnimation anim,boolean isTimer){
+    public CloseListener(Task taskId, UUID uuid, LotteryAnimation anim, boolean isTimer){
         this.uuid = uuid;
         this.taskId = taskId;
         this.awards = anim.getAwards();
@@ -36,7 +36,7 @@ public class CloseListener implements Listener {
         this.isTimer = isTimer;
     }
 
-    public CloseListener(int taskId,UUID uuid,LotteryAnimation anim){
+    public CloseListener(Task taskId,UUID uuid,LotteryAnimation anim){
         this(taskId,uuid,anim,false);
     }
 
@@ -70,7 +70,7 @@ public class CloseListener implements Listener {
     }
 
     public void clear(){
-        Bukkit.getScheduler().cancelTask(taskId);
+        taskId.cancel();
         HandlerList.unregisterAll(this);
     }
 

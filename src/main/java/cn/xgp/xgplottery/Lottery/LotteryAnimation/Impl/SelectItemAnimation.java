@@ -31,8 +31,7 @@ public class SelectItemAnimation extends LotteryAnimation {
 
         Inventory inventory = new SelectItemGui(this).loadGui().getInventory();
         player.openInventory(inventory);
-
-        taskID = Bukkit.getScheduler().runTaskLater(XgpLottery.instance, () -> {
+        taskID = XgpLottery.foliaLibAPI.getScheduler().runTaskLater(()->{
             if(!isStop()) {
                 player.playSound(player.getLocation(), finish, 1.0f, 1.0f);
                 inventory.setItem(new Random().nextInt(54), new MyItem(awards.get(0).getRecordDisplayItem()).addEnchant().getItem());
@@ -40,7 +39,7 @@ public class SelectItemAnimation extends LotteryAnimation {
                 calculator.sendMessage();
             }
             setStop(true);
-        }, 200).getTaskId();
+        },200);
         CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this);
         Bukkit.getPluginManager().registerEvents(closeListener,XgpLottery.instance);
     }

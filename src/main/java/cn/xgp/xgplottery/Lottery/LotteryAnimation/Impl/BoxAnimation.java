@@ -37,7 +37,7 @@ public class BoxAnimation extends LotteryAnimation {
         //get award
         showItemList.set(20,awards.get(0).getRecordDisplayItem());
         player.openInventory(inventory);
-        taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
+        taskID = XgpLottery.foliaLibAPI.getScheduler().runTaskTimer(new Runnable() {
             int j = 0;
             @Override
             public void run() {
@@ -64,9 +64,7 @@ public class BoxAnimation extends LotteryAnimation {
                 }
 
             }
-
-
-        }, 0L, 5L).getTaskId();
+        },0L,5L);
         CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this,true);
         Bukkit.getPluginManager().registerEvents(closeListener,XgpLottery.instance);
     }

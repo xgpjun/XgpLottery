@@ -30,7 +30,7 @@ public class DefaultMultipleAnimation extends MultipleAnimation {
         DefMultipleAnimGui gui = new DefMultipleAnimGui();
         player.openInventory(gui.getInventory());
 
-        taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance,new Runnable (){
+        taskID = XgpLottery.foliaLibAPI.getScheduler().runTaskTimer(new Runnable() {
             int counter = 0;
             int index = 0;
             @Override
@@ -58,7 +58,7 @@ public class DefaultMultipleAnimation extends MultipleAnimation {
                     player.playSound(player.getLocation(), finish,1.0f,1.0f);
                 }
             }
-        },0L,5L).getTaskId();
+        },0L,5L);
         CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this,true);
         Bukkit.getPluginManager().registerEvents(closeListener,XgpLottery.instance);
     }

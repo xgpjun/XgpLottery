@@ -6,7 +6,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -20,7 +19,7 @@ public class LoginListener implements Listener {
         if(!ConfigSetting.msgToAdmin){return;}
         Player player = e.getPlayer();
         if(player.isOp()||player.hasPermission("xgplottery.manager")){
-            Bukkit.getScheduler().runTaskLaterAsynchronously(XgpLottery.instance,()->{
+            XgpLottery.foliaLibAPI.getScheduler().runTaskLaterAsynchronously(()->{
                 player.sendMessage(ChatColor.DARK_RED + "[XgpLottery] 有新版本可用！ 请去发布贴下载~");
                 //友情链接
                 sendUrl("https://www.mcbbs.net/thread-1445345-1-1.html",player);

@@ -35,7 +35,7 @@ public class MarqueeAnimation extends LotteryAnimation {
         });
         gui.getInventory().setItem(awardSlot,awards.get(0).getRecordDisplayItem());
         int totalStep = 54+awardSlot;
-        taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
+        taskID = XgpLottery.foliaLibAPI.getScheduler().runTaskTimer(new Runnable() {
             int counter,step = 0;
             @Override
             public void run() {
@@ -53,7 +53,7 @@ public class MarqueeAnimation extends LotteryAnimation {
                 }
 
             }
-        }, 0L, 5L).getTaskId();
+        },0L, 5L);
         CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this,true);
         Bukkit.getPluginManager().registerEvents(closeListener,XgpLottery.instance);
     }

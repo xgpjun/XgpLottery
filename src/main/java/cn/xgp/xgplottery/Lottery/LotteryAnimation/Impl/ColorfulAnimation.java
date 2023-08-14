@@ -26,8 +26,7 @@ public class ColorfulAnimation extends LotteryAnimation {
         awards.add(getOneAward());
         ColorfulAnimGui gui = new ColorfulAnimGui(calculator.isSpecial(),awards.get(0).getRecordDisplayItem());
         player.openInventory(gui.getInventory());
-        taskID = Bukkit.getScheduler().runTaskLater(XgpLottery.instance, () -> player.closeInventory(),4000L).getTaskId();
-
+        taskID = XgpLottery.foliaLibAPI.getScheduler().runTaskLater(()->player.closeInventory(),4000L);
         CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this,true);
         Bukkit.getPluginManager().registerEvents(closeListener, XgpLottery.instance);
     }

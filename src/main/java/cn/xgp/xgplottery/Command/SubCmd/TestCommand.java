@@ -1,5 +1,6 @@
 package cn.xgp.xgplottery.Command.SubCmd;
 
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabExecutor;
@@ -12,7 +13,7 @@ public class TestCommand implements TabExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-
+        sender.sendMessage(ChatColor.translateAlternateColorCodes('&',args[1]));
         return true;
     }
 

@@ -28,7 +28,7 @@ public class SimpleMultipleAnimation extends MultipleAnimation {
         SimpleMultipleAnimGui gui = new SimpleMultipleAnimGui();
 
         player.openInventory(gui.getInventory());
-        taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
+        taskID = XgpLottery.foliaLibAPI.getScheduler().runTaskTimer(new Runnable() {
             int counter = 0;
             @Override
             public void run() {
@@ -43,7 +43,7 @@ public class SimpleMultipleAnimation extends MultipleAnimation {
                 }
 
             }
-        }, 30L, 20L).getTaskId();
+        },30L, 20L);
         CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this,true);
         Bukkit.getPluginManager().registerEvents(closeListener,XgpLottery.instance);
     }

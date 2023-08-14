@@ -4,7 +4,7 @@ main: cn.xgp.xgplottery.XgpLottery
 api-version: '1.13'
 authors: [ 1badsobig ]
 description: MyPlayer lottery plugin.
-
+folia-supported: true
 softdepend:
   - PlaceholderAPI
   - ParticleLib

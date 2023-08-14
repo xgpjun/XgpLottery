@@ -40,7 +40,10 @@ public class LotteryListener implements Listener {
                         player.sendMessage(LangUtils.PlayerGui5);
                         return;
                     }
-                    lottery.open(player, false, false);
+                    if (NMSUtils.checkTag(item, false, lottery.getName())) {
+                        lottery.open(player, false, false);
+                        return;
+                    }
                     return;
                 }
                 // 判断物品类型或其他条件
@@ -71,8 +74,13 @@ public class LotteryListener implements Listener {
                             player.sendMessage(LangUtils.PlayerGui5);
                             return;
                         }
-                        lottery.open(player, false, false);
+                        ItemStack item = VersionAdapterUtils.getItemInMainHand(player);
+                        if (NMSUtils.checkTag(item, true, lottery.getName())) {
+                            lottery.open(player, false, false);
+                            return;
+                        }
                         return;
+
                     }
                     player.openInventory(new PlayerLotteryGui(player, lottery, true).getInventory());
                 }

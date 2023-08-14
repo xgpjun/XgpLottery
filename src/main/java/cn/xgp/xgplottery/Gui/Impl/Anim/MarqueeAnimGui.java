@@ -4,14 +4,13 @@ import cn.xgp.xgplottery.Gui.LotteryGui;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class MarqueeAnimGui extends AnimHolder{
-    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ LangUtils.SelectItemGuiTitle);
+    private final Inventory inv = Bukkit.createInventory(this,6*9, LangUtils.SelectItemGuiTitle);
 
     private ItemStack temp;
 

@@ -27,8 +27,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class SerializeUtils {
 
-    public static int saveTaskId;
-
     public static void save(){
         if(!XgpLottery.lotteryList.isEmpty()){
             saveLotteryData();
@@ -40,8 +38,6 @@ public class SerializeUtils {
         XgpLottery.log(LangUtils.LoadData);
         loadLotteryData();
         loadData();
-        if (ConfigSetting.autoSaveTime > 0)
-            saveTaskId = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, SerializeUtils::save, ConfigSetting.autoSaveTime * 3, ConfigSetting.autoSaveTime).getTaskId();
     }
 
     public static void saveData(){
@@ -55,7 +51,7 @@ public class SerializeUtils {
         }
     }
     public static void loadData(){
-        Bukkit.getScheduler().runTask(XgpLottery.instance,SerializeUtils::loadBoxData);
+        XgpLottery.foliaLibAPI.getScheduler().runTask(SerializeUtils::loadBoxData);
 //        loadBoxData();
         if(!SqlUtils.enable){
             loadDataByFile();

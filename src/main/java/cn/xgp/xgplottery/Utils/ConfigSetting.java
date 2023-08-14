@@ -20,6 +20,8 @@ public class ConfigSetting {
     public static String version;
 
     public static boolean enableDatabase;
+    public static boolean enableSqlite;
+    public static String sqlite;
     public static boolean showProbability;
     public static boolean enableParticle;
     public static boolean giveLottery;
@@ -36,9 +38,12 @@ public class ConfigSetting {
     public static int pluginVersionToInt = getVersionToInt(pluginVersion);
 
 
+
     public static void loadConfig(Configuration config){
         version = config.getString("version");
         enableDatabase = config.getBoolean("enableDatabase",false); //1.1.0新增
+        enableSqlite = config.getBoolean("enableSqlite",false);
+        sqlite = config.getString("sqlite","");
         showProbability = config.getBoolean("showProbability",false);
         enableParticle = config.getBoolean("enableParticle",true);
         giveLottery = config.getBoolean("giveLottery",true);
@@ -72,9 +77,11 @@ public class ConfigSetting {
             XgpLottery.instance.getConfig().set("version", version);
             XgpLottery.instance.saveConfig();
         }
-        if (versionToInt < 125) {
+        if (versionToInt < 126) {
             version = pluginVersion;
             XgpLottery.instance.getConfig().set("version", version);
+            XgpLottery.instance.getConfig().set("enableSqlite", enableSqlite);
+            XgpLottery.instance.getConfig().set("sqlite", sqlite);
             XgpLottery.instance.saveConfig();
         }
         msg = getXgpWebsite("msg");

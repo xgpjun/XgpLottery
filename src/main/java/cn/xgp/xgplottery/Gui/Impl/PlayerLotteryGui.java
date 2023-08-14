@@ -21,8 +21,8 @@ public class PlayerLotteryGui extends PlayerGui {
     Player player;
     Lottery lottery;
     boolean keyOrTicket;
-    boolean single;
-    boolean multiple;
+    boolean single = false;
+    boolean multiple = false;
 
     public PlayerLotteryGui(Player player, Lottery lottery, boolean keyOrTicket) {
         this.player = player;
@@ -53,7 +53,7 @@ public class PlayerLotteryGui extends PlayerGui {
                 lore = LangUtils.PlayerGui2;
                 single = true;
             }
-        } else {
+        } else if(lottery.getValue()>0) {
             //售卖
             lore = LangUtils.PlayerGui3;
             single = true;
@@ -87,7 +87,7 @@ public class PlayerLotteryGui extends PlayerGui {
                 lore = LangUtils.PlayerGui8;
                 multiple = true;
             }
-        } else {
+        } else if(lottery.getValue()>0){
             lore = LangUtils.PlayerGui9;
             multiple = true;
         }

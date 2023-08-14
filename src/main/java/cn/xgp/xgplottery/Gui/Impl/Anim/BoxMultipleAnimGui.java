@@ -5,14 +5,13 @@ import cn.xgp.xgplottery.Lottery.Award;
 import cn.xgp.xgplottery.Lottery.MyItem;
 import cn.xgp.xgplottery.Utils.LangUtils;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public class BoxMultipleAnimGui extends AnimHolder{
-    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+ LangUtils.SelectItemGuiTitle);
+    private final Inventory inv = Bukkit.createInventory(this,6*9, LangUtils.SelectItemGuiTitle2);
 
     int[] borderSlot = {0,1,2,3,4,5,6,7,8,9,17,18,19,25,26,27,28,34,35,36,37,43,44,45,46,47,48,49,50,51,52,53};
     int[] awardSlot = {29,30,31,32,33,38,39,40,41,42};

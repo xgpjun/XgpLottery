@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 @AllArgsConstructor
 public class SelectItemGui extends AnimHolder{
-    private final Inventory inv = Bukkit.createInventory(this,6*9, ChatColor.GOLD+LangUtils.SelectItemGuiTitle);
+    private final Inventory inv = Bukkit.createInventory(this,6*9, LangUtils.SelectItemGuiTitle);
     private final SelectItemAnimation selectItemAnimation;
 
 

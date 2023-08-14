@@ -26,7 +26,7 @@ public class MultipleSelectItemAnimation extends MultipleAnimation {
         IntStream.range(0, 10).forEach(i -> awards.add(getOneAward()));
         MultipleSelectItemGui gui = new MultipleSelectItemGui(this);
         player.openInventory(gui.getInventory());
-        taskID = Bukkit.getScheduler().runTaskTimer(XgpLottery.instance, new Runnable() {
+        taskID = XgpLottery.foliaLibAPI.getScheduler().runTaskTimer(new Runnable() {
             int counter = 0;
             @Override
             public void run() {
@@ -40,7 +40,7 @@ public class MultipleSelectItemAnimation extends MultipleAnimation {
                     cancelTask();
                 }
             }
-        }, 0L, 5L).getTaskId();
+        },0L,5L);
         CloseListener closeListener = new CloseListener(taskID,player.getUniqueId(),this,true);
         Bukkit.getPluginManager().registerEvents(closeListener,XgpLottery.instance);
     }

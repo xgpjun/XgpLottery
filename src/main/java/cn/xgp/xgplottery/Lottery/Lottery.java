@@ -118,6 +118,9 @@ public class Lottery {
         }
     }
 
+    public LotteryAnimation getMultipleAnimationObject() {
+        return getMultipleAnimationObject(null,this);
+    }
     /**
      * 用于获取抽奖动画的描述
      * @return 默认的抽奖动画实例

@@ -7,6 +7,7 @@ import cn.xgp.xgplottery.Listener.LotteryListener;
 import cn.xgp.xgplottery.Lottery.*;
 import cn.xgp.xgplottery.Utils.*;
 import cn.xgp.xgplottery.bStats.Metrics;
+import cn.xgp.xgplottery.common.FoliaLib.Api.FoliaLibAPI;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 import net.milkbowl.vault.economy.Economy;
@@ -37,6 +38,7 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
 
     public static JavaPlugin instance;
     public static PlayerPointsAPI ppAPI;
+    public static FoliaLibAPI foliaLibAPI;
     public static Economy eco;
     public static Map<String,Lottery> lotteryList = new ConcurrentHashMap<>();
     public static List<LotteryBox> lotteryBoxList = new CopyOnWriteArrayList<>();
@@ -78,12 +80,13 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
     public void onEnable() {
 
         instance=this;
+        foliaLibAPI = new FoliaLibAPI(this);
         Metrics.enable();
 
         //读取配置文件
         ConfigSetting.loadConfig(getConfig());
 
-        if(ConfigSetting.enableDatabase)
+        if(ConfigSetting.enableDatabase||ConfigSetting.enableSqlite)
             SqlUtils.init();
 
 
@@ -91,7 +94,6 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
         TimesUtils.autoLoadTop();
         //启动相关依赖
         enableDepend();
-
 
         log(LangUtils.EnableMessage);
         //注册命令
@@ -105,7 +107,8 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
 
         Bukkit.getPluginManager().registerEvents(new LoginListener(),this);
 
-        Bukkit.getScheduler().runTaskAsynchronously(XgpLottery.instance, ConfigSetting::updateConfig);
+
+        foliaLibAPI.getScheduler().runTaskAsynchronously(ConfigSetting::updateConfig);
 
         //bc
         this.getServer().getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
@@ -122,8 +125,7 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
         SqlUtils.closeConnection();
         log(LangUtils.DisableMessage);
         HandlerList.unregisterAll(this);
-        Bukkit.getScheduler().cancelTask(SerializeUtils.saveTaskId);
-        Bukkit.getScheduler().cancelTask(TimesUtils.taskId);
+        TimesUtils.task.cancel();
 
     }
 
@@ -177,13 +179,11 @@ public final class XgpLottery extends JavaPlugin implements PluginMessageListene
 
     public static void reload(){
 
-        if (ConfigSetting.autoSaveTime >= 0)
-            Bukkit.getScheduler().cancelTask(SerializeUtils.saveTaskId);
         instance.reloadConfig();
         ConfigSetting.loadConfig(instance.getConfig());
         log(LangUtils.ReloadMessage);
         SqlUtils.closeConnection();
-        if (ConfigSetting.enableDatabase)
+        if (ConfigSetting.enableDatabase||ConfigSetting.enableSqlite)
             SqlUtils.init();
 
         SerializeUtils.load();
