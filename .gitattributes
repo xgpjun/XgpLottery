@@ -1,0 +1,3 @@
+*.kt linguist-language=Kotlin
+*.yml linguist-language=Kotlin
+*.html linguist-vendored
