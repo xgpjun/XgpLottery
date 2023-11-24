@@ -1,0 +1,10 @@
+  name: "XgpLottery2"
+  main: "cn.xgpjun.xgplottery2.XgpLottery"
+  version: ${version}
+  api-version: "1.13"
+  folia-supported: true
+  authors: [ 1badsobig ]
+  commands:
+    xgplottery:
+      aliases: "xl"
+      usage: "plugin is disabled!"

@@ -1,0 +1,36 @@
+animation: "Default"
+multipleAnimation: "DefaultMultiple"
+calculator: "Guaranteed"
+value: 10
+sellType: "EXP"
+customTag:
+  guaranteedCount: 10
+  maxDrawCount: 100
+key:
+  #ni: "foo"
+  #ia: "bar"
+  #mm: "foo"
+  material: "GRASS"
+  displayName: "&6default's key"
+  lore:
+    - "&aUse to add a key!"
+awards:
+  exampleAward1:
+    item:
+      #ni: "foo"
+      #ia: "bar"
+      #mm: "foo"
+      #internal: "bar"
+      material: "STONE"
+      displayName: "&6special stone"
+      lore:
+        - "&x&0&0&F&F&7&F I have a special lore!"
+      amount: 1
+    giveItem: true
+    rawItem: false
+    broadcast: false
+    weight: 10
+    command:
+      - "say 123"
+    customTag:
+      guaranteedRewards: true

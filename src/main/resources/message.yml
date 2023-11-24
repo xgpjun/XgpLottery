@@ -1,0 +1,75 @@
+error:
+  missingNode: "&f读取lottery文件{file.name}时,缺少{node},已跳过"
+  awardNull: "&c奖池有误，未获得奖品"
+  onlyPlayer: "&c只有玩家才能这样做！"
+  notFoundLottery: "&c指定奖池无效"
+  crateExisted: "&c这个位置已经有抽奖箱了"
+  removeFailed: "&c这个地方不是抽奖箱"
+  notSupport: "&c该功能不支持此MC版本!"
+  notFoundPlayer: "&c此玩家不在线"
+
+message:
+  prefix: "&l[&9Xgp&3Lottery&a2&f] &e=> &f"
+  createCrate: "&a左键点击方块，设置为{name}奖池的抽奖箱！"
+  removeCrate: "&a左键点击抽奖箱，移除抽奖箱"
+  createCrateSuccessfully: "&a创建抽奖箱成功"
+  crateListInfo:
+    - "&6&l&n点击&r&l&f以传送"
+    - "world: {world}"
+    - "x: {x}"
+    - "y: {y}"
+    - "z: {z}"
+    - "奖池: {lotteryName}"
+
+
+help:
+  help:
+    - "/"
+  crate:
+    - "&3/xl crate create 已有奖池名称"
+    - "&7设置某个方块为已有奖池的抽奖箱"
+    - "&3/xl crate remove"
+    - "&7删除某个方块的抽奖箱"
+    - "&3/xl crate list"
+    - "&7 查看所有抽奖箱信息，可传送"
+  draw:
+    - "&3/xl draw 玩家名称 奖池名称"
+    - "&7给与指定玩家单抽，不消耗钥匙"
+    - "&3/xl draw 玩家名称 奖池名称 multiple"
+    - "&7给与指定玩家十连抽，不消耗钥匙"
+
+noun:
+  money: "&6金币"
+  point: "&6点券"
+  exp: "&6经验"
+gui:
+  items:
+    border:
+      name: "&7&l无法到达的边界"
+      lore:
+        - "&7有一个声音对你说:你拿不走我的"
+    border2:
+      name: "&6&l无法到达的边界"
+      lore:
+        - "&6这块边界似乎有什么不同"
+    exit:
+      name: "&c退出"
+    previous:
+      name: "&6返回上一层"
+    nextPage:
+      name: "&f下一页"
+    previousPage:
+      name: "&f上一页"
+  admin:
+    manage:
+      title: "&6奖池管理"
+  message:
+    cancel: "&6&l&n点击&r&l&c取消"
+    singleAnimChange: "&6&l&n点击&r&f以更改为:{name}"
+    multipleAnimChange: "&6&l&n点击&r&f以更改为:{name}"
+    valueChange: "&6&l请输入新的价格，0为不出售,输入&fcancel&6取消"
+    sellTypeChange: "&6&f&n点击&r&l&f以更改为:{name}"
+  singleAnim:
+    default:
+      title: "&6单抽出奇迹!"
+      name: "&f默认单抽动画"
