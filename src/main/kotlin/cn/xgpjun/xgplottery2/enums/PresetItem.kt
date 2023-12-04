@@ -150,34 +150,36 @@ enum class PresetItem {
      * 数据值 14: 红色（Red）
      * 数据值 15: 黑色（Black）
      */
-    protected val glasses by lazy {
-        val t = arrayOfNulls<ItemStack>(16)
-        if (NMSManager.versionToInt < 13) {
-            val select = Material.valueOf("STAINED_GLASS_PANE")
-            for (i in 0..15) {
-                t[i] = ItemStack(
-                    select, 1, i.toByte()
-                        .toShort()
-                )
+    companion object{
+        val glasses by lazy {
+            val t = arrayOfNulls<ItemStack>(16)
+            if (NMSManager.versionToInt < 13) {
+                val select = Material.valueOf("STAINED_GLASS_PANE")
+                for (i in 0..15) {
+                    t[i] = ItemStack(
+                        select, 1, i.toByte()
+                            .toShort()
+                    )
+                }
+            } else {
+                t[0] = ItemStack(Material.WHITE_STAINED_GLASS_PANE)
+                t[1] = ItemStack(Material.ORANGE_STAINED_GLASS_PANE)
+                t[2] = ItemStack(Material.MAGENTA_STAINED_GLASS_PANE)
+                t[3] = ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
+                t[4] = ItemStack(Material.YELLOW_STAINED_GLASS_PANE)
+                t[5] = ItemStack(Material.LIME_STAINED_GLASS_PANE)
+                t[6] = ItemStack(Material.PINK_STAINED_GLASS_PANE)
+                t[7] = ItemStack(Material.GRAY_STAINED_GLASS_PANE)
+                t[8] = ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE)
+                t[9] = ItemStack(Material.CYAN_STAINED_GLASS_PANE)
+                t[10] = ItemStack(Material.PURPLE_STAINED_GLASS_PANE)
+                t[11] = ItemStack(Material.BLUE_STAINED_GLASS_PANE)
+                t[12] = ItemStack(Material.BROWN_STAINED_GLASS_PANE)
+                t[13] = ItemStack(Material.GREEN_STAINED_GLASS_PANE)
+                t[14] = ItemStack(Material.RED_STAINED_GLASS_PANE)
+                t[15] = ItemStack(Material.BLACK_STAINED_GLASS_PANE)
             }
-        } else {
-            t[0] = ItemStack(Material.WHITE_STAINED_GLASS_PANE)
-            t[1] = ItemStack(Material.ORANGE_STAINED_GLASS_PANE)
-            t[2] = ItemStack(Material.MAGENTA_STAINED_GLASS_PANE)
-            t[3] = ItemStack(Material.LIGHT_BLUE_STAINED_GLASS_PANE)
-            t[4] = ItemStack(Material.YELLOW_STAINED_GLASS_PANE)
-            t[5] = ItemStack(Material.LIME_STAINED_GLASS_PANE)
-            t[6] = ItemStack(Material.PINK_STAINED_GLASS_PANE)
-            t[7] = ItemStack(Material.GRAY_STAINED_GLASS_PANE)
-            t[8] = ItemStack(Material.LIGHT_GRAY_STAINED_GLASS_PANE)
-            t[9] = ItemStack(Material.CYAN_STAINED_GLASS_PANE)
-            t[10] = ItemStack(Material.PURPLE_STAINED_GLASS_PANE)
-            t[11] = ItemStack(Material.BLUE_STAINED_GLASS_PANE)
-            t[12] = ItemStack(Material.BROWN_STAINED_GLASS_PANE)
-            t[13] = ItemStack(Material.GREEN_STAINED_GLASS_PANE)
-            t[14] = ItemStack(Material.RED_STAINED_GLASS_PANE)
-            t[15] = ItemStack(Material.BLACK_STAINED_GLASS_PANE)
+            t.requireNoNulls()
         }
-        t.requireNoNulls()
     }
 }

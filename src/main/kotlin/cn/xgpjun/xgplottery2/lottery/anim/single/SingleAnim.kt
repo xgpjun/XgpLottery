@@ -9,10 +9,12 @@ import org.bukkit.inventory.InventoryHolder
 
 abstract class SingleAnim:InventoryHolder {
     abstract val name:String
-    abstract val i18Name:String
+    abstract val i18nName:String
     var award:Award? = null
     var mustBeCrate:Boolean = false
     abstract fun draw(player: Player,lottery: Lottery,crateLocation:Location?)
-    fun register() = AnimManager.singleAnim.put(name,this.javaClass)
+    fun register() {
+        AnimManager.singleAnim[name] = this.javaClass
+    }
     open fun finish(){}
 }

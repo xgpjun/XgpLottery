@@ -73,6 +73,7 @@ tasks{
         relocate("org.intellij","cn.xgpjun.org.intellij")
         relocate("org.jetbrains","cn.xgpjun.org.jetbrains")
         relocate("org.jetbrains","cn.xgpjun.org.jetbrains")
+        relocate("org.slf4j","cn.xgpjun.org.slf4j")
         relocate("com.zaxxer","cn.xgpjun.com.zaxxer")
         relocate("com.google.devtools","cn.xgpjun.com.google.devtools")
 

@@ -27,6 +27,9 @@ class XgpLottery : JavaPlugin() {
 
         SchedulerManager.register(this)
 
+        //注册动画处理器
+        AnimManager.register()
+
         //读取lottery文件
         LotteryManager.loadFileData()
         //注册监听器

@@ -9,7 +9,7 @@ import org.bukkit.inventory.InventoryHolder
 
 abstract class MultipleAnim :InventoryHolder{
     abstract val name:String
-    abstract val i18Name:String
+    abstract val i18nName:String
     open val awards:MutableList<Award> = arrayListOf()
     var mustBeCrate:Boolean = false
     fun register() = AnimManager.multipleAnim.put(name,this.javaClass)

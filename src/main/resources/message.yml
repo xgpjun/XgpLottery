@@ -73,3 +73,30 @@ gui:
     default:
       title: "&6单抽出奇迹!"
       name: "&f默认单抽动画"
+    colorful:
+      title: "&6单抽出奇迹!"
+      name: "&f多彩抽奖动画"
+      click: "&f点击启动抽奖!"
+    marquee:
+      title: "&6单抽出奇迹!"
+      name: "&f走马灯动画"
+      selected: "&a被选中的是..."
+    select:
+      title: "&6单抽出奇迹!"
+      name: "&f翻牌动画"
+      click: "&f点击翻开!"
+    void:
+      name: "&f无动画"
+  multipleAnim:
+    default:
+      title: "&6不知道多少抽出奇迹!"
+      name: "&f默认十连动画"
+    select:
+      title: "&6不知道多少抽出奇迹!"
+      name: "&f连着选十个物品的动画"
+    box:
+      title: "&6不知道多少抽出奇迹!"
+      name: "&f爱叫啥叫啥十连动画"
+    simple:
+      title: "&6不知道多少抽出奇迹!"
+      name: "&f爱叫啥叫啥2十连动画"

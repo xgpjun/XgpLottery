@@ -3,13 +3,13 @@ package cn.xgpjun.xgplottery2.common.foliaSupport.wrapper
 interface Scheduler {
     fun runTask(runnable: Runnable): Task?
 
-    fun runTaskLater(runnable: Runnable, delay: Long): Task?
+    fun runTaskLater(delay: Long,runnable: Runnable): Task?
 
-    fun runTaskTimer(runnable: Runnable, delay: Long, period: Long): Task?
+    fun runTaskTimer( delay: Long, period: Long,runnable: Runnable, ): Task?
 
     fun runTaskAsynchronously(runnable: Runnable): Task?
 
-    fun runTaskLaterAsynchronously(runnable: Runnable, delay: Long): Task?
+    fun runTaskLaterAsynchronously(delay: Long,runnable: Runnable): Task?
 
-    fun runTaskTimerAsynchronously(runnable: Runnable, delay: Long, period: Long): Task?
+    fun runTaskTimerAsynchronously(delay: Long, period: Long,runnable: Runnable, ): Task?
 }

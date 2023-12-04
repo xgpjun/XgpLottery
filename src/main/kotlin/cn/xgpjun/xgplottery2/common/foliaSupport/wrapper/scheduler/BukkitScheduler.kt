@@ -12,11 +12,11 @@ class BukkitScheduler(private val plugin: Plugin): Scheduler {
         return BukkitTask(Bukkit.getScheduler().runTask(plugin, runnable), false)
     }
 
-    override fun runTaskLater(runnable: Runnable, delay: Long): Task {
+    override fun runTaskLater(delay: Long,runnable: Runnable): Task {
         return BukkitTask(Bukkit.getScheduler().runTaskLater(plugin, runnable, delay), false)
     }
 
-    override fun runTaskTimer(runnable: Runnable, delay: Long, period: Long): Task {
+    override fun runTaskTimer(delay: Long, period: Long,runnable: Runnable): Task {
         return BukkitTask(Bukkit.getScheduler().runTaskTimer(plugin, runnable, delay, period), true)
     }
 
@@ -24,11 +24,11 @@ class BukkitScheduler(private val plugin: Plugin): Scheduler {
         return BukkitTask(Bukkit.getScheduler().runTaskAsynchronously(plugin, runnable), false)
     }
 
-    override fun runTaskLaterAsynchronously(runnable: Runnable, delay: Long): Task {
+    override fun runTaskLaterAsynchronously(delay: Long,runnable: Runnable): Task {
         return BukkitTask(Bukkit.getScheduler().runTaskLaterAsynchronously(plugin, runnable, delay), false)
     }
 
-    override fun runTaskTimerAsynchronously(runnable: Runnable, delay: Long, period: Long): Task {
+    override fun runTaskTimerAsynchronously(delay: Long, period: Long,runnable: Runnable, ): Task {
         return BukkitTask(Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, runnable, delay, period), true)
     }
 }

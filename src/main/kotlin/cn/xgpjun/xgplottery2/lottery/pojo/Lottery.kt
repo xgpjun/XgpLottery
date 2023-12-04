@@ -11,6 +11,7 @@ import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
 import java.io.File
+import java.util.*
 
 class Lottery(
     var name: String,
@@ -105,8 +106,11 @@ class Lottery(
                 animation.draw(player, this, null)
             }
         }
+    }
 
-
+    fun getRandomAward(): Award? {
+        val next = Random().nextInt(awards.size)
+        return awards.values.toList().getOrNull(next)
     }
 
 }

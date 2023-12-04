@@ -47,7 +47,7 @@ class FoliaScheduler:Scheduler {
         return FoliaTask(task1)
     }
 
-    override fun runTaskLater(runnable: Runnable, delay: Long): Task {
+    override fun runTaskLater(delay: Long,runnable: Runnable): Task {
         val task1= when (schedulerType) {
             SchedulerType.ENTITY -> entity.scheduler.runDelayed(plugin, { runnable.run() }, retired, delay)
             SchedulerType.GLOBAL -> Bukkit.getGlobalRegionScheduler().runDelayed(plugin, { runnable.run() }, delay)
@@ -61,7 +61,7 @@ class FoliaScheduler:Scheduler {
         return FoliaTask(task1)
     }
 
-    override fun runTaskTimer(runnable: Runnable, delay: Long, period: Long): Task {
+    override fun runTaskTimer(delay: Long, period: Long, runnable: Runnable): Task {
         val task1 = when (schedulerType) {
             SchedulerType.ENTITY -> entity.scheduler.runAtFixedRate(plugin, { runnable.run() }, retired, delay, period)
             SchedulerType.GLOBAL -> Bukkit.getGlobalRegionScheduler().runAtFixedRate(plugin, { runnable.run() }, delay, period)
@@ -86,11 +86,11 @@ class FoliaScheduler:Scheduler {
         return runTask(runnable)
     }
 
-    override fun runTaskLaterAsynchronously(runnable: Runnable, delay: Long): Task {
-        return runTaskLater(runnable, delay)
+    override fun runTaskLaterAsynchronously(delay: Long, runnable: Runnable): Task {
+        return runTaskLater(delay,runnable)
     }
 
-    override fun runTaskTimerAsynchronously(runnable: Runnable, delay: Long, period: Long): Task {
-        return runTaskTimer(runnable, delay, period)
+    override fun runTaskTimerAsynchronously(delay: Long, period: Long, runnable: Runnable): Task {
+        return runTaskTimer(delay, period,runnable)
     }
 }

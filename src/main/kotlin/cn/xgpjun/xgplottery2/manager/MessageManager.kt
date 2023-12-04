@@ -86,6 +86,25 @@ enum class Message(val path: String){
     //动画
     DefaultSingleAnimTitle("gui.singleAnim.default.title"),
     DefaultSingleAnimName("gui.singleAnim.default.name"),
+    ColorfulAnimTitle("gui.singleAnim.colorful.title"),
+    ColorfulAnimName("gui.singleAnim.colorful.name"),
+    ColorfulAnimClick("gui.singleAnim.colorful.click"),
+    MarqueeAnimTitle("gui.singleAnim.marquee.title"),
+    MarqueeAnimName("gui.singleAnim.marquee.name"),
+    MarqueeAnimSelected("gui.singleAnim.marquee.selected"),
+    SelectAnimTitle("gui.singleAnim.select.title"),
+    SelectAnimName("gui.singleAnim.select.name"),
+    SelectAnimClick("gui.singleAnim.select.click"),
+    VoidAnimName("gui.singleAnim.void.name"),
+
+    DefaultMultipleAnimTitle("gui.multipleAnim.default.title"),
+    DefaultMultipleAnimName("gui.multipleAnim.default.name"),
+    BoxMultipleAnimTitle("gui.multipleAnim.box.title"),
+    BoxMultipleAnimName("gui.multipleAnim.box.name"),
+    SelectMultipleAnimTitle("gui.multipleAnim.select.title"),
+    SelectMultipleAnimName("gui.multipleAnim.select.name"),
+    SimpleMultipleAnimTitle("gui.multipleAnim.simple.title"),
+    SimpleMultipleAnimName("gui.multipleAnim.simple.name"),
     ;
 
     var string:String = "${ChatColor.RED}Not Init Yet:${name}"

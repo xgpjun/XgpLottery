@@ -98,7 +98,7 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
         player.closeInventory()
         preInventory[player.uniqueId] = this
         AnimManager.singleAnim.values.forEach{
-            val information = TextComponent(Message.SingleAnimChange.get(it.new().i18Name).color())
+            val information = TextComponent(Message.SingleAnimChange.get(it.new().i18nName).color())
             information.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xl edit ${lottery.name} singleAnim ${it.name}")
             player.spigot().sendMessage(information)
         }
@@ -111,7 +111,7 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
         preInventory[player.uniqueId] = this
 
         AnimManager.multipleAnim.values.forEach{
-            val information = TextComponent(Message.MultipleAnimChange.get(it.getConstructor().newInstance().i18Name))
+            val information = TextComponent(Message.MultipleAnimChange.get(it.getConstructor().newInstance().i18nName))
             information.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xl edit ${lottery.name} multipleAnim ${it.name}")
             player.spigot().sendMessage(information)
         }
