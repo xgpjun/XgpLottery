@@ -4,7 +4,6 @@ import cn.xgpjun.xgplottery2.common.foliaSupport.enum.SchedulerType
 import cn.xgpjun.xgplottery2.common.foliaSupport.wrapper.Scheduler
 import cn.xgpjun.xgplottery2.common.foliaSupport.wrapper.Task
 import cn.xgpjun.xgplottery2.common.foliaSupport.wrapper.task.FoliaTask
-import io.papermc.paper.threadedregions.scheduler.ScheduledTask
 import org.bukkit.Bukkit
 import org.bukkit.Location
 import org.bukkit.entity.Entity

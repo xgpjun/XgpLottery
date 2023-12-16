@@ -19,13 +19,14 @@ class Lottery(
     multipleAnimation:String,
     value:Double,
     sellType: SellType,
+    var virtualKeyName: String,
     var customTags:MutableMap<String,Any>,
     key:ItemStack,
     var awards:MutableMap<String,Award>,
     calculator: String,
     private var file: File,
 ){
-    var yaml = YamlConfiguration.loadConfiguration(file)
+    private var yaml = YamlConfiguration.loadConfiguration(file)
     var animation = animation
         set(value) {
             field = value
@@ -66,7 +67,6 @@ class Lottery(
             yaml.set("calculator",value)
             yaml.save(file)
         }
-    // TODO: methods
     fun createNewAward(name: String){
         awards[name] = Award.create(name)
 

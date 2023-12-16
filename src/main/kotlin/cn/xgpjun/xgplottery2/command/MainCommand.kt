@@ -12,9 +12,11 @@ import java.util.*
 object MainCommand :TabExecutor {
     private val subCommands: MutableMap<String, TabExecutor> = HashMap()
     init {
+        registerSubCommand("count",Count)
         registerSubCommand("crate",Crate)
         registerSubCommand("help",Help)
         registerSubCommand("draw",Draw)
+        registerSubCommand("key",Key)
         registerSubCommand("manage",Manage)
         registerSubCommand("edit",Edit)
     }

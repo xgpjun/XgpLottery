@@ -7,6 +7,10 @@ error:
   removeFailed: "&c这个地方不是抽奖箱"
   notSupport: "&c该功能不支持此MC版本!"
   notFoundPlayer: "&c此玩家不在线"
+  invFull: "&c你背包没有多余的空位"
+  noEnoughKeys: "&c你的{name}钥匙不足..."
+  totalWeightNegative: "&c奖池总权重必须大于零"
+  maxTimeLimit: "&c在尝试进行{count}次抽奖失败: 你已抽{time},而上限是{maxTime}"
 
 message:
   prefix: "&l[&9Xgp&3Lottery&a2&f] &e=> &f"
@@ -20,23 +24,41 @@ message:
     - "y: {y}"
     - "z: {z}"
     - "奖池: {lotteryName}"
+  countClearConfirm: "&c输入 &a/xl count clear {player} confirm &c以确认"
+  countInquire: "&b奖池名称-{lottery}: &a次数-{count}"
+  keyClearConfirm: "&c输入 &a/xl key clear {player} confirm &c以确认"
+  keyInquire: "&b钥匙名称-{key}: &a数量-{count}"
 
 
 help:
   help:
     - "/"
+  count:
+    - "&3/xl count inquire 玩家名称"
+    - "&7查询某个玩家的抽奖次数"
+    - "&3/xl count clear 玩家名称"
+    - "&7清除某个玩家的抽奖次数"
   crate:
     - "&3/xl crate create 已有奖池名称"
     - "&7设置某个方块为已有奖池的抽奖箱"
     - "&3/xl crate remove"
     - "&7删除某个方块的抽奖箱"
     - "&3/xl crate list"
-    - "&7 查看所有抽奖箱信息，可传送"
+    - "&7查看所有抽奖箱信息，可传送"
   draw:
     - "&3/xl draw 玩家名称 奖池名称"
     - "&7给与指定玩家单抽，不消耗钥匙"
     - "&3/xl draw 玩家名称 奖池名称 multiple"
     - "&7给与指定玩家十连抽，不消耗钥匙"
+  key:
+    - "&3/xl key inquire 玩家名称"
+    - "&7查询玩家虚拟钥匙数量"
+    - "&3/xl key add 玩家名称 钥匙名称 数量"
+    - "&7增加玩家虚拟钥匙数量"
+    - "&3/xl key sub 玩家名称 钥匙名称 数量"
+    - "&7减少玩家虚拟钥匙数量"
+    - "&3/xl key clear 玩家名称"
+    - "&7清空玩家虚拟钥匙数量"
 
 noun:
   money: "&6金币"
@@ -76,7 +98,7 @@ gui:
     colorful:
       title: "&6单抽出奇迹!"
       name: "&f多彩抽奖动画"
-      click: "&f点击启动抽奖!"
+      click: "&a点击启动抽奖!"
     marquee:
       title: "&6单抽出奇迹!"
       name: "&f走马灯动画"
@@ -84,7 +106,7 @@ gui:
     select:
       title: "&6单抽出奇迹!"
       name: "&f翻牌动画"
-      click: "&f点击翻开!"
+      click: "&a点击翻开!"
     void:
       name: "&f无动画"
   multipleAnim:

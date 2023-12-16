@@ -35,6 +35,7 @@ object LotteryManager {
             val multipleAnimation = yaml.getString("multipleAnimation")?: run { Message.MissingNode.get(file.name,"multipleAnimation").log();return@forEach }
             val value = yaml.getDouble("value",0.0)
             val sellType = SellType.fromString(yaml.getString("sellType")?:"null")
+            val virtualKeyName = yaml.getString("virtualKeyName",name)!!
 
             val lotteryCustomTag: HashMap<String, Any> = yaml.getConfigurationSection("customTag")?.getKeys(false)?.run {
                 val tags = HashMap<String,Any>()
@@ -103,7 +104,7 @@ object LotteryManager {
                 return@forEach
             }
 
-            val lottery = Lottery(name,animation,multipleAnimation,value,sellType,lotteryCustomTag,key,awards,calculator,file)
+            val lottery = Lottery(name,animation,multipleAnimation,value,sellType,virtualKeyName,lotteryCustomTag,key,awards,calculator,file)
             lotteryMap[name] = lottery
         }
     }

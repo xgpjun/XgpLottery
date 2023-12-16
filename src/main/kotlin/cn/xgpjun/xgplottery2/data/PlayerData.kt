@@ -1,7 +1,7 @@
 package cn.xgpjun.xgplottery2.data
 
 import cn.xgpjun.xgplottery2.lottery.pojo.Lottery
-import org.bukkit.entity.Player
+import com.google.gson.Gson
 import java.util.UUID
 
 /**
@@ -20,21 +20,19 @@ class PlayerData(
     ) {
 
     fun addCount(lottery: Lottery){
-        totalDrawCount++
+        totalDrawCount += 1
         individualPoolDrawCount[lottery.name] = individualPoolDrawCount.getOrDefault(lottery.name,0) + 1
     }
 
     fun consumeKey(lottery: Lottery,count:Int){
-        val result = keyCount.getOrDefault(lottery.name,0) - count
-        keyCount[lottery.name] = result
+        val result = keyCount.getOrDefault(lottery.virtualKeyName,0) - count
+        keyCount[lottery.virtualKeyName] = result
     }
 
-    companion object{
-        fun getPlayerData(player: Player):PlayerData{
-            return createPlayerData(player)
-            TODO()
-        }
+    fun individualPoolDrawCountString(): String = Gson().toJson(individualPoolDrawCount)
 
-        private fun createPlayerData(player: Player) = PlayerData(player.uniqueId,0,HashMap(),HashMap(),HashMap())
-    }
+    fun keyCountString(): String = Gson().toJson(keyCount)
+
+    fun customDataString(): String = Gson().toJson(customData)
+
 }

@@ -1,13 +1,14 @@
 package cn.xgpjun.xgplottery2
 
 import cn.xgpjun.xgplottery2.command.MainCommand
+import cn.xgpjun.xgplottery2.manager.DatabaseManager
+import cn.xgpjun.xgplottery2.manager.DatabaseManager.save
 import cn.xgpjun.xgplottery2.lottery.calculator.impl.GuaranteedCalculator
 import cn.xgpjun.xgplottery2.lottery.calculator.impl.NormalCalculator
 import cn.xgpjun.xgplottery2.manager.*
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
-import org.bukkit.event.Listener
 import org.bukkit.plugin.java.JavaPlugin
 import java.io.File
 
@@ -27,6 +28,8 @@ class XgpLottery : JavaPlugin() {
 
         SchedulerManager.register(this)
 
+        DatabaseManager.register()
+
         //注册动画处理器
         AnimManager.register()
 
@@ -39,7 +42,14 @@ class XgpLottery : JavaPlugin() {
 
     }
 
-    companion object Instance {
+    override fun onDisable() {
+        DatabaseManager.onlinePlayerData.forEach{
+            it.value.save()
+        }
+        DatabaseManager.onlinePlayerData.clear()
+    }
+
+    companion object {
         lateinit var instance : JavaPlugin
         val logo = listOf("&f",
             "&9__   __               _             _    _                      _____ ",
@@ -54,7 +64,11 @@ class XgpLottery : JavaPlugin() {
         )
     }
 
+}
 
+fun stop(message: String){
+    message.log()
+    Bukkit.getPluginManager().disablePlugin(XgpLottery.instance)
 }
 
 fun String.log(){

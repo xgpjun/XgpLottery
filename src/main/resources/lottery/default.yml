@@ -3,6 +3,7 @@ multipleAnimation: "DefaultMultiple"
 calculator: "Guaranteed"
 value: 10
 sellType: "EXP"
+virtualKeyName: "default"
 customTag:
   guaranteedCount: 10
   maxDrawCount: 100

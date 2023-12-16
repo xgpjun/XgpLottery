@@ -1,6 +1,6 @@
 package cn.xgpjun.xgplottery2.lottery.calculator.impl
 
-import cn.xgpjun.xgplottery2.data.PlayerData
+import cn.xgpjun.xgplottery2.manager.DatabaseManager
 import cn.xgpjun.xgplottery2.lottery.calculator.Calculator
 import cn.xgpjun.xgplottery2.lottery.pojo.Award
 import cn.xgpjun.xgplottery2.lottery.pojo.Lottery
@@ -8,7 +8,7 @@ import org.bukkit.entity.Player
 
 class NormalCalculator:Calculator() {
     override fun getAward(player: Player, lottery: Lottery): Award? {
-        val playerData = PlayerData.getPlayerData(player)
+        val playerData = DatabaseManager.getPlayerData(player.uniqueId)
         playerData.addCount(lottery)
         return onlyGetAward(lottery)
     }

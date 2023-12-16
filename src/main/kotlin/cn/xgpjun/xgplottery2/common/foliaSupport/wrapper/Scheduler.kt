@@ -5,7 +5,7 @@ interface Scheduler {
 
     fun runTaskLater(delay: Long,runnable: Runnable): Task?
 
-    fun runTaskTimer( delay: Long, period: Long,runnable: Runnable, ): Task?
+    fun runTaskTimer(delay: Long, period: Long,runnable: Runnable): Task?
 
     fun runTaskAsynchronously(runnable: Runnable): Task?
 

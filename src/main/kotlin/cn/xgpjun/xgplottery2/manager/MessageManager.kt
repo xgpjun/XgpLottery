@@ -45,6 +45,20 @@ enum class Message(val path: String){
     RemoveFailed("error.removeFailed"),
     NotSupport("error.notSupport"),
     NotFoundPlayer("error.notFoundPlayer"),
+    InvFull("error.invFull"),
+    NoEnoughKeys("error.noEnoughKeys"){
+        override fun get(vararg placeholders: String?): String {
+            return string.replace("{name}",placeholders[0].toString())
+        }
+                                      },
+    TotalWeightNegative("error.totalWeightNegative"),
+    MaxTimeLimit("error.maxTimeLimit"){
+        override fun get(vararg placeholders: String?): String {
+            return string.replace("{count}",placeholders[0].toString())
+                .replace("{time}",placeholders[1].toString())
+                .replace("{maxTime",placeholders[2].toString())
+        }
+                                      },
     CreateCrateSuccessfully("message.createCrateSuccessfully"),
     CreateCrate("message.createCrate"){
         override fun get(vararg placeholders: String?): String {
@@ -52,6 +66,26 @@ enum class Message(val path: String){
         }
                                       },
     RemoveCrate("message.removeCrate"),
+    CountClearConfirm("message.countClearConfirm"){
+        override fun get(vararg placeholders: String?): String {
+            return string.replace("{player}",placeholders[0].toString())
+        }
+                                                  },
+    CountInquire("message.countInquire"){
+        override fun get(vararg placeholders: String?): String {
+            return string.replace("{lottery}",placeholders[0].toString()).replace("{count}",placeholders[1].toString())
+        }
+                                        },
+    KeyClearConfirm("message.keyClearConfirm"){
+        override fun get(vararg placeholders: String?): String {
+            return string.replace("{player}",placeholders[0].toString())
+        }
+    },
+    KeyInquire("message.keyInquire"){
+        override fun get(vararg placeholders: String?): String {
+            return string.replace("{key}",placeholders[0].toString()).replace("{count}",placeholders[1].toString())
+        }
+    },
     ManageTitle("gui.admin.manage.title"),
 
     ItemBorderName( "gui.items.border.name"),
@@ -118,6 +152,8 @@ enum class MessageL(val path: String){
     HelpMessage("help.help"),
     CrateHelp("help.crate"),
     DrawHelp("help.draw"),
+    CountHelp("help.count"),
+    KeyHelp("help.key"),
     ItemBorderLore("gui.items.border.lore"),
     ItemBorder2Lore("gui.items.border2.lore"),
     CrateListInfo("message.crateListInfo"){

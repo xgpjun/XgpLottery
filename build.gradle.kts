@@ -39,7 +39,8 @@ dependencies {
     compileOnly("dev.folia:folia-api:1.20.1-R0.1-SNAPSHOT") {
         targetConfiguration = "compile"
     }
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
+    implementation("com.google.code.gson:gson:2.9.0")
     compileOnly("me.clip:placeholderapi:2.9.2")
 //    compileOnly("com.github.602723113:ParticleLib:1.5.0").
 
@@ -73,9 +74,8 @@ tasks{
         relocate("org.intellij","cn.xgpjun.org.intellij")
         relocate("org.jetbrains","cn.xgpjun.org.jetbrains")
         relocate("org.jetbrains","cn.xgpjun.org.jetbrains")
-        relocate("org.slf4j","cn.xgpjun.org.slf4j")
         relocate("com.zaxxer","cn.xgpjun.com.zaxxer")
-        relocate("com.google.devtools","cn.xgpjun.com.google.devtools")
+        relocate("com.google","cn.xgpjun.com.google")
 
     }
     build{
