@@ -13,7 +13,7 @@ import java.util.UUID
 import java.util.concurrent.ConcurrentHashMap
 
 object DatabaseManager{
-    private lateinit var dataSource: HikariDataSource
+    lateinit var dataSource: HikariDataSource
 
     val onlinePlayerData = ConcurrentHashMap<UUID,PlayerData>()
 
@@ -126,7 +126,6 @@ object DatabaseManager{
                     return PlayerData(uuid,0,ConcurrentHashMap(),ConcurrentHashMap(),ConcurrentHashMap())
                 }
             }
-
         }
     }
 

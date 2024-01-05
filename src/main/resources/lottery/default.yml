@@ -4,6 +4,7 @@ calculator: "Guaranteed"
 value: 10
 sellType: "EXP"
 virtualKeyName: "default"
+showProbability: true
 customTag:
   guaranteedCount: 10
   maxDrawCount: 100
@@ -29,7 +30,6 @@ awards:
       amount: 1
     giveItem: true
     rawItem: false
-    broadcast: false
     weight: 10
     command:
       - "say 123"

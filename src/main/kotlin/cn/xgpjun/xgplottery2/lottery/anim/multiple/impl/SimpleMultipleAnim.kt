@@ -55,19 +55,15 @@ class SimpleMultipleAnim:MultipleAnim() {
             }
             gui.setItem(13,null)
             SchedulerManager.getScheduler().runTask{player.openInventory(gui)}
+            var counter = 0
             animTask1 = SchedulerManager.getScheduler().runTaskTimerAsynchronously(30L,20L){
-                object : Runnable {
-                    var counter = 0
-                    override fun run() {
-                        setNextItem(awards[counter].toDisplayItem())
-                        val pitch = Math.pow(2.0, counter / 10.0).toFloat()
-                        player.playSound(player.location, Sounds.PLING.get(), 0.2f, pitch)
-                        counter++
-                        if (counter == 10) {
-                            player.playSound(player.location, Sounds.LEVEL_UP.get(), 1.0f, 1.0f)
-                            animTask1?.cancel()
-                        }
-                    }
+                setNextItem(awards[counter].toDisplayItem())
+                val pitch = Math.pow(2.0, counter / 10.0).toFloat()
+                player.playSound(player.location, Sounds.PLING.get(), 0.2f, pitch)
+                counter++
+                if (counter == 10) {
+                    player.playSound(player.location, Sounds.LEVEL_UP.get(), 1.0f, 1.0f)
+                    animTask1?.cancel()
                 }
             }
         }

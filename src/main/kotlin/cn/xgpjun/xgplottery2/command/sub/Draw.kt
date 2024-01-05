@@ -30,6 +30,9 @@ object Draw:TabExecutor {
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
+        if (!sender.isOp){
+            return true
+        }
         args.getOrNull(2)?.let { lotteryName->
             LotteryManager.getLottery(lotteryName)?.let {lottery ->
                 Bukkit.getPlayer(args[1])?.let { player ->
@@ -41,6 +44,9 @@ object Draw:TabExecutor {
         return true
     }
     fun help(sender: CommandSender){
+        if (!sender.isOp){
+            return
+        }
         MessageL.DrawHelp.get().send(sender)
     }
 }

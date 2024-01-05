@@ -2,6 +2,7 @@ package cn.xgpjun.xgplottery2.manager
 
 import cn.xgpjun.xgplottery2.XgpLottery
 import cn.xgpjun.xgplottery2.nms.*
+import cn.xgpjun.xgplottery2.utils.Config
 import org.bukkit.Bukkit
 import org.bukkit.inventory.ItemStack
 import java.lang.reflect.Constructor
@@ -31,7 +32,7 @@ object NMSManager {
     }
 }
 
-abstract class NMSWrapper() {
+abstract class NMSWrapper {
     abstract val nbtTagCompound: Class<*>
     abstract val newNBT:Constructor<*>
     abstract val nmsItemStack: Class<*>
@@ -90,30 +91,41 @@ abstract class NMSWrapper() {
 
 
     fun getTag(itemStack: ItemStack,key:String):String?{
-        val nmsItemStack =if (handle!=null&&craftItemStack.isInstance(itemStack)) {
-            handle!!.get(itemStack)
-        }else{
-            asNMSCopy.invoke(craftItemStack,itemStack)
+        try {
+            val nmsItemStack =if (handle!=null&&craftItemStack.isInstance(itemStack)) {
+                handle!!.get(itemStack)
+            }else{
+                asNMSCopy.invoke(craftItemStack,itemStack)
+            }
+            val tags = getTag.invoke(nmsItemStack)?:return null
+            return getString.invoke(tags,key) as String
+        }catch (e:Exception){
+            if (Config.debug){
+                e.printStackTrace()
+            }
+            return null
         }
-        val tags = getTag.invoke(nmsItemStack)?:return null
-        return getString.invoke(tags,key) as String
     }
     fun setTag(itemStack: ItemStack,key: String,value:String):ItemStack{
-        return if (handle!=null&&craftItemStack.isInstance(itemStack)) {
-            val nmsItemStack = handle!!.get(itemStack)
-            val tags = getTag.invoke(nmsItemStack)?:newNBT.newInstance()
-            setString.invoke(tags,key,value)
-            itemStack
-        }else{
-            val nmsItemStack = asNMSCopy.invoke(craftItemStack,itemStack)
-            val tags = getTag.invoke(nmsItemStack)?:newNBT.newInstance()
-            setString.invoke(tags,key,value)
-            setTag.invoke(nmsItemStack,tags)
-            asCraftMirror.invoke(craftItemStack,nmsItemStack) as ItemStack
+        try {
+            return if (handle!=null&&craftItemStack.isInstance(itemStack)) {
+                val nmsItemStack = handle!!.get(itemStack)
+                val tags = getTag.invoke(nmsItemStack)?:newNBT.newInstance()
+                setString.invoke(tags,key,value)
+                itemStack
+            }else{
+                val nmsItemStack = asNMSCopy.invoke(craftItemStack,itemStack)
+                val tags = getTag.invoke(nmsItemStack)?:newNBT.newInstance()
+                setString.invoke(tags,key,value)
+                setTag.invoke(nmsItemStack,tags)
+                asCraftMirror.invoke(craftItemStack,nmsItemStack) as ItemStack
+            }
+        }catch (e:Exception){
+            if (Config.debug){
+                e.printStackTrace()
+            }
+            return itemStack
         }
-
-//            setTag.invoke(nmsItemStack,tags)
-//            return asCraftMirror.invoke(craftItemStack,nmsItemStack) as ItemStack
     }
 }
 fun ItemStack.setTag(key: String,value: String):ItemStack{
@@ -128,5 +140,5 @@ fun ItemStack.toNBTString():String{
     return NMSManager.nmsWrapper.toNbtString(this)
 }
 fun String.toItemStack():ItemStack{
-    return NMSManager.nmsWrapper.toItem(this);
+    return NMSManager.nmsWrapper.toItem(this)
 }

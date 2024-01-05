@@ -11,7 +11,9 @@ error:
   noEnoughKeys: "&c你的{name}钥匙不足..."
   totalWeightNegative: "&c奖池总权重必须大于零"
   maxTimeLimit: "&c在尝试进行{count}次抽奖失败: 你已抽{time},而上限是{maxTime}"
-
+  requireParticleLib: "&c粒子插件未启用, 请点击前往下载并安装"
+  receiveRewardFailed: "&c领取失败，你还需抽{count}次才可以领取"
+  receiveMaximum: "&c已达领取上限 无法领取"
 message:
   prefix: "&l[&9Xgp&3Lottery&a2&f] &e=> &f"
   createCrate: "&a左键点击方块，设置为{name}奖池的抽奖箱！"
@@ -25,14 +27,22 @@ message:
     - "z: {z}"
     - "奖池: {lotteryName}"
   countClearConfirm: "&c输入 &a/xl count clear {player} confirm &c以确认"
-  countInquire: "&b奖池名称-{lottery}: &a次数-{count}"
+  countInquire: "&b奖池名称-{lottery}: &a{count}"
   keyClearConfirm: "&c输入 &a/xl key clear {player} confirm &c以确认"
-  keyInquire: "&b钥匙名称-{key}: &a数量-{count}"
-
+  keyInquire: "&b钥匙名称-{key}: &a{count}"
+  processing: "&3正在处理..."
+  success: "&7操作成功!"
+  drawTips:
+    - "&b右键&7单抽  &bShift+右键&7十连抽"
+    - "&a奖池:&f{name}"
+    - "&b所持钥匙数量:&f{amount}"
+  changeAwardItem: "&3&l手持物品点击以更改"
+  versionOutDate: "&c插件版本最新为{newVersion},您的版本过低.可能存在一些问题."
 
 help:
   help:
-    - "/"
+    - "&3可用子命令如下: "
+    - "&7(可点击)"
   count:
     - "&3/xl count inquire 玩家名称"
     - "&7查询某个玩家的抽奖次数"
@@ -59,7 +69,15 @@ help:
     - "&7减少玩家虚拟钥匙数量"
     - "&3/xl key clear 玩家名称"
     - "&7清空玩家虚拟钥匙数量"
-
+  preview:
+    - "&3/xl preview 奖池名称"
+    - "&7预览奖池内容"
+  give:
+    - "&3/xl give 玩家名称 key 奖池名称 数量"
+    - "&7给予玩家指定数量的实体钥匙(默认数量为1)"
+  convert:
+    - "&3/xl convert fromlegacy"
+    - "&7从一代中移植数据。(成功后需重载)"
 noun:
   money: "&6金币"
   point: "&6点券"
@@ -82,9 +100,14 @@ gui:
       name: "&f下一页"
     previousPage:
       name: "&f上一页"
+  showProbability: "&7获得概率:{num}"
+  decimalFormat: "0.00%"
   admin:
     manage:
       title: "&6奖池管理"
+  user:
+    preview:
+      title: "&6奖池[&a{name}&6]预览"
   message:
     cancel: "&6&l&n点击&r&l&c取消"
     singleAnimChange: "&6&l&n点击&r&f以更改为:{name}"

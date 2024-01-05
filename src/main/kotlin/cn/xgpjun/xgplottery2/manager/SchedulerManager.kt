@@ -11,7 +11,7 @@ import org.bukkit.plugin.java.JavaPlugin
 
 object SchedulerManager {
     private lateinit var plugin:JavaPlugin
-    private lateinit var serverType: ServerType
+    lateinit var serverType: ServerType
     fun register(plugin:JavaPlugin){
         this.plugin = plugin
         serverType = ServerType.getServerType()

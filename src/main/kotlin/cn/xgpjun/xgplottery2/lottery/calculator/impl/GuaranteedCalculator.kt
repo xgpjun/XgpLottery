@@ -11,7 +11,7 @@ import org.bukkit.entity.Player
 class GuaranteedCalculator:Calculator() {
     override fun getAward(player: Player, lottery: Lottery): Award? {
         val playerData = DatabaseManager.getPlayerData(player.uniqueId)
-        val nonGuaranteedCount = playerData.customData.getOrDefault("nonGuaranteed${lottery.name}",0).toInt() + 1
+        val nonGuaranteedCount = playerData.customData.getOrDefault("nonGuaranteed${lottery.name}",0).int() + 1
         playerData.addCount(lottery)
         val guaranteedCount = lottery.getGuaranteedCount()
         //奖池拥有保底机制
@@ -33,8 +33,12 @@ class GuaranteedCalculator:Calculator() {
                 playerData.customData["nonGuaranteed${lottery.name}"] = nonGuaranteedCount
             }
         }
-        //其他情况
-        return NormalCalculator.onlyGetAward(lottery)
+        //其他情况、 提前出了
+        val award = NormalCalculator.onlyGetAward(lottery)
+        if (award?.isGuaranteed() == true){
+            playerData.customData["nonGuaranteed${lottery.name}"] = 0
+        }
+        return award
     }
 
 }
@@ -47,8 +51,8 @@ fun Award.isGuaranteed():Boolean{
     return tag.toString().toBoolean()
 }
 
-fun Any.toInt():Int{
-    return if (this is Number ){
+fun Any.int():Int{
+    return if (this is Number){
         this.toInt()
     } else{
         "&cNon-numeric error, automatically converted to 0".log()

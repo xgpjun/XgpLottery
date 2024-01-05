@@ -1,8 +1,6 @@
 package cn.xgpjun.xgplottery2.command
 
 import cn.xgpjun.xgplottery2.command.sub.*
-import cn.xgpjun.xgplottery2.manager.MessageL
-import cn.xgpjun.xgplottery2.send
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -10,62 +8,59 @@ import org.bukkit.command.TabExecutor
 import java.util.*
 
 object MainCommand :TabExecutor {
-    private val subCommands: MutableMap<String, TabExecutor> = HashMap()
+    val subCommands: MutableMap<String, TabExecutor> = HashMap()
     init {
+        registerSubCommand("convert",Convert)
         registerSubCommand("count",Count)
         registerSubCommand("crate",Crate)
-        registerSubCommand("help",Help)
+        registerSubCommand("cumulativeReward",CumulativeReward)
         registerSubCommand("draw",Draw)
-        registerSubCommand("key",Key)
-        registerSubCommand("manage",Manage)
         registerSubCommand("edit",Edit)
+        registerSubCommand("give",Give)
+        registerSubCommand("help",Help)
+        registerSubCommand("key",Key)
+        registerSubCommand("particle",Particle)
+        registerSubCommand("preview",Preview)
+        registerSubCommand("manage",Manage)
+        registerSubCommand("reload",Reload)
     }
     override fun onTabComplete(
         sender: CommandSender,
         command: Command,
         alias: String,
-        args: Array<String>?
+        args: Array<String>
     ): MutableList<String>? {
         val list: MutableList<String> = ArrayList(subCommands.keys)
-        if (!sender.hasPermission("xgplottery.manager")) {
-            return if (args?.size == 1) {
-                mutableListOf("shop")
-            } else {
-                ArrayList()
-            }
+        if (!sender.isOp){
+            return arrayListOf()
         }
-
-        if (sender.hasPermission("xgplottery.manager")) {
-            if (args?.size == 1) {
-                return list.filter(args)
-            } else {
-                val subCommand = args?.get(0)?.lowercase(Locale.getDefault())
-                val executor = subCommands[subCommand]
-                if (executor != null) {
-                    return executor.onTabComplete(sender, command, alias, args)
-                }
+        if (args.size == 1) {
+            return list.filter(args)
+        } else {
+            val subCommand = args[0].lowercase(Locale.getDefault())
+            val executor = subCommands[subCommand]
+            if (executor != null) {
+                return executor.onTabComplete(sender, command, alias, args)
             }
         }
         return null
     }
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
-        if (args?.isNotEmpty() == true) {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+        return if (args.isNotEmpty()) {
             val subCommand = args[0].lowercase(Locale.getDefault())
             subCommands[subCommand]?.onCommand(sender, command, label, args)
-            return true
-        } else return subCommands["help"]!!.onCommand(sender, command, label, args)
+            true
+        } else subCommands["help"]!!.onCommand(sender, command, label, args)
 
-        MessageL.HelpMessage.get().send(sender)
-        return true
     }
 
-    private fun registerSubCommand(subCommand: String, executor: TabExecutor) {
+    fun registerSubCommand(subCommand: String, executor: TabExecutor) {
         subCommands[subCommand.lowercase(Locale.getDefault())] = executor
     }
 
     fun register(){
-        Bukkit.getPluginCommand("XgpLottery")?.setExecutor(this)
+        Bukkit.getPluginCommand("xgplottery2")?.setExecutor(this)
     }
 }
 

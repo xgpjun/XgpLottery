@@ -2,17 +2,23 @@ package cn.xgpjun.xgplottery2.manager
 
 import cn.xgpjun.xgplottery2.lottery.calculator.Calculator
 import cn.xgpjun.xgplottery2.lottery.pojo.Lottery
+import cn.xgpjun.xgplottery2.manager.DatabaseManager.save
 import cn.xgpjun.xgplottery2.send
 import cn.xgpjun.xgplottery2.utils.Config
 import cn.xgpjun.xgplottery2.utils.VersionAdapterUtils
+import org.bukkit.Location
 import org.bukkit.entity.Player
 
 object DrawManager {
     val calculators = HashMap<String,Calculator>()
 
 
-    fun isValid(player: Player, lottery: Lottery,count: Int = 1): Boolean {
-        return maxDrawTime(player,lottery,count)
+    fun isValid(player: Player, lottery: Lottery,count: Int = 1,crateLocation: Location? =null): Boolean {
+        return maxDrawTime(player,lottery,count)||if (count==1){
+            AnimManager.getSingleAnimObject(lottery.animation).mustBeCrate&&crateLocation==null
+        }else{
+            AnimManager.getMultipleAnimObject(lottery.multipleAnimation).mustBeCrate&&crateLocation==null
+        }
     }
 
     fun lotteryValid(player: Player,lottery: Lottery):Boolean{
@@ -64,13 +70,13 @@ object DrawManager {
     }
 
 
-    fun draw(player: Player,lottery: Lottery,isMultiple:Boolean = false,isConsumeKeys:Boolean =false){
+    fun draw(player: Player,lottery: Lottery,isMultiple:Boolean = false,isConsumeKeys:Boolean =false,crateLocation: Location? = null){
 
         val amount = if(isMultiple) 10 else 1
         //先确认是否能抽
         if (!checkFullInventory(player,amount)||
             (isConsumeKeys&&!checkKeyCount(player,lottery,amount))||
-            !isValid(player,lottery,amount) ||
+            !isValid(player,lottery,amount,crateLocation) ||
             !lotteryValid(player,lottery)){
             return
         }
@@ -81,13 +87,18 @@ object DrawManager {
         if (isConsumeKeys){
             playerData.consumeKey(lottery,amount)
         }
+        if (player.isOnline){
+            DatabaseManager.onlinePlayerData[player.uniqueId] = playerData
+        }else{
+            playerData.save()
+        }
 
         //开始抽奖
         player.closeInventory()
         if(isMultiple){
             lottery.multipleDraw(player)
         }else{
-            lottery.singleDraw(player)
+            lottery.singleDraw(player,crateLocation)
         }
     }
 

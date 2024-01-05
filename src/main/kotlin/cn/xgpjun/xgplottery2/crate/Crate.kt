@@ -1,4 +1,4 @@
-package cn.xgpjun.xgplottery2.lottery.pojo
+package cn.xgpjun.xgplottery2.crate
 
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -11,7 +11,8 @@ class Crate(
     val y:Double,
     val z:Double,
     val world:String,
-    val uuid: UUID) {
+    val uuid: UUID,
+    var crateParticle:String) {
 
     fun equal(location: Location):Boolean{
         return (location.world?.name == this.world&&

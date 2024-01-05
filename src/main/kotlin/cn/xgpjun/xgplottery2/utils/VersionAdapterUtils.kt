@@ -12,18 +12,6 @@ class VersionAdapterUtils {
             return if (NMSManager.versionToInt < 9) true else EquipmentSlot.HAND == e.hand
         }
 
-        fun setItemInMainHand(player: Player, itemStack: ItemStack?) {
-            if (NMSManager.versionToInt < 9) {
-                player.setItemInHand(itemStack)
-            } else {
-                player.inventory.setItemInMainHand(itemStack)
-            }
-        }
-
-        fun getItemInMainHand(player: Player): ItemStack? {
-            return if (NMSManager.versionToInt < 9) player.itemInHand else player.inventory.itemInMainHand
-        }
-
         fun getPlayerEmptySlot(player: Player): Int {
             val items = player.inventory.contents
             var emptySlots = 0
@@ -46,4 +34,20 @@ class VersionAdapterUtils {
             }
         }
     }
+}
+
+fun Player.setItemInMainHand(itemStack: ItemStack?) {
+    if (NMSManager.versionToInt < 9) {
+        this.setItemInHand(itemStack)
+    } else {
+        this.inventory.setItemInMainHand(itemStack)
+    }
+}
+
+fun Player.getItemInMainHand(): ItemStack {
+    return if (NMSManager.versionToInt < 9) this.itemInHand else this.inventory.itemInMainHand
+}
+
+fun PlayerInteractEvent.isMainHand():Boolean{
+    return if (NMSManager.versionToInt < 9) true else EquipmentSlot.HAND == this.hand
 }

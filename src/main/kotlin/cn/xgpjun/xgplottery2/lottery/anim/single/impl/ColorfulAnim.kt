@@ -46,50 +46,47 @@ class ColorfulAnim:SingleAnim() {
                 player.openInventory(inv)
             }
 
+            val colorGlass: ItemStack =
+                MyItemBuilder((if (guaranteed) PresetItem.ORANGE_STAINED_GLASS_PANE.getItem() else PresetItem.PURPLE_STAINED_GLASS_PANE.getItem()))
+                    .setDisplayName(Message.ItemBorderName.get().color())
+                    .setLore(MessageL.ItemBorderLore.get().color())
+                    .getItem()
+            val glass: ItemStack =
+                MyItemBuilder(PresetItem.LIGHT_BLUE_STAINED_GLASS_PANE.getItem())
+                    .setDisplayName(Message.ItemBorderName.get().color())
+                    .setLore(MessageL.ItemBorderLore.get().color())
+                    .getItem()
+            var counter = 0
             animTask = SchedulerManager.getScheduler().runTaskTimerAsynchronously(20L,15L){
-                object : Runnable{
-                    val colorGlass: ItemStack =
-                        MyItemBuilder((if (guaranteed) PresetItem.ORANGE_STAINED_GLASS_PANE.getItem() else PresetItem.PURPLE_STAINED_GLASS_PANE.getItem()))
-                            .setDisplayName(Message.ItemBorderName.get().color())
-                            .setLore(MessageL.ItemBorderLore.get().color())
-                            .getItem()
-                    val glass: ItemStack =
-                        MyItemBuilder(PresetItem.LIGHT_BLUE_STAINED_GLASS_PANE.getItem())
-                            .setDisplayName(Message.ItemBorderName.get().color())
-                            .setLore(MessageL.ItemBorderLore.get().color())
-                            .getItem()
-                    var counter = 0
-                    override fun run() {
-                        if (counter <= 8) {
-                            for (index in batches.get(counter)) {
-                                if (counter < 4) {
-                                    inv.setItem(index, glass)
-                                } else {
-                                    inv.setItem(index, colorGlass)
-                                }
-                            }
-                        } else if (counter == 9) {
-                            IntStream.range(0, 54).forEach { i: Int ->
-                                inv.setItem(i, colorGlass)
-                            }
-                        }
-                        val pitch = Math.pow(2.0, counter / 10.0).toFloat()
-                        player.playSound(player.location, Sounds.PLING.get(), 0.5f, pitch)
-                        counter++
-                        if (counter == 11) {
-                            IntStream.range(0, 54).forEach { i: Int ->
-                                inv.setItem(i, null)
-                            }
-                            inv.setItem(22, award?.item)
-                            player.playSound(player.location, Sounds.LEVEL_UP.get(), 1.0f, 1.0f)
-                            animTask?.cancel()
-                        }
-                        if (inv.viewers.isEmpty()) {
-                            animTask?.cancel()
+                if (counter <= 8) {
+                    for (index in batches.get(counter)) {
+                        if (counter < 4) {
+                            inv.setItem(index, glass)
+                        } else {
+                            inv.setItem(index, colorGlass)
                         }
                     }
+                } else if (counter == 9) {
+                    IntStream.range(0, 54).forEach { i: Int ->
+                        inv.setItem(i, colorGlass)
+                    }
+                }
+                val pitch = Math.pow(2.0, counter / 10.0).toFloat()
+                player.playSound(player.location, Sounds.PLING.get(), 0.5f, pitch)
+                counter++
+                if (counter == 11) {
+                    IntStream.range(0, 54).forEach { i: Int ->
+                        inv.setItem(i, null)
+                    }
+                    inv.setItem(22, award?.item)
+                    player.playSound(player.location, Sounds.LEVEL_UP.get(), 1.0f, 1.0f)
+                    animTask?.cancel()
+                }
+                if (inv.viewers.isEmpty()) {
+                    animTask?.cancel()
                 }
             }
+
         }
     }
 

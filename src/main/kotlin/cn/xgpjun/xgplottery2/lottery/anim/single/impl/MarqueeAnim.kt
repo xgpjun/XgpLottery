@@ -42,23 +42,20 @@ class MarqueeAnim:SingleAnim() {
         }
         inv.setItem(awardSlot, award?.toDisplayItem())
         val totalStep = 54 + awardSlot
+
+        var counter = 0
+        var step = 0
         animTask = SchedulerManager.getScheduler().runTaskTimerAsynchronously(0L,5L){
-            object : Runnable {
-                var counter = 0
-                var step:Int = 0
-                override fun run() {
-                    counter++
-                    val pitch = Math.pow(2.0, (step.toFloat() / totalStep).toDouble()).toFloat()
-                    if (counter < 54 || counter < 162 && counter % 2 == 0) {
-                        player.playSound(player.location, Sounds.PLING.get(), 0.2f, pitch)
-                        nexStep(step % 54)
-                        step++
-                    }
-                    if (step == totalStep) {
-                        player.playSound(player.location, Sounds.LEVEL_UP.get(), 1.0f, 1.0f)
-                        animTask?.cancel()
-                    }
-                }
+            counter++
+            val pitch = Math.pow(2.0, (step.toFloat() / totalStep).toDouble()).toFloat()
+            if (counter < 54 || counter < 162 && counter % 2 == 0) {
+                player.playSound(player.location, Sounds.PLING.get(), 0.2f, pitch)
+                nexStep(step % 54)
+                step++
+            }
+            if (step == totalStep) {
+                player.playSound(player.location, Sounds.LEVEL_UP.get(), 1.0f, 1.0f)
+                animTask?.cancel()
             }
         }
     }

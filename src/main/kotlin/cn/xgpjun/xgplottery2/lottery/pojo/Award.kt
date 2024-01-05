@@ -1,8 +1,9 @@
 package cn.xgpjun.xgplottery2.lottery.pojo
 
 import cn.xgpjun.xgplottery2.XgpLottery
-import me.clip.placeholderapi.PlaceholderAPI
-import org.bukkit.Bukkit
+import cn.xgpjun.xgplottery2.hook.PlaceholderAPIHook
+import cn.xgpjun.xgplottery2.hook.setPlaceholder
+import cn.xgpjun.xgplottery2.utils.give
 import org.bukkit.Material
 import org.bukkit.entity.HumanEntity
 import org.bukkit.entity.Player
@@ -12,18 +13,15 @@ data class Award(
         var name:String,
         var item:ItemStack,
         var giveItem:Boolean,
-        var broadcast:Boolean,
         var weight:Int,
         var rawItem:Boolean,
         var commands:MutableList<String>,
         var customTag:MutableMap<String,Any>){
-    // TODO: method
 
         companion object{
                 fun create(name: String):Award{
                         return Award(name, ItemStack(Material.STONE),
                                 giveItem = true,
-                                broadcast = false,
                                 weight = 1,
                                 rawItem = false,
                                 commands = ArrayList(),
@@ -36,8 +34,8 @@ data class Award(
                 val player = humanEntity as Player
                 if (commands.isNotEmpty()){
                         for (command in commands) {
-                                val cmd = if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-                                        PlaceholderAPI.setPlaceholders(player, command)
+                                val cmd = if (PlaceholderAPIHook.enable) {
+                                        command.setPlaceholder(player)
                                 }else{
                                         command
                                 }
@@ -45,11 +43,7 @@ data class Award(
                         }
                 }
                 if (giveItem){
-                        val map: Map<Int, ItemStack> = player.inventory.addItem(item.clone())
-                        if (map.isEmpty()) return
-                        for (item in map.values) {
-                                player.world.dropItemNaturally(player.location, item)
-                        }
+                        item.give(player)
                 }
         }
 

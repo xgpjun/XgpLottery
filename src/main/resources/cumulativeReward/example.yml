@@ -1,0 +1,25 @@
+lotteryName: default
+#每次领取需要的次数
+baseTimes: 10
+#领取次数,默认为1。0为无限重复领取。
+maximum: 2
+
+#和lottery相同
+awards:
+  exampleAward1:
+    item:
+      #ni: "foo"
+      #ia: "bar"
+      #mm: "foo"
+      #internal: "bar"
+      material: "STONE"
+      displayName: "&6special stone"
+      lore:
+            #RGB
+        - "&x&0&0&F&F&7&FI have a special lore!"
+      amount: 1
+    giveItem: true
+    rawItem: false
+    weight: 10
+    command:
+      - "say 123"

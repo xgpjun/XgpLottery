@@ -52,7 +52,7 @@ object V1_16Below:NMSWrapper(){
         }else{
             createStack.invoke(nmsItemStack,nbt)
         }
-        return item as ItemStack
+        return asCraftMirror.invoke(craftItemStack,item) as ItemStack
     }
 }
 
@@ -89,7 +89,7 @@ object V1_17 :NMSWrapper(){
     override fun toItem(nbtString: String):ItemStack {
         val nbt = parse.invoke(mojangsonParser,nbtString) //(nbtTagCompound)
         val item = a.invoke(nmsItemStack,nbt)
-        return item as ItemStack
+        return asCraftMirror.invoke(craftItemStack,item) as ItemStack
     }
 }
 
@@ -126,7 +126,7 @@ object V1_18 :NMSWrapper(){
     override fun toItem(nbtString: String):ItemStack {
         val nbt = parse.invoke(mojangsonParser,nbtString) //(nbtTagCompound)
         val item = a.invoke(nmsItemStack,nbt)
-        return item as ItemStack
+        return asCraftMirror.invoke(craftItemStack,item) as ItemStack
     }
 }
 
@@ -163,7 +163,7 @@ object V1_19 :NMSWrapper(){
     override fun toItem(nbtString: String):ItemStack {
         val nbt = parse.invoke(mojangsonParser,nbtString) //(nbtTagCompound)
         val item = a.invoke(nmsItemStack,nbt)
-        return item as ItemStack
+        return asCraftMirror.invoke(craftItemStack,item) as ItemStack
     }
 }
 
@@ -199,6 +199,6 @@ object V1_20 :NMSWrapper(){
     override fun toItem(nbtString: String):ItemStack {
         val nbt = parse.invoke(mojangsonParser,nbtString) //(nbtTagCompound)
         val item = a.invoke(nmsItemStack,nbt)
-        return item as ItemStack
+        return asCraftMirror.invoke(craftItemStack,item) as ItemStack
     }
 }

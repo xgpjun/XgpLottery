@@ -59,9 +59,9 @@ object Crate :TabExecutor {
             Message.OnlyPlayer.get().send(sender)
             return true
         }
-        when(args.getOrNull(2)){
+        when(args.getOrNull(1)){
             "create" ->{
-                args.getOrNull(3)?.let { lotteryName ->
+                args.getOrNull(2)?.let { lotteryName ->
                     LotteryManager.getLottery(lotteryName)?.let { lottery->
                         CrateManager.createCrate(sender,lottery)
                     }?: Message.NotFoundLottery.get().send(sender)
@@ -71,12 +71,12 @@ object Crate :TabExecutor {
                 CrateManager.removeCrate(sender)
             }
             "list" ->{
-                args.getOrNull(3)?.let {
+                args.getOrNull(2)?.let {
                     val uuid = UUID.fromString(it)
                     CrateManager.cratesList[uuid]?.let { crate ->
-                        crate.getLocation()?.let {
-                            it.add(0.5,2.0,0.5)
-                            sender.teleport(it)
+                        crate.getLocation()?.let { location->
+                            location.add(0.5,2.0,0.5)
+                            sender.teleport(location)
                         }
                     }
                 }?:sendCrateInfo(sender)
@@ -90,11 +90,13 @@ object Crate :TabExecutor {
     }
 
     fun help(sender: CommandSender){
+        if (!sender.isOp){
+            return
+        }
         MessageL.CrateHelp.get().send(sender)
     }
 
     fun sendCrateInfo(player: Player){
-        Message.Prefix.get().send(player)
         try {
             CrateManager.cratesList.forEach{
                 val message = TextComponent("${ChatColor.BLUE}${ChatColor.BOLD}${it.key}")
@@ -106,7 +108,7 @@ object Crate :TabExecutor {
                     }
 
                 message.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, temp.toTypedArray())
-                message.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/XgpLottery crate list ${it.key}")
+                message.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 crate list ${it.key}")
                 player.spigot().sendMessage(message)
             }
         }catch (e:NoSuchMethodError){

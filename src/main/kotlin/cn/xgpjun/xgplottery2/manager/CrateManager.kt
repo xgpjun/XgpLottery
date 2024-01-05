@@ -1,10 +1,10 @@
 package cn.xgpjun.xgplottery2.manager
 
 import cn.xgpjun.xgplottery2.XgpLottery
-import cn.xgpjun.xgplottery2.lottery.pojo.Crate
+import cn.xgpjun.xgplottery2.crate.Crate
 import cn.xgpjun.xgplottery2.lottery.pojo.Lottery
 import cn.xgpjun.xgplottery2.send
-import cn.xgpjun.xgplottery2.utils.VersionAdapterUtils
+import cn.xgpjun.xgplottery2.utils.isMainHand
 
 import org.bukkit.Location
 import org.bukkit.configuration.file.YamlConfiguration
@@ -19,7 +19,7 @@ import java.util.*
 import kotlin.collections.HashMap
 
 object CrateManager {
-    val cratesList = HashMap<UUID,Crate>()
+    val cratesList = HashMap<UUID, Crate>()
     private val file = File(XgpLottery.instance.dataFolder,"crates.yml")
 
     fun register(){
@@ -34,7 +34,8 @@ object CrateManager {
                 val z = section.getDouble("z")
                 val worldName = section.getString("world")?:run { Message.MissingNode.get("${file.name}:$it","world");return@forEach}
                 val lotteryName = section.getString("lottery")?:run { Message.MissingNode.get("${file.name}:$it","lottery"); return@forEach }
-                Crate(lotteryName,x,y,z,worldName,UUID.fromString(it)).register(UUID.fromString(it))
+                val crateParticle = section.getString("particle")?:"DefaultParticle"
+                Crate(lotteryName,x,y,z,worldName,UUID.fromString(it),crateParticle).register(UUID.fromString(it))
             }
         }
     }
@@ -58,10 +59,9 @@ object CrateManager {
         return null
     }
 
-    private fun save(crate: Crate,uuid: UUID){
+    private fun save(crate: Crate, uuid: UUID){
         if (!file.exists()){
             file.createNewFile()
-            return
         }
         val yaml = YamlConfiguration.loadConfiguration(file)
         yaml.set("$uuid.x",crate.x)
@@ -69,6 +69,7 @@ object CrateManager {
         yaml.set("$uuid.z",crate.z)
         yaml.set("$uuid.world",crate.world)
         yaml.set("$uuid.lottery",crate.lotteryName)
+        yaml.set("$uuid.particle",crate.crateParticle)
         yaml.save(file)
     }
     private fun create(location: Location,lottery: Lottery){
@@ -78,7 +79,7 @@ object CrateManager {
         location.world?.name?.let {
             val uuid = UUID.randomUUID()
 
-            val crate = Crate(lottery.name,location.x,location.y,location.z, it,uuid)
+            val crate = Crate(lottery.name,location.x,location.y,location.z, it,uuid,"DefaultParticle")
             crate.register(uuid)
             save(crate,uuid)
         }
@@ -102,7 +103,7 @@ object CrateManager {
             @EventHandler
             fun select(e:PlayerInteractEvent){
                 val ePlayer = e.player
-                if (ePlayer.uniqueId == uuid &&VersionAdapterUtils.ifMainHand(e)){
+                if (ePlayer.uniqueId == uuid &&e.isMainHand()){
                     e.isCancelled = true
                     if (e.action == Action.LEFT_CLICK_BLOCK){
                         e.clickedBlock?.location?.let { location->
@@ -130,7 +131,7 @@ object CrateManager {
             @EventHandler
             fun remove(e:PlayerInteractEvent){
                 val ePlayer = e.player
-                if (ePlayer.uniqueId == uuid&&VersionAdapterUtils.ifMainHand(e)){
+                if (ePlayer.uniqueId == uuid&&e.isMainHand()){
                     e.isCancelled = true
                     if (e.action == Action.LEFT_CLICK_BLOCK){
                         e.clickedBlock?.location?.let { location ->

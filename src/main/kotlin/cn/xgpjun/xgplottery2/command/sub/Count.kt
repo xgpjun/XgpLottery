@@ -10,6 +10,7 @@ import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
+import org.bukkit.entity.Player
 
 object Count:TabExecutor {
     /**
@@ -24,9 +25,9 @@ object Count:TabExecutor {
         args: Array<String>
     ): MutableList<String>? {
         return when(args.size){
-            2 -> mutableListOf("inquire","clear").filter(args)
+            2 -> if (sender.isOp) mutableListOf("inquire","clear").filter(args) else mutableListOf("inquire").filter(args)
             3 -> null
-            4 -> if(args[2] == "clear") mutableListOf("confirm").filter(args) else arrayListOf()
+            4 -> if(args[2] == "clear"&&sender.isOp) mutableListOf("confirm").filter(args) else arrayListOf()
             else -> arrayListOf()
         }
     }
@@ -37,6 +38,11 @@ object Count:TabExecutor {
             return true
         }
         val player = Bukkit.getOfflinePlayer(args[2])
+
+        if (!sender.isOp&&(sender is Player && player.uniqueId!=sender.uniqueId)){
+            return true
+        }
+
         val data = DatabaseManager.getPlayerData(player.uniqueId)
 
         when(args.getOrNull(1)){
@@ -49,6 +55,9 @@ object Count:TabExecutor {
                 }
             }
             "clear" -> {
+                if (!sender.isOp){
+                    return true
+                }
                 if (args.getOrNull(3).equals("confirm",true)){
                     Message.CountClearConfirm.get(args[2]).send(sender)
                 }else{
@@ -59,12 +68,16 @@ object Count:TabExecutor {
                     }else{
                         data.save()
                     }
+                    Message.Success.get().send(sender)
                 }
             }
         }
         return true
     }
     fun help(sender: CommandSender){
+        if (!sender.isOp){
+            return
+        }
         MessageL.CountHelp.get().send(sender)
     }
 }

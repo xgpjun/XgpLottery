@@ -6,7 +6,8 @@ import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.InventoryHolder
 
-abstract class LotteryGui(val previousInventory:InventoryHolder?) :InventoryHolder{
+abstract class LotteryGui(var previousInventory:InventoryHolder?) :InventoryHolder{
+
     abstract val inv:Inventory
 
     abstract fun handleClick(e:InventoryClickEvent)
@@ -28,6 +29,8 @@ abstract class LotteryGui(val previousInventory:InventoryHolder?) :InventoryHold
 
 
     fun pageItem(){
+        border.forEach { inv.setItem(it, PresetItem.BORDER_GLASS.getItem()) }
+        inv.setItem(8,PresetItem.PREVIOUS_INVENTORY.getItem())
         if(page!=size){
             inv.setItem(53, PresetItem.NEXT_PAGE.getItem())
         }

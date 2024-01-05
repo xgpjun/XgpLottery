@@ -23,7 +23,7 @@ import java.util.*
 import java.util.stream.IntStream
 
 class SelectMultipleAnim :MultipleAnim(), Listener {
-    private val gui : Inventory = Bukkit.createInventory(this,54,Message.SelectAnimTitle.get().color())
+    private val gui : Inventory = Bukkit.createInventory(this,54,Message.SelectMultipleAnimTitle.get().color())
     override val name: String
         get() = "SelectMultiple"
     override val i18nName: String

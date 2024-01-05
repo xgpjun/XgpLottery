@@ -4,7 +4,6 @@ import cn.xgpjun.xgplottery2.XgpLottery
 import org.bukkit.ChatColor
 import org.bukkit.configuration.file.YamlConfiguration
 import java.io.File
-import java.util.function.UnaryOperator
 
 object MessageManager {
     private var config:YamlConfiguration? = null
@@ -39,6 +38,8 @@ enum class Message(val path: String){
                                      },
     AwardNull("error.awardNull"),
     Prefix("message.prefix"),
+    Success("message.success"),
+    Processing("message.processing"),
     OnlyPlayer("error.onlyPlayer"),
     NotFoundLottery("error.notFoundLottery"),
     CrateExisted("error.crateExisted"),
@@ -59,6 +60,18 @@ enum class Message(val path: String){
                 .replace("{maxTime",placeholders[2].toString())
         }
                                       },
+    RequireParticleLib("error.requireParticleLib"),
+    ReceiveRewardFailed("error.receiveRewardFailed"){
+        override fun get(vararg placeholders: String?): String {
+            return string.replace("{count}",placeholders[0].toString())
+        }
+    },
+    ReceiveMaximum("error.receiveMaximum"),
+    VersionOutDate("message.versionOutDate"){
+        override fun get(vararg placeholders: String?): String {
+            return string.replace("{newVersion}",placeholders[0].toString())
+        }
+                                            },
     CreateCrateSuccessfully("message.createCrateSuccessfully"),
     CreateCrate("message.createCrate"){
         override fun get(vararg placeholders: String?): String {
@@ -87,7 +100,11 @@ enum class Message(val path: String){
         }
     },
     ManageTitle("gui.admin.manage.title"),
-
+    PreviewTitle("gui.user.preview.title"){
+        override fun get(vararg placeholders: String?): String {
+            return string.replace("{name}",placeholders[0].toString())
+        }
+    },
     ItemBorderName( "gui.items.border.name"),
     ItemBorder2Name( "gui.items.border2.name"),
     ItemExitName("gui.items.exit.name"),
@@ -99,24 +116,29 @@ enum class Message(val path: String){
         override fun get(vararg placeholders: String?): String {
             return string.replace("{name}",placeholders[0].toString())
         }
-                                                    },
+   },
     MultipleAnimChange("gui.message.multipleAnimChange"){
         override fun get(vararg placeholders: String?): String {
             return string.replace("{name}",placeholders[0].toString())
         }
-                                                        },
+    },
     ValueChange("gui.message.valueChange"),
     SellTypeChange("gui.message.sellTypeChange"){
         override fun get(vararg placeholders: String?): String {
             return string.replace("{name}",placeholders[0].toString())
         }
-                                                },
+    },
     Cancel("gui.message.cancel"),
     Point("noun.point"),
     Money("noun.money"),
     EXP("noun.exp"),
-
-
+    ShowProbability("gui.showProbability"){
+        override fun get(vararg placeholders: String?): String {
+            return string.replace("{num}",placeholders[0].toString())
+        }
+    },
+    DecimalFormat("gui.decimalFormat"),
+    ChangeAwardItem("message.changeAwardItem"),
     //动画
     DefaultSingleAnimTitle("gui.singleAnim.default.title"),
     DefaultSingleAnimName("gui.singleAnim.default.name"),
@@ -154,6 +176,9 @@ enum class MessageL(val path: String){
     DrawHelp("help.draw"),
     CountHelp("help.count"),
     KeyHelp("help.key"),
+    GiveHelp("help.give"),
+    PreviewHelp("help.preview"),
+    ConvertHelp("help.convert"),
     ItemBorderLore("gui.items.border.lore"),
     ItemBorder2Lore("gui.items.border2.lore"),
     CrateListInfo("message.crateListInfo"){
@@ -170,7 +195,19 @@ enum class MessageL(val path: String){
             }
             return result
         }
-                                          },
+    },
+    DrawTips("message.drawTips"){
+        override fun get(vararg placeholders: String?): MutableList<String> {
+            val result = ArrayList<String>()
+            stringList.forEach{
+                val string = it
+                    .replace("{name}",placeholders[0].toString())
+                    .replace("{amount}",placeholders[1].toString())
+                result.add(string)
+            }
+            return result
+        }
+    },
     ;
     var stringList:MutableList<String> = mutableListOf("${ChatColor.RED}Not Init Yet")
     open fun get(vararg placeholders:String?):MutableList<String>{

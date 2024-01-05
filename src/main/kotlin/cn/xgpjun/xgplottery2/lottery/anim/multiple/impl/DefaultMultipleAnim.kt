@@ -16,6 +16,8 @@ import org.bukkit.Location
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import java.util.*
+import kotlin.math.pow
+import kotlin.random.Random
 
 
 class DefaultMultipleAnim:MultipleAnim() {
@@ -48,33 +50,29 @@ class DefaultMultipleAnim:MultipleAnim() {
                 .getItem())
         }
         player.openInventory(inv)
+
+        var counter = 0
+        var index = 0
         animTask = SchedulerManager.getScheduler().runTaskTimerAsynchronously(0L,5L){
-            object :Runnable{
-                var counter = 0
-                var index = 0
-                override fun run() {
-                    counter++;
-                    val pitch = Math.pow(2.0, counter / 30.0).toFloat()
-                    //3->出现一个奖品 30 结束
-                    if (counter <= 21 || counter <= 27 && counter % 2 == 0 || counter == 30) {
-                        borderChange()
-                        player.playSound(player.location, Sounds.PLING.get(), 1.0f, pitch)
-                    }
+            counter++
+            val pitch = 2.0.pow(counter / 30.0).toFloat()
+            //3->出现一个奖品 30 结束
+            if (counter <= 21 || counter <= 27 && counter % 2 == 0 || counter == 30) {
+                borderChange()
+                player.playSound(player.location, Sounds.PLING.get(), 1.0f, pitch)
+            }
 
-                    if (counter % 3 == 0) {
-                        setAward(index, awards[index])
-                        player.playSound(player.location, Sounds.LEVEL_UP.get(), 0.2f, 1.0f)
-                        index++
-                        if (index == 10) {
-                            stop = true
-                        }
-                    }
-                    if (stop) {
-                        animTask?.cancel()
-                        player.playSound(player.location, Sounds.LEVEL_UP.get(), 1.0f, 1.0f)
-                    }
+            if (counter % 3 == 0) {
+                setAward(index, awards[index])
+                player.playSound(player.location, Sounds.LEVEL_UP.get(), 0.2f, 1.0f)
+                index++
+                if (index == 10) {
+                    stop = true
                 }
-
+            }
+            if (stop) {
+                animTask?.cancel()
+                player.playSound(player.location, Sounds.LEVEL_UP.get(), 1.0f, 1.0f)
             }
         }
     }
@@ -83,7 +81,7 @@ class DefaultMultipleAnim:MultipleAnim() {
 
     fun borderChange() {
         for (i in borderSlot) {
-            val index: Int = Random().nextInt(16) - 1
+            val index: Int = Random.Default.nextInt(0,16)
             inv.setItem(i, MyItemBuilder(PresetItem.glasses[index])
                 .setDisplayName(Message.ItemBorderName.get().color())
                 .setLore(MessageL.ItemBorderLore.get().color())

@@ -129,6 +129,13 @@ enum class PresetItem {
 
         }
     },
+    PREVIOUS_INVENTORY{
+        override fun getItem(): ItemStack {
+            return MyItemBuilder(glasses[14])
+                .setDisplayName(Message.ItemPreviousName.get().color())
+                .getItem()
+        }
+    },
     ;
 
     abstract fun getItem(): ItemStack

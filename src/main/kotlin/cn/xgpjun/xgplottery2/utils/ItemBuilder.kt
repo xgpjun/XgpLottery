@@ -1,8 +1,8 @@
 package cn.xgpjun.xgplottery2.utils
 
+import cn.xgpjun.xgplottery2.hook.PlaceholderAPIHook
 import cn.xgpjun.xgplottery2.manager.NMSManager
 import me.clip.placeholderapi.PlaceholderAPI
-import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.Material
 import org.bukkit.enchantments.Enchantment
@@ -120,12 +120,8 @@ class MyItemBuilder {
 
     fun getItem(player: Player?): ItemStack {
         val lore = itemMeta.lore
-        val newLore: MutableList<String> = ArrayList()
-        if (lore != null && Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            for (str in lore) {
-                newLore.add(PlaceholderAPI.setPlaceholders(player, str))
-            }
-            itemMeta.lore = newLore
+        if (lore != null && PlaceholderAPIHook.enable) {
+            itemMeta.lore = PlaceholderAPI.setPlaceholders(player,lore)
         }
         item.setItemMeta(itemMeta)
         return item
@@ -142,5 +138,13 @@ class MyItemBuilder {
             get() = MyItemBuilder(Material.STONE).setDisplayName(ChatColor.RED.toString() + "Missing Item!").setLore(
                 ChatColor.AQUA.toString() + "If you see this line of lore"
             ).addLore(ChatColor.AQUA.toString() + "means the item has missed enchantments/material.").getItem()
+    }
+}
+
+fun ItemStack.give(player: Player,amount: Int = 1){
+    for (i in 1..amount){
+        player.inventory.addItem(this.clone()).values.forEach{
+            player.world.dropItemNaturally(player.location,it)
+        }
     }
 }

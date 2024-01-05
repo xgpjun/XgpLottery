@@ -1,12 +1,13 @@
 package cn.xgpjun.xgplottery2.lottery.pojo
 
-import cn.xgpjun.xgplottery2.command.sub.Draw
+import cn.xgpjun.xgplottery2.api.event.Events
 import cn.xgpjun.xgplottery2.lottery.calculator.impl.NormalCalculator
 import cn.xgpjun.xgplottery2.lottery.enums.SellType
 import cn.xgpjun.xgplottery2.manager.AnimManager
 import cn.xgpjun.xgplottery2.manager.DrawManager
 import cn.xgpjun.xgplottery2.manager.SchedulerManager
 import cn.xgpjun.xgplottery2.manager.toNBTString
+import org.bukkit.Location
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.inventory.ItemStack
@@ -20,13 +21,14 @@ class Lottery(
     value:Double,
     sellType: SellType,
     var virtualKeyName: String,
+    var showProbability: Boolean,
     var customTags:MutableMap<String,Any>,
     key:ItemStack,
     var awards:MutableMap<String,Award>,
     calculator: String,
-    private var file: File,
+    var file: File,
 ){
-    private var yaml = YamlConfiguration.loadConfiguration(file)
+    var yaml = YamlConfiguration.loadConfiguration(file)
     var animation = animation
         set(value) {
             field = value
@@ -74,7 +76,6 @@ class Lottery(
         yaml.set("awards.$name.item.displayName","&6special stone")
         yaml.set("awards.$name.item.amount",1)
         yaml.set("awards.$name.giveItem",true)
-        yaml.set("awards.$name.broadcast",false)
         yaml.set("awards.$name.weight",1)
         yaml.save(file)
     }
@@ -97,13 +98,14 @@ class Lottery(
 
     }
 
-    fun singleDraw(player: Player){
+    fun singleDraw(player: Player,location: Location? = null){
         SchedulerManager.getScheduler().runTaskAsynchronously {
             val animation = AnimManager.getSingleAnimObject(animation)
             val calculator = DrawManager.calculators[calculator] ?: NormalCalculator()
             animation.award = calculator.getAward(player, this)
             SchedulerManager.getScheduler().runTask{
-                animation.draw(player, this, null)
+                Events.DrawEvent(player,animation.award!!).callEvent()
+                animation.draw(player, this, location)
             }
         }
     }

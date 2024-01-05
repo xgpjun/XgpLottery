@@ -16,18 +16,19 @@ repositories {
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/public")
     maven("https://jitpack.io")
+    maven("https://r.irepo.space/maven/")
     maven("https://repo.rosewooddev.io/repository/public/")
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
     maven("https://lss233.littleservice.cn/repositories/minecraft")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://repo.codemc.io/repository/nms/")
+    maven("https://mvn.lumine.io/repository/maven-public/")
 
 }
 
 dependencies {
     implementation(kotlin("stdlib"))
-//    compileOnly ("org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT")
     compileOnly("net.kyori:examination-api:1.3.0")
     compileOnly("net.md-5:bungeecord-chat:1.20-R0.1")
     compileOnly("net.kyori:adventure-api:4.14.0"){
@@ -39,15 +40,19 @@ dependencies {
     compileOnly("dev.folia:folia-api:1.20.1-R0.1-SNAPSHOT") {
         targetConfiguration = "compile"
     }
-//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
     implementation("com.google.code.gson:gson:2.9.0")
     compileOnly("me.clip:placeholderapi:2.9.2")
-//    compileOnly("com.github.602723113:ParticleLib:1.5.0").
+    compileOnly("com.github.602723113:ParticleLib:1.5.1")
 
     compileOnly("org.black_ixx:playerpoints:3.2.5")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     implementation("com.zaxxer:HikariCP:4.0.3")
-//    compileOnly("org.bukkit:craftbukkit:$nmsVersion-R0.1-SNAPSHOT")
+    compileOnly(fileTree("lib"))
+    compileOnly("pers.neige.neigeitems:NeigeItems:1.16.15")
+    compileOnly("com.github.LoneDev6:api-itemsadder:3.5.0b")
+    compileOnly("io.lumine:Mythic-Dist:5.3.5")
+//    compileOnly("io.lumine:MythicLib-dist:1.5.2-SNAPSHOT")
+
 }
 
 tasks.test {
@@ -56,6 +61,11 @@ tasks.test {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "1.8"
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 application {
@@ -74,6 +84,8 @@ tasks{
         relocate("org.intellij","cn.xgpjun.org.intellij")
         relocate("org.jetbrains","cn.xgpjun.org.jetbrains")
         relocate("org.jetbrains","cn.xgpjun.org.jetbrains")
+//        relocate("org.slf4j","cn.xgpjun.org.slf4j")
+//        重定后启动会报错= =
         relocate("com.zaxxer","cn.xgpjun.com.zaxxer")
         relocate("com.google","cn.xgpjun.com.google")
 

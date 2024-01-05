@@ -58,31 +58,28 @@ class BoxMultipleAnim:MultipleAnim() {
                 .setDisplayName("")
                 .getItem())
             SchedulerManager.getScheduler().runTask{ player.openInventory(gui) }
+
+            var counter = 0
+            var index = 0
+            var stop = false
             animTask = SchedulerManager.getScheduler().runTaskTimerAsynchronously(0L,5L){
-                object :Runnable{
-                    var counter = 0
-                    var index = 0
-                    var stop = false
-                    override fun run() {
-                        counter++
-                        val pitch = 2.0.pow(counter / 30.0).toFloat()
-                        for (i in 10..16) {
-                            val myItem = MyItemBuilder(showItemList[i - 9 + counter])
-                            if (i == 13) gui.setItem(i, myItem.addEnchant().getItem()) else gui.setItem(i, myItem.getItem())
-                        }
-                        player.playSound(player.location, Sounds.PLING.get(), 1.0f, pitch)
-                        if (counter % 3 == 0) {
-                            setAward(index, awards[index])
-                            player.playSound(player.location, Sounds.LEVEL_UP.get(), 0.2f, 1.0f)
-                            index++
-                            if (index == 10) {
-                                stop =(true)
-                            }
-                        }
-                        if (stop) {
-                            player.playSound(player.location, Sounds.LEVEL_UP.get(), 1.0f, 1.0f)
-                        }
+                counter++
+                val pitch = 2.0.pow(counter / 30.0).toFloat()
+                for (i in 10..16) {
+                    val myItem = MyItemBuilder(showItemList[i - 9 + counter])
+                    if (i == 13) gui.setItem(i, myItem.addEnchant().getItem()) else gui.setItem(i, myItem.getItem())
+                }
+                player.playSound(player.location, Sounds.PLING.get(), 1.0f, pitch)
+                if (counter % 3 == 0) {
+                    setAward(index, awards[index])
+                    player.playSound(player.location, Sounds.LEVEL_UP.get(), 0.2f, 1.0f)
+                    index++
+                    if (index == 10) {
+                        stop =(true)
                     }
+                }
+                if (stop) {
+                    player.playSound(player.location, Sounds.LEVEL_UP.get(), 1.0f, 1.0f)
                 }
             }
         }

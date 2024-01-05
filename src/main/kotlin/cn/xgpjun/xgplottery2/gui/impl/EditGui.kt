@@ -164,7 +164,7 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
         player.inventory.addItem(lottery.key.clone())
     }
     fun setAwards(player: Player){
-        TODO()
+        player.openInventory(AwardGui(this,lottery).inventory)
     }
 }
 

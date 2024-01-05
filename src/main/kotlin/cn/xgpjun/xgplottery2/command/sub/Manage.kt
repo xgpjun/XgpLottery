@@ -11,15 +11,18 @@ object Manage:TabExecutor {
         sender: CommandSender,
         command: Command,
         alias: String,
-        args: Array<out String>?
+        args: Array<out String>
     ): MutableList<String> {
-
         return ArrayList()
     }
 
-    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>?): Boolean {
+    override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
+        if (!sender.isOp){
+            return true
+        }
+
         val player = sender as Player
-        player.openInventory(Manage().getInventory())
+        player.openInventory(Manage().inventory)
         return true
     }
 }

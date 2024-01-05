@@ -1,12 +1,8 @@
 package cn.xgpjun.xgplottery2.command.sub
 
 import cn.xgpjun.xgplottery2.command.filter
-import cn.xgpjun.xgplottery2.lottery.calculator.impl.toInt
-import cn.xgpjun.xgplottery2.manager.DatabaseManager
+import cn.xgpjun.xgplottery2.manager.*
 import cn.xgpjun.xgplottery2.manager.DatabaseManager.save
-import cn.xgpjun.xgplottery2.manager.LotteryManager
-import cn.xgpjun.xgplottery2.manager.Message
-import cn.xgpjun.xgplottery2.manager.MessageL
 import cn.xgpjun.xgplottery2.send
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
@@ -45,52 +41,55 @@ object Key :TabExecutor{
             return true
         }
         val player = Bukkit.getOfflinePlayer(args[2])
-        val data = DatabaseManager.getPlayerData(player.uniqueId)
-
-        when(args[1]){
-            "inquire" ->{
-                data.keyCount.forEach{
-                    Message.KeyInquire.get(it.key,it.value.toString()).send(sender)
+        SchedulerManager.getScheduler().runTaskAsynchronously{
+            val data = DatabaseManager.getPlayerData(player.uniqueId)
+            when(args[1]){
+                "inquire" ->{
+                    data.keyCount.forEach{
+                        Message.KeyInquire.get(it.key,it.value.toString()).send(sender)
+                    }
                 }
-            }
-            "add" ->{
-                if (args.size!=5){
-                    help(sender)
-                    return true
+                "add" ->{
+                    if (args.size!=5){
+                        help(sender)
+                        return@runTaskAsynchronously
+                    }
+                    data.keyCount[args[3]] = data.keyCount.getOrDefault(args[3],0) + args[4].toInt()
+                    if (player.isOnline){
+                        DatabaseManager.onlinePlayerData[player.uniqueId] = data
+                    }else{
+                        data.save()
+                    }
+                    Message.Success.get().send(sender)
                 }
-                data.keyCount[args[3]] = data.keyCount.getOrDefault(args[3],0) + args[4].toInt()
-                if (player.isOnline){
-                    DatabaseManager.onlinePlayerData[player.uniqueId] = data
-                }else{
-                    data.save()
+                "sub" ->{
+                    if (args.size!=5){
+                        help(sender)
+                        return@runTaskAsynchronously
+                    }
+                    data.keyCount[args[3]] = data.keyCount.getOrDefault(args[3],0) - args[4].toInt()
+                    if (player.isOnline){
+                        DatabaseManager.onlinePlayerData[player.uniqueId] = data
+                    }else{
+                        data.save()
+                    }
+                    Message.Success.get().send(sender)
                 }
-            }
-            "sub" ->{
-                if (args.size!=5){
-                    help(sender)
-                    return true
-                }
-                data.keyCount[args[3]] = data.keyCount.getOrDefault(args[3],0) - args[4].toInt()
-                if (player.isOnline){
-                    DatabaseManager.onlinePlayerData[player.uniqueId] = data
-                }else{
-                    data.save()
-                }
-            }
-            "clear" ->{
-                if (args.getOrNull(3)!="confirm"){
-                    Message.KeyClearConfirm.get(args[2]).send(sender)
-                    return true
-                }
-                data.keyCount.clear()
-                if (player.isOnline){
-                    DatabaseManager.onlinePlayerData[player.uniqueId] = data
-                }else{
-                    data.save()
+                "clear" ->{
+                    if (args.getOrNull(3)!="confirm"){
+                        Message.KeyClearConfirm.get(args[2]).send(sender)
+                        return@runTaskAsynchronously
+                    }
+                    data.keyCount.clear()
+                    if (player.isOnline){
+                        DatabaseManager.onlinePlayerData[player.uniqueId] = data
+                    }else{
+                        data.save()
+                    }
+                    Message.Success.get().send(sender)
                 }
             }
         }
-
         return true
     }
     fun help(sender: CommandSender){
