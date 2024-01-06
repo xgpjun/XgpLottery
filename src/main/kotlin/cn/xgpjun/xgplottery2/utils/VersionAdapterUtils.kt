@@ -8,10 +8,6 @@ import org.bukkit.inventory.ItemStack
 
 class VersionAdapterUtils {
     companion object{
-        fun ifMainHand(e: PlayerInteractEvent): Boolean {
-            return if (NMSManager.versionToInt < 9) true else EquipmentSlot.HAND == e.hand
-        }
-
         fun getPlayerEmptySlot(player: Player): Int {
             val items = player.inventory.contents
             var emptySlots = 0

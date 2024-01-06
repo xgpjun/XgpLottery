@@ -1,6 +1,7 @@
 package cn.xgpjun.xgplottery2.hook
 
 import cn.xgpjun.xgplottery2.manager.DatabaseManager
+import cn.xgpjun.xgplottery2.manager.LotteryManager
 import cn.xgpjun.xgplottery2.utils.Config
 import me.clip.placeholderapi.PlaceholderAPI
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
@@ -11,7 +12,7 @@ import kotlin.collections.HashMap
 
 object PlaceholderAPIHook {
     val enable:Boolean by lazy {
-        Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")
+        Bukkit.getPluginManager().getPlugin("PlaceholderAPI")!=null
     }
     fun register(){
         if (enable){
@@ -83,9 +84,7 @@ object NGT:SubRequest{
 object LotteryInfo:SubRequest{
     override fun onRequest(p: OfflinePlayer?, args: Array<String>?): String? {
         return args?.getOrNull(1)?.let {
-            p?.let { it1 ->
-                DatabaseManager.getPlayerData(it1.uniqueId).customData.getOrDefault("nonGuaranteed$it",0).toString()
-            }
+            LotteryManager.getLottery(it)?.customTags?.getOrDefault("guaranteedCount",0)?.toString()
         }
     }
 }

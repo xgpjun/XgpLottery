@@ -1,6 +1,5 @@
 version: 2.0.0
 checkFullInventory: false
-showProbability: false
 database:
   sqlite:
     path: ""

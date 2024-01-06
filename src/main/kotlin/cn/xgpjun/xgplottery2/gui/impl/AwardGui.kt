@@ -2,9 +2,11 @@ package cn.xgpjun.xgplottery2.gui.impl
 
 import cn.xgpjun.xgplottery2.XgpLottery
 import cn.xgpjun.xgplottery2.color
+import cn.xgpjun.xgplottery2.enums.PresetItem
 import cn.xgpjun.xgplottery2.gui.LotteryGui
 import cn.xgpjun.xgplottery2.lottery.pojo.Lottery
 import cn.xgpjun.xgplottery2.manager.Message
+import cn.xgpjun.xgplottery2.manager.MessageL
 import cn.xgpjun.xgplottery2.manager.getTag
 import cn.xgpjun.xgplottery2.manager.setTag
 import cn.xgpjun.xgplottery2.utils.MyItemBuilder
@@ -26,7 +28,7 @@ import kotlin.math.ceil
 import kotlin.math.min
 
 class AwardGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
-    override val inv = Bukkit.createInventory(this,9*6,"&6奖品信息".color())
+    override val inv = Bukkit.createInventory(this,9*6,Message.AwardGuiTitle.get().color())
 
     companion object {
         val preInventory = HashMap<UUID, AwardGui>()
@@ -64,6 +66,12 @@ class AwardGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
         page = 1.coerceAtLeast(page.coerceAtMost(size))
         pageItem()
 
+        inv.setItem(45,MyItemBuilder(
+            PresetItem.ORANGE_STAINED_GLASS_PANE.getItem())
+            .setDisplayName(Message.ItemBorder2Name.get().color())
+            .setLore(MessageL.ItemBorder2Lore.get().color())
+            .getItem())
+
         lottery.awards
             .toList()
             .slice((page - 1) * 28 until min(page*28,lottery.awards.size))
@@ -71,7 +79,7 @@ class AwardGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
             inv.setItem(slot[index],
                 MyItemBuilder(award.item)
                     .setDisplayName("&f&l$name".color())
-                    .addLore("&6点击以修改".color())
+                    .addLore(Message.ClickToChange.get().color())
                     .getItem()
                     .setTag("AwardName",name))
         }
@@ -87,7 +95,7 @@ class AwardGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
         val conversation = ConversationFactory(XgpLottery.instance)
             .withFirstPrompt(object: ValidatingPrompt() {
                 override fun getPromptText(context: ConversationContext): String {
-                    return "&6输入奖品名称，cancel取消."
+                    return Message.NewAward.get().color()
                 }
                 override fun isInputValid(context: ConversationContext, input: String): Boolean {
                     val c = ChatColor.stripColor(input)?.trim()
@@ -97,7 +105,7 @@ class AwardGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
                         } else if (lottery.awards.containsKey(it)){
                             lottery.createNewAward(c)
                         }else{
-                            context.forWhom.sendRawMessage("&c奖品已存在!")
+                            context.forWhom.sendRawMessage(Message.Existed.get().color())
                         }
                     }
                     return true

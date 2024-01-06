@@ -4,6 +4,7 @@ import cn.xgpjun.xgplottery2.XgpLottery
 import cn.xgpjun.xgplottery2.command.filter
 import cn.xgpjun.xgplottery2.manager.*
 import cn.xgpjun.xgplottery2.send
+import cn.xgpjun.xgplottery2.utils.Config
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -13,8 +14,6 @@ import java.io.File
 
 object Convert:TabExecutor {
     /**
-     * /xl convert toCC
-     * /xl convert fromCC
      * /xl convert fromLegacy
      */
     override fun onTabComplete(
@@ -80,6 +79,8 @@ object Convert:TabExecutor {
                         }
                         Message.Success.get().send(sender)
                     }
+                }else{
+                    "?".send(sender)
                 }
             }
             else -> help(sender)

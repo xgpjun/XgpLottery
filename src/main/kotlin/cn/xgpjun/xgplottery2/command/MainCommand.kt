@@ -1,6 +1,7 @@
 package cn.xgpjun.xgplottery2.command
 
 import cn.xgpjun.xgplottery2.command.sub.*
+import cn.xgpjun.xgplottery2.utils.Config
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -32,6 +33,9 @@ object MainCommand :TabExecutor {
     ): MutableList<String>? {
         val list: MutableList<String> = ArrayList(subCommands.keys)
         if (!sender.isOp){
+            return arrayListOf()
+        }
+        if (!Config.readWiki(sender)){
             return arrayListOf()
         }
         if (args.size == 1) {

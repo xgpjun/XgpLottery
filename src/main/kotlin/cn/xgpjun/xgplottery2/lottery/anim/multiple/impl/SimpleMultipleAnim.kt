@@ -81,21 +81,17 @@ class SimpleMultipleAnim:MultipleAnim() {
         gui.setItem(13, item)
         index++
         if (index == 10) {
+            var counter = 0
             animTask = SchedulerManager.getScheduler().runTaskTimerAsynchronously(0L,5L){
-                object : Runnable {
-                    var counter = 0
-                    override fun run() {
-                        counter++
-                        val glass: ItemStack = MyItemBuilder(PresetItem.glasses[Random().nextInt(16)]).setDisplayName("").getItem()
-                        IntStream.range(0, 27).forEach { i: Int ->
-                            if (i != 13) {
-                                gui.setItem(i, glass)
-                            }
-                        }
-                        if (counter == 20) {
-                            animTask?.cancel()
-                        }
+                counter++
+                val glass: ItemStack = MyItemBuilder(PresetItem.glasses[Random().nextInt(16)]).setDisplayName("").getItem()
+                IntStream.range(0, 27).forEach { i: Int ->
+                    if (i != 13) {
+                        gui.setItem(i, glass)
                     }
+                }
+                if (counter == 20) {
+                    animTask?.cancel()
                 }
             }
         }

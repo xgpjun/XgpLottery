@@ -19,16 +19,16 @@ object ParticleManager {
         clear()
         particles["DefaultParticle"] = DefaultParticle(null).javaClass
         particles["CubeParticle"] = CubeParticle(null).javaClass
+        show()
+    }
+
+    fun show(){
         list.clear()
         CrateManager.cratesList.values.forEach{
             it.crateParticle.let { particle->
                 list.add(particles[particle]?.getConstructor(it.javaClass)?.newInstance(it)?:DefaultParticle(it))
             }
         }
-        show()
-    }
-
-    fun show(){
         list.forEach{
             it.show()
         }

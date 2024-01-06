@@ -32,16 +32,19 @@ object DatabaseManager{
                 dataSourceConfig.password = config.getString("database.mysql.password")
             }else{
                 val path = config.getString("database.sqlite.path","")!!
+                Class.forName("org.sqlite.JDBC")
                 if (path != ""){
                     dataSourceConfig.jdbcUrl = "jdbc:sqlite:$path"
                 }else{
                     val dataPath = XgpLottery.instance.dataFolder.absolutePath + File.separator + "data.db"
                     dataSourceConfig.jdbcUrl = "jdbc:sqlite:$dataPath"
                 }
+                dataSourceConfig.connectionTestQuery = "SELECT 1"
             }
             dataSourceConfig.maximumPoolSize = 50
             dataSourceConfig.minimumIdle = 5
             dataSource = HikariDataSource(dataSourceConfig)
+
             createTable()
         }catch (e:Exception){
             e.printStackTrace()

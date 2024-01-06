@@ -77,6 +77,11 @@ class DefaultMultipleAnim:MultipleAnim() {
         }
     }
 
+
+    override fun finish() {
+        animTask?.cancel()
+    }
+
     override fun getInventory() = inv
 
     fun borderChange() {

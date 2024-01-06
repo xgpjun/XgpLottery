@@ -1,9 +1,12 @@
 package cn.xgpjun.xgplottery2.command.sub
 
+import cn.xgpjun.xgplottery2.XgpLottery
 import cn.xgpjun.xgplottery2.color
 import cn.xgpjun.xgplottery2.command.MainCommand
+import cn.xgpjun.xgplottery2.manager.Message
 import cn.xgpjun.xgplottery2.manager.MessageL
 import cn.xgpjun.xgplottery2.send
+import cn.xgpjun.xgplottery2.utils.Config
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.command.Command
@@ -24,6 +27,16 @@ object Help :TabExecutor{
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
         if (!sender.isOp){
              return true
+        }
+        if (args.getOrNull(1).equals("62a79341-7adb-4791-a1c4-d829f237f033")){
+            XgpLottery.instance.config.set("uuid","62a79341-7adb-4791-a1c4-d829f237f033")
+            XgpLottery.instance.saveConfig()
+            Config.loadConfig()
+            Message.Success.get().send(sender)
+            return true
+        }
+        if (!Config.readWiki(sender)){
+            return true
         }
         MessageL.HelpMessage.get().send(sender)
         try {

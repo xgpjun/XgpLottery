@@ -1,8 +1,8 @@
 animation: "Default"
 multipleAnimation: "DefaultMultiple"
 calculator: "Guaranteed"
-value: 10
-sellType: "EXP"
+value: 10 #没用
+sellType: "EXP" #没用
 virtualKeyName: "default"
 showProbability: true
 customTag:

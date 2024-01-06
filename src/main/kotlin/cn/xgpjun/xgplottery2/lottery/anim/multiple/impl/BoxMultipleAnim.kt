@@ -22,7 +22,7 @@ class BoxMultipleAnim:MultipleAnim() {
     val gui: Inventory = Bukkit.createInventory(this, 6 * 9, Message.BoxMultipleAnimTitle.get().color())
 
     private var showItemList = ArrayList<ItemStack>()
-    private val borderSlot = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19, 25, 26, 27, 28, 34, 35, 36, 37, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53)
+    private val borderSlot = intArrayOf(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 17, 18, 19,20,21,23,24, 25, 26, 27, 28, 34, 35, 36, 37, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53)
     private val awardSlot = intArrayOf(29, 30, 31, 32, 33, 38, 39, 40, 41, 42)
     var animTask: Task? = null
     override val name: String
@@ -80,6 +80,7 @@ class BoxMultipleAnim:MultipleAnim() {
                 }
                 if (stop) {
                     player.playSound(player.location, Sounds.LEVEL_UP.get(), 1.0f, 1.0f)
+                    finish()
                 }
             }
         }

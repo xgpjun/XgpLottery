@@ -78,7 +78,6 @@ object CrateManager {
         }
         location.world?.name?.let {
             val uuid = UUID.randomUUID()
-
             val crate = Crate(lottery.name,location.x,location.y,location.z, it,uuid,"DefaultParticle")
             crate.register(uuid)
             save(crate,uuid)

@@ -1,6 +1,8 @@
 package cn.xgpjun.xgplottery2.command.sub
 
 import cn.xgpjun.xgplottery2.gui.impl.Manage
+import cn.xgpjun.xgplottery2.manager.Message
+import cn.xgpjun.xgplottery2.send
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
@@ -17,12 +19,14 @@ object Manage:TabExecutor {
     }
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-        if (!sender.isOp){
+        if (!sender.isOp) {
             return true
         }
-
-        val player = sender as Player
-        player.openInventory(Manage().inventory)
+        if (sender !is Player) {
+            Message.OnlyPlayer.get().send(sender)
+            return true
+        }
+        sender.openInventory(Manage().inventory)
         return true
     }
 }

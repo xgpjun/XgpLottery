@@ -6,6 +6,7 @@ import cn.xgpjun.xgplottery2.manager.LotteryManager
 import cn.xgpjun.xgplottery2.manager.Message
 import cn.xgpjun.xgplottery2.manager.MessageL
 import cn.xgpjun.xgplottery2.send
+import cn.xgpjun.xgplottery2.utils.Config
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
@@ -33,13 +34,16 @@ object Draw:TabExecutor {
         if (!sender.isOp){
             return true
         }
+        if (!Config.readWiki(sender)){
+            return true
+        }
         args.getOrNull(2)?.let { lotteryName->
             LotteryManager.getLottery(lotteryName)?.let {lottery ->
                 Bukkit.getPlayer(args[1])?.let { player ->
                     DrawManager.draw(player,lottery, isMultiple = args.getOrNull(3).equals("multiple"))
                 }?:Message.NotFoundPlayer.get().send(sender)
             }?:Message.NotFoundLottery.get().send(sender)
-        }
+        }?: help(sender)
 
         return true
     }

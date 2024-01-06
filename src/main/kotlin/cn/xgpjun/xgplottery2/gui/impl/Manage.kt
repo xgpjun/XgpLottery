@@ -6,6 +6,7 @@ import cn.xgpjun.xgplottery2.manager.*
 import cn.xgpjun.xgplottery2.utils.MyItemBuilder
 import org.bukkit.Bukkit
 import org.bukkit.Material
+import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryClickEvent
 import org.bukkit.inventory.Inventory
 import kotlin.math.ceil
@@ -24,6 +25,9 @@ class Manage :LotteryGui(null){
                 }
             }
         }
+
+        if (e.rawSlot == 8)
+            getPreviousInventory(e.whoClicked as Player)
     }
 
     override fun reloadGui() {
@@ -38,7 +42,7 @@ class Manage :LotteryGui(null){
             .forEachIndexed{ index,(name, _) ->
             inv.setItem(slot[index],
                 MyItemBuilder(Material.CHEST)
-                    .setDisplayName("&a奖池名称:&9$name".color())
+                    .setDisplayName("&aLotteryName:&9$name".color())
                     .getItem().setTag("LotteryNameGui",name))
             }
     }

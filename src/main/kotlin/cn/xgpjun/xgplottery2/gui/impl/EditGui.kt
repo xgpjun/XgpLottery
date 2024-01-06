@@ -24,7 +24,7 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
     companion object {
         val preInventory = HashMap<UUID, EditGui>()
     }
-    override val inv: Inventory = Bukkit.createInventory(this,54,"&6奖池信息".color())
+    override val inv: Inventory = Bukkit.createInventory(this,54,"&6${lottery.name}".color())
 
     override fun handleClick(e: InventoryClickEvent) {
         val slot =e.rawSlot
@@ -36,6 +36,7 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
             24 -> getKeyItem(player)
             31 -> sellTypeChange(player)
             33 -> setAwards(player)
+            8 -> getPreviousInventory(player)
         }
     }
 
@@ -53,24 +54,20 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
         )) {
             inv.setItem(i,borderGlass.getItem())
         }
-        val lore = arrayListOf(
-            "&a此处展示了奖池的基本信息，奖品在子界面",
-            "&a如需更改请点击下方gui物品",
-            "&a单抽动画:&b${AnimManager.getSingleI18Name(lottery.animation)}",
-            "&a十连抽动画:&b${AnimManager.getMultipleI18Name(lottery.multipleAnimation)}",
-            "&a售卖价格:&b${lottery.value}&a${lottery.sellType.getName()}")
+        inv.setItem(8,PresetItem.PREVIOUS_INVENTORY.getItem())
+        val lore = MessageL.LotteryInfoLore.get(AnimManager.getSingleI18Name(lottery.animation),AnimManager.getMultipleI18Name(lottery.multipleAnimation)).color()
         val lotteryMessage = MyItemBuilder(PresetItem.SIGN.getItem())
-            .setDisplayName("&f&l${lottery.name}奖池信息".color())
-            .setLore(lore.color())
+            .setDisplayName(Message.LotteryInfoName.get(lottery.name).color())
+            .setLore(lore)
         inv.setItem(4,lotteryMessage.getItem())
         inv.setItem(20, MyItemBuilder(Material.PAINTING)
-            .setDisplayName("&f&l更改单抽动画".color())
+            .setDisplayName(Message.ChangeAnimationName.get().color())
             .getItem())
         inv.setItem(29, MyItemBuilder(Material.ITEM_FRAME)
-            .setDisplayName("&f&l更改十连抽动画".color())
+            .setDisplayName(Message.ChangeMultipleAnimationName.get().color())
             .getItem())
         inv.setItem(22, MyItemBuilder(Material.GOLD_NUGGET)
-            .setDisplayName("&f&l更改售价".color())
+            .setDisplayName(Message.UnusedName.get().color())
             .getItem())
         val sellType = when(lottery.sellType){
             SellType.POINTS ->  Material.DIAMOND
@@ -79,13 +76,13 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
             SellType.NULL -> Material.PAPER
         }
         inv.setItem(31, MyItemBuilder(sellType)
-            .setDisplayName("&f&l更改售卖方式".color())
+            .setDisplayName(Message.UnusedName.get().color())
             .getItem())
         inv.setItem(24, MyItemBuilder(lottery.key.type)
-            .setDisplayName("&f&l获得一个钥匙".color())
+            .setDisplayName(Message.GetKeyName.get().color())
             .getItem())
         inv.setItem(33, MyItemBuilder(Material.ENDER_CHEST)
-            .setDisplayName("&f&l查看并设置奖品".color())
+            .setDisplayName(Message.EditAwardName.get().color())
             .getItem())
     }
 
@@ -99,11 +96,11 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
         preInventory[player.uniqueId] = this
         AnimManager.singleAnim.values.forEach{
             val information = TextComponent(Message.SingleAnimChange.get(it.new().i18nName).color())
-            information.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xl edit ${lottery.name} singleAnim ${it.name}")
+            information.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit ${lottery.name} singleAnim ${it.newInstance().name}")
             player.spigot().sendMessage(information)
         }
         TextComponent(Message.Cancel.get().color()).run {
-            this.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xl edit")
+            this.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit")
         }
     }
     fun multipleAnimChange(player: Player){
@@ -111,12 +108,12 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
         preInventory[player.uniqueId] = this
 
         AnimManager.multipleAnim.values.forEach{
-            val information = TextComponent(Message.MultipleAnimChange.get(it.getConstructor().newInstance().i18nName))
-            information.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xl edit ${lottery.name} multipleAnim ${it.name}")
+            val information = TextComponent(Message.MultipleAnimChange.get(it.getConstructor().newInstance().i18nName).color())
+            information.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit ${lottery.name} multipleAnim ${it.newInstance().name}")
             player.spigot().sendMessage(information)
         }
         TextComponent(Message.Cancel.get().color()).run {
-            this.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xl edit")
+            this.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit")
         }
     }
 
@@ -153,15 +150,15 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
 
         arrayListOf(SellType.POINTS,SellType.MONEY,SellType.EXP).forEach{
             val message = TextComponent(Message.SellTypeChange.get(it.getName()).color())
-            message.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xl edit ${lottery.name} sellType ${it.name}")
+            message.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit ${lottery.name} sellType ${it.name}")
             player.spigot().sendMessage(message)
         }
         TextComponent(Message.Cancel.get().color()).run {
-            this.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xl edit ${lottery.name}")
+            this.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit ${lottery.name}")
         }
     }
     fun getKeyItem(player: Player){
-        player.inventory.addItem(lottery.key.clone())
+        player.inventory.addItem(lottery.key.clone().setTag("XL2KEY", lottery.virtualKeyName))
     }
     fun setAwards(player: Player){
         player.openInventory(AwardGui(this,lottery).inventory)

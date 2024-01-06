@@ -129,6 +129,15 @@ enum class Message(val path: String){
         }
     },
     Cancel("gui.message.cancel"),
+    AwardGuiTitle("gui.awardGui.title"),
+    ClickToChange("gui.message.clickToChange"),
+    NewAward("gui.message.newAward"),
+    Existed("existed"),
+    LotteryInfoName("gui.items.lotteryInfo.name"){
+        override fun get(vararg placeholders: String?): String {
+            return string.replace("{name}",placeholders[0].toString())
+        }
+                                                 },
     Point("noun.point"),
     Money("noun.money"),
     EXP("noun.exp"),
@@ -139,6 +148,11 @@ enum class Message(val path: String){
     },
     DecimalFormat("gui.decimalFormat"),
     ChangeAwardItem("message.changeAwardItem"),
+    ChangeAnimationName("gui.items.changeAnimation.name"),
+    ChangeMultipleAnimationName("gui.items.changeMultipleAnimation.name"),
+    GetKeyName("gui.items.getKey.name"),
+    EditAwardName("gui.items.editAward.name"),
+    UnusedName("gui.items.unused.name"),
     //动画
     DefaultSingleAnimTitle("gui.singleAnim.default.title"),
     DefaultSingleAnimName("gui.singleAnim.default.name"),
@@ -179,6 +193,7 @@ enum class MessageL(val path: String){
     GiveHelp("help.give"),
     PreviewHelp("help.preview"),
     ConvertHelp("help.convert"),
+    ParticleHelp("help.particle"),
     ItemBorderLore("gui.items.border.lore"),
     ItemBorder2Lore("gui.items.border2.lore"),
     CrateListInfo("message.crateListInfo"){
@@ -191,6 +206,18 @@ enum class MessageL(val path: String){
                     .replace("{y}",placeholders[2].toString())
                     .replace("{z}",placeholders[3].toString())
                     .replace("{lotteryName}",placeholders[4].toString())
+                result.add(string)
+            }
+            return result
+        }
+    },
+    LotteryInfoLore("gui.items.lotteryInfo.lore"){
+        override fun get(vararg placeholders: String?): MutableList<String> {
+            val result = ArrayList<String>()
+            stringList.forEach{
+                val string = it
+                    .replace("{animation}",placeholders[0].toString())
+                    .replace("{multipleAnimation}",placeholders[1].toString())
                 result.add(string)
             }
             return result

@@ -14,6 +14,7 @@ error:
   requireParticleLib: "&c粒子插件未启用, 请点击前往下载并安装"
   receiveRewardFailed: "&c领取失败，你还需抽{count}次才可以领取"
   receiveMaximum: "&c已达领取上限 无法领取"
+  existed: "&c该名称已存在"
 message:
   prefix: "&l[&9Xgp&3Lottery&a2&f] &e=> &f"
   createCrate: "&a左键点击方块，设置为{name}奖池的抽奖箱！"
@@ -78,6 +79,11 @@ help:
   convert:
     - "&3/xl convert fromlegacy"
     - "&7从一代中移植数据。(成功后需重载)"
+  particle:
+    - "&3/xl particle show"
+    - "&7显示所有粒子特效"
+    - "&3/xl particle clear"
+    - "&7清除所有粒子特效"
 noun:
   money: "&6金币"
   point: "&6点券"
@@ -100,6 +106,24 @@ gui:
       name: "&f下一页"
     previousPage:
       name: "&f上一页"
+    lotteryInfo:
+      name: "&f&l{name}奖池信息"
+      lore:
+        - "&a此处展示了奖池的基本信息，奖品在子界面"
+        - "&a如需更改请点击下方gui物品"
+        - "&a单抽动画:&b{animation}"
+        - "&a十连抽动画:&b{multipleAnimation}"
+        - "&7售价...这个功能好像阉割掉了"
+    changeAnimation:
+      name: "&f&l更改单抽动画"
+    changeMultipleAnimation:
+      name: "&f&l更改十连抽动画"
+    getKey:
+      name: "&f&l获得一个钥匙"
+    editAward:
+      name: "&f&l查看并设置奖品"
+    unused:
+      name: "嘿嘿 这个功能被阉割掉了~"
   showProbability: "&7获得概率:{num}"
   decimalFormat: "0.00%"
   admin:
@@ -108,12 +132,16 @@ gui:
   user:
     preview:
       title: "&6奖池[&a{name}&6]预览"
+  awardGui:
+    title: "&6奖品信息"
   message:
     cancel: "&6&l&n点击&r&l&c取消"
     singleAnimChange: "&6&l&n点击&r&f以更改为:{name}"
     multipleAnimChange: "&6&l&n点击&r&f以更改为:{name}"
     valueChange: "&6&l请输入新的价格，0为不出售,输入&fcancel&6取消"
     sellTypeChange: "&6&f&n点击&r&l&f以更改为:{name}"
+    clickToChange: "&6点击以修改"
+    newAward: "&6输入奖品名称，cancel取消."
   singleAnim:
     default:
       title: "&6单抽出奇迹!"

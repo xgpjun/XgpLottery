@@ -46,20 +46,16 @@ class SelectMultipleAnim :MultipleAnim(), Listener {
             SchedulerManager.getScheduler().runTask { player.openInventory(gui) }
 
         }
+        var counter = 0
         animTask = SchedulerManager.getScheduler().runTaskTimerAsynchronously(0L,5L){
-            object : Runnable {
-                var counter = 0
-                override fun run() {
-                    counter++
-                    randomGlass()
-                    val pitch = Math.pow(2.0, counter / 18.0).toFloat()
-                    player.playSound(player.location, Sounds.PLING.get(), 1.0f, pitch)
-                    if (counter == 17) {
-                        player.playSound(player.location, Sounds.LEVEL_UP.get(), 1.0f, 1.0f)
-                        animTask?.cancel()
-                        animIsStop = true
-                    }
-                }
+            counter++
+            randomGlass()
+            val pitch = Math.pow(2.0, counter / 18.0).toFloat()
+            player.playSound(player.location, Sounds.PLING.get(), 1.0f, pitch)
+            if (counter == 17) {
+                player.playSound(player.location, Sounds.LEVEL_UP.get(), 1.0f, 1.0f)
+                animTask?.cancel()
+                animIsStop = true
             }
         }
         XgpLottery.instance.let { Bukkit.getPluginManager().registerEvents(this, it) }

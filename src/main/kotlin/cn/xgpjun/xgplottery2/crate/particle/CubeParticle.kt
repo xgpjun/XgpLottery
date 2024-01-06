@@ -27,7 +27,7 @@ class CubeParticle(crate: Crate?):CrateParticleObject(crate){
         cube2!!.color = Color.WHITE
         cube2!!.alwaysShowAsync()
         task = SchedulerManager.getScheduler().runTaskTimerAsynchronously(0L,5L){
-            cube1!!.addMatrix(Matrixs.rotateAroundYAxis(2.0))
+            cube1!!.addMatrix(Matrixs.rotateAroundYAxis(5.0))
         }
     }
 

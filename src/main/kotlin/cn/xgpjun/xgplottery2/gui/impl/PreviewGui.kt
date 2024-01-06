@@ -15,7 +15,7 @@ import kotlin.math.min
 
 class PreviewGui(val lottery: Lottery,val player: Player) :LotteryGui(null){
 
-    override val inv: Inventory = Bukkit.createInventory(this,54,Message.PreviewTitle.get(lottery.name))
+    override val inv: Inventory = Bukkit.createInventory(this,54,Message.PreviewTitle.get(lottery.name).color())
 
     override fun handleClick(e: InventoryClickEvent) {
         val player = e.whoClicked as Player
@@ -28,6 +28,7 @@ class PreviewGui(val lottery: Lottery,val player: Player) :LotteryGui(null){
                 page +=1
                 reloadGui()
             }
+            8 -> getPreviousInventory(player)
         }
     }
 
@@ -59,7 +60,10 @@ class PreviewGui(val lottery: Lottery,val player: Player) :LotteryGui(null){
     override fun getInventory() = inv
 
     fun openGui(){
-        previousInventory = player.openInventory.topInventory.holder
+        val top = player.openInventory.topInventory.holder
+        if (top !is Player){
+            previousInventory = top
+        }
         reloadGui()
         player.openInventory(inv)
     }

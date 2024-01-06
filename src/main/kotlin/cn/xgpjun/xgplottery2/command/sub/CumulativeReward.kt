@@ -26,7 +26,6 @@ object CumulativeReward :TabExecutor{
      * /xl cr name
      */
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<out String>): Boolean {
-
         if (sender !is Player){
             Message.OnlyPlayer.get().send(sender)
             return true

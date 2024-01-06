@@ -21,7 +21,7 @@ abstract class LotteryGui(var previousInventory:InventoryHolder?) :InventoryHold
 
 
     fun getPreviousInventory(player:Player){
-        previousInventory?.let { player.openInventory(it.inventory) }?:{
+        previousInventory?.let { player.openInventory(it.inventory) }?:let{
             player.closeInventory()
         }
     }

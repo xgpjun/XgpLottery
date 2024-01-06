@@ -6,6 +6,7 @@ import cn.xgpjun.xgplottery2.manager.Message
 import cn.xgpjun.xgplottery2.manager.MessageL
 import cn.xgpjun.xgplottery2.manager.setTag
 import cn.xgpjun.xgplottery2.send
+import cn.xgpjun.xgplottery2.utils.Config
 import cn.xgpjun.xgplottery2.utils.give
 import org.bukkit.Bukkit
 import org.bukkit.command.Command
@@ -34,6 +35,9 @@ object Give :TabExecutor{
 
     override fun onCommand(sender: CommandSender, command: Command, label: String, args: Array<String>): Boolean {
         if (!sender.isOp){
+            return true
+        }
+        if (!Config.readWiki(sender)){
             return true
         }
         if (args.size>3){

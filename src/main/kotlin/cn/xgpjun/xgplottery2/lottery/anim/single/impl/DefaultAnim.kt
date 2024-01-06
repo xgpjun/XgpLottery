@@ -7,6 +7,7 @@ import cn.xgpjun.xgplottery2.enums.Sounds
 import cn.xgpjun.xgplottery2.lottery.anim.single.SingleAnim
 import cn.xgpjun.xgplottery2.lottery.pojo.Lottery
 import cn.xgpjun.xgplottery2.manager.Message
+import cn.xgpjun.xgplottery2.manager.NMSManager
 import cn.xgpjun.xgplottery2.manager.SchedulerManager
 import cn.xgpjun.xgplottery2.send
 import cn.xgpjun.xgplottery2.utils.MyItemBuilder
@@ -38,9 +39,9 @@ class DefaultAnim:SingleAnim() {
         crateLocation?.block?.let {
             //1.16+
             try {
-                if(it.state is Lidded){
+                if(NMSManager.versionToInt>=16&&it.state is Lidded){
                     (it.state as Lidded).open()
-                    SchedulerManager.getScheduler(crateLocation).runTaskLater(20L){
+                    SchedulerManager.getScheduler(crateLocation).runTaskLater(100L){
                         (it.state as Lidded).close()
                         val firework: Firework = crateLocation.world.spawn(crateLocation, Firework::class.java)
                         val fireworkMeta = firework.fireworkMeta

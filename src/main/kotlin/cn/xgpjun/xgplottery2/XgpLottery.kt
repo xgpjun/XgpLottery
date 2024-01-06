@@ -89,6 +89,7 @@ class XgpLottery : JavaPlugin() {
         CumulativeRewardManager.register()
         CrateManager.register()
         ParticleManager.register()
+        PlaceholderAPIHook.register()
         "&7loading additions...".log()
         AdditionLoader.loadAddition()
     }
@@ -160,8 +161,7 @@ fun checkUpdate(){
                     PlayerListener.pluginOutDate = version
                 }
             }
-        }catch (e:Exception){
-            e.printStackTrace()
+        }catch (_:Exception){
         }
     }
 }
