@@ -33,7 +33,7 @@ object Config {
 
         val read = uuid?.equals(UUID.fromString("62a79341-7adb-4791-a1c4-d829f237f033")) == true
         if (!read){
-            val url = "https://xgpjun.github.io/XgpLottery/"
+            val url = "https://xgpjun.github.io/XL-wiki/intro"
             try {
                 "&cno-support".send(sender)
                 val text = TextComponent("&3Please READ: &7&l&n$url".color())
