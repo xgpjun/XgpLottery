@@ -35,7 +35,7 @@ object V1_16Below:NMSWrapper(){
         getString = nbtTagCompound.getMethod("getString",String::class.java)
         if (versionToInt>12)
             a = nmsItemStack.getMethod("a", nbtTagCompound)
-        if (versionToInt<9)
+        else if (versionToInt<9)
             createStack = nmsItemStack.getMethod("createStack", nbtTagCompound)
         else
             newItemStack = nmsItemStack.getConstructor(nbtTagCompound)
