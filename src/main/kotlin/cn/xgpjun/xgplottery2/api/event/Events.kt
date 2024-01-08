@@ -26,3 +26,7 @@ class Events {
 
 
 }
+
+fun Event.call(){
+    org.bukkit.Bukkit.getPluginManager().callEvent(this)
+}

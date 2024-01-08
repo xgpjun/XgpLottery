@@ -2,6 +2,7 @@ package cn.xgpjun.xgplottery2
 
 import cn.xgpjun.xgplottery2.additions.AdditionLoader
 import cn.xgpjun.xgplottery2.api.event.Events
+import cn.xgpjun.xgplottery2.api.event.call
 import cn.xgpjun.xgplottery2.bStats.Metrics
 import cn.xgpjun.xgplottery2.command.MainCommand
 import cn.xgpjun.xgplottery2.hook.PlaceholderAPIHook
@@ -77,7 +78,7 @@ class XgpLottery : JavaPlugin() {
         DatabaseManager.onlinePlayerData.clear()
     }
     fun reload(){
-        Events.XLReloadEvent().callEvent()
+        Events.XLReloadEvent().call()
         saveDefaultConfig()
         Config.loadConfig()
         MessageManager.load()

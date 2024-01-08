@@ -1,6 +1,7 @@
 package cn.xgpjun.xgplottery2.lottery.pojo
 
 import cn.xgpjun.xgplottery2.api.event.Events
+import cn.xgpjun.xgplottery2.api.event.call
 import cn.xgpjun.xgplottery2.lottery.calculator.impl.NormalCalculator
 import cn.xgpjun.xgplottery2.lottery.enums.SellType
 import cn.xgpjun.xgplottery2.manager.AnimManager
@@ -104,7 +105,7 @@ class Lottery(
             val calculator = DrawManager.calculators[calculator] ?: NormalCalculator()
             animation.award = calculator.getAward(player, this)
             SchedulerManager.getScheduler().runTask{
-                Events.DrawEvent(player,animation.award!!).callEvent()
+                Events.DrawEvent(player,animation.award!!).call()
                 animation.draw(player, this, location)
             }
         }
