@@ -97,7 +97,11 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
         AnimManager.singleAnim.values.forEach{
             val information = TextComponent(Message.SingleAnimChange.get(it.new().i18nName).color())
             information.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit ${lottery.name} singleAnim ${it.newInstance().name}")
-            player.spigot().sendMessage(information)
+            try {
+                player.spigot().sendMessage(information)
+            }catch (_:NoSuchMethodError){
+
+            }
         }
         TextComponent(Message.Cancel.get().color()).run {
             this.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit")
@@ -110,7 +114,11 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
         AnimManager.multipleAnim.values.forEach{
             val information = TextComponent(Message.MultipleAnimChange.get(it.getConstructor().newInstance().i18nName).color())
             information.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit ${lottery.name} multipleAnim ${it.newInstance().name}")
-            player.spigot().sendMessage(information)
+            try {
+                player.spigot().sendMessage(information)
+            }catch (_:NoSuchMethodError){
+
+            }
         }
         TextComponent(Message.Cancel.get().color()).run {
             this.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit")
@@ -151,7 +159,11 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
         arrayListOf(SellType.POINTS,SellType.MONEY,SellType.EXP).forEach{
             val message = TextComponent(Message.SellTypeChange.get(it.getName()).color())
             message.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit ${lottery.name} sellType ${it.name}")
-            player.spigot().sendMessage(message)
+            try {
+                player.spigot().sendMessage(message)
+            }catch (_:NoSuchMethodError){
+
+            }
         }
         TextComponent(Message.Cancel.get().color()).run {
             this.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit ${lottery.name}")

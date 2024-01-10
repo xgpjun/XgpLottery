@@ -16,6 +16,9 @@ class Manage :LotteryGui(null){
     override val inv: Inventory = Bukkit.createInventory(this,54,Message.ManageTitle.get().color())
 
     override fun handleClick(e: InventoryClickEvent) {
+        if (e.rawSlot<0||e.rawSlot>53){
+            return
+        }
         if (e.isLeftClick&&!e.isShiftClick){
             val item =inv.getItem(e.rawSlot)
             if (item!=null&&item.hasItemMeta()){

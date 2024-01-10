@@ -14,6 +14,7 @@ import cn.xgpjun.xgplottery2.manager.*
 import cn.xgpjun.xgplottery2.manager.DatabaseManager.save
 import cn.xgpjun.xgplottery2.utils.Config
 import com.google.gson.JsonParser
+import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
@@ -29,9 +30,9 @@ import java.nio.charset.StandardCharsets
 class XgpLottery : JavaPlugin() {
     override fun onEnable() {
         instance = this
+        Config.loadConfig()
         NMSManager.register()
         saveDefaultConfig()
-        Config.loadConfig()
         MessageManager.load()
         logo.send(Bukkit.getConsoleSender())
         if (!File(dataFolder, "lottery").exists()){

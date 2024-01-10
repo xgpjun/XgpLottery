@@ -37,7 +37,7 @@ object Particle :TabExecutor{
                 text.clickEvent = ClickEvent(ClickEvent.Action.OPEN_URL,"https://github.com/602723113/ParticleLib/releases")
                 message.addExtra(text)
                 sender.spigot().sendMessage(message)
-            }catch (_:Exception){
+            }catch (_:NoSuchMethodError){
             }
             return true
         }

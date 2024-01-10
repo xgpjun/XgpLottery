@@ -132,7 +132,7 @@ enum class Message(val path: String){
     AwardGuiTitle("gui.awardGui.title"),
     ClickToChange("gui.message.clickToChange"),
     NewAward("gui.message.newAward"),
-    Existed("existed"),
+    Existed("error.existed"),
     LotteryInfoName("gui.items.lotteryInfo.name"){
         override fun get(vararg placeholders: String?): String {
             return string.replace("{name}",placeholders[0].toString())

@@ -9,9 +9,11 @@ import cn.xgpjun.xgplottery2.send
 import cn.xgpjun.xgplottery2.utils.Config
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.TextComponent
+import org.bukkit.Bukkit
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
+import org.bukkit.entity.Player
 
 object Help :TabExecutor{
     override fun onTabComplete(
@@ -39,19 +41,19 @@ object Help :TabExecutor{
             return true
         }
         MessageL.HelpMessage.get().send(sender)
-        try {
-            val message = TextComponent()
-            MainCommand.subCommands.keys.forEachIndexed{ index,it->
-                val text = TextComponent("&7&l&n$it".color())
-                text.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 $it")
-                text.addExtra(" ")
-                message.addExtra(text)
-                if (index%5==4){
-                    message.addExtra("\n")
-                }
+        val message = TextComponent()
+        MainCommand.subCommands.keys.forEachIndexed{ index,it->
+            val text = TextComponent("&7&l&n$it".color())
+            text.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 $it")
+            text.addExtra(" ")
+            message.addExtra(text)
+            if (index%5==4){
+                message.addExtra("\n")
             }
+        }
+        try {
             sender.spigot().sendMessage(message)
-        }catch (e:Exception){
+        }catch (e:Throwable){
             val string = StringBuilder("\n")
             MainCommand.subCommands.keys.forEachIndexed{ index,it->
                 string.append("&7$it ")

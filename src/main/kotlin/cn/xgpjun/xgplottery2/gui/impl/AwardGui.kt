@@ -37,7 +37,7 @@ class AwardGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
     override fun handleClick(e: InventoryClickEvent) {
         val player = e.whoClicked as Player
         when(e.rawSlot){
-            45 -> createNewAward(player)
+            49 -> createNewAward(player)
             8 ->{
                 getPreviousInventory(player)
             }
@@ -51,7 +51,7 @@ class AwardGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
                     text.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit ${lottery.name} award ${award.name}")
                     message.addExtra(text)
                     player.spigot().sendMessage(message)
-                }catch (_:Exception){
+                }catch (_:Throwable){
                     player.sendMessage("&cThe server version is too low, please hold the item and manually enter /xgplottery2 edit ${lottery.name} award ${award.name}".color())
                 }
                 player.closeInventory()
@@ -66,7 +66,7 @@ class AwardGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
         page = 1.coerceAtLeast(page.coerceAtMost(size))
         pageItem()
 
-        inv.setItem(45,MyItemBuilder(
+        inv.setItem(49,MyItemBuilder(
             PresetItem.ORANGE_STAINED_GLASS_PANE.getItem())
             .setDisplayName(Message.ItemBorder2Name.get().color())
             .setLore(MessageL.ItemBorder2Lore.get().color())
@@ -102,7 +102,7 @@ class AwardGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
                     c?.let {
                         if (c == "cancel"){
                             return true
-                        } else if (lottery.awards.containsKey(it)){
+                        } else if (!lottery.awards.containsKey(c)){
                             lottery.createNewAward(c)
                         }else{
                             context.forWhom.sendRawMessage(Message.Existed.get().color())

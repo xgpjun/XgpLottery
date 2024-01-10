@@ -12,6 +12,7 @@ object Config {
     var version = "2.0.0"
     var checkFullInventory = false
     var debug = false
+    var nms:String? = ""
     private var uuid : UUID? = null
     private var read = false
     fun loadConfig(){
@@ -23,6 +24,7 @@ object Config {
             uuid = it.getString("uuid")?.let { string ->
                 UUID.fromString(string)
             }
+            nms = it.getString("nms","")
         }
     }
 
@@ -39,7 +41,7 @@ object Config {
                 val text = TextComponent("&3Please READ: &7&l&n$url".color())
                 text.clickEvent = ClickEvent(ClickEvent.Action.OPEN_URL,url)
                 sender.spigot().sendMessage(text)
-            }catch (e:Exception){
+            }catch (e:Throwable){
                 sender.sendMessage("&3Please READ: &7&l&n$url".color())
             }
         }else{

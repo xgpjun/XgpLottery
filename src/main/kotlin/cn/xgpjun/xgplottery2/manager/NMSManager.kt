@@ -17,18 +17,26 @@ object NMSManager {
     var versionToInt = version.split("_")[1].toInt()
     fun register(){
         try {
-            nmsWrapper = when(versionToInt){
-                20 -> V1_20
-                19 -> V1_19
-                18 -> V1_18
-                17 -> V1_17
-                else -> {V1_16Below}
+            if (Config.nms!=null&&Config.nms!=""){
+                when(Config.nms){
+                    "1.7U" ->{
+                        nmsWrapper = V1_7U
+                    }
+                }
+            }else{
+                nmsWrapper = when(versionToInt){
+                    20 -> V1_20
+                    19 -> V1_19
+                    18 -> V1_18
+                    17 -> V1_17
+                    else -> {V1_16Below}
+                }
             }
-        }catch (e:Exception){
+            nmsWrapper.init()
+        } catch (e:Exception){
             e.printStackTrace()
             Bukkit.getPluginManager().disablePlugin(XgpLottery.instance)
         }
-        nmsWrapper.init()
     }
 }
 
@@ -90,7 +98,7 @@ abstract class NMSWrapper {
     }
 
 
-    fun getTag(itemStack: ItemStack,key:String):String?{
+    open fun getTag(itemStack: ItemStack,key:String):String?{
         try {
             val nmsItemStack =if (handle!=null&&craftItemStack.isInstance(itemStack)) {
                 handle!!.get(itemStack)
@@ -106,7 +114,7 @@ abstract class NMSWrapper {
             return null
         }
     }
-    fun setTag(itemStack: ItemStack,key: String,value:String):ItemStack{
+    open fun setTag(itemStack: ItemStack,key: String,value:String):ItemStack{
         try {
             return if (handle!=null&&craftItemStack.isInstance(itemStack)) {
                 val nmsItemStack = handle!!.get(itemStack)

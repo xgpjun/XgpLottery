@@ -5,6 +5,44 @@ import org.bukkit.inventory.ItemStack
 import java.lang.reflect.Constructor
 import java.lang.reflect.Method
 
+
+object V1_7U:NMSWrapper(){
+    override lateinit var nbtTagCompound: Class<*>
+    override lateinit var nmsItemStack: Class<*>
+    override lateinit var mojangsonParser: Class<*>
+    override lateinit var parse: Method
+    override lateinit var a: Method
+    override lateinit var save: Method
+    override lateinit var getTag: Method
+    override lateinit var setTag: Method
+    override lateinit var setString: Method
+    override lateinit var getString: Method
+
+    lateinit var createStack:Method
+    override lateinit var newNBT: Constructor<*>
+
+    override fun init() {
+        nbtTagCompound = Class.forName("net.minecraft.nbt.NBTTagCompound")
+        nmsItemStack = Class.forName("net.minecraft.item.ItemStack")
+        mojangsonParser = Class.forName("net.minecraft.nbt.JsonToNBT")
+        newNBT = nbtTagCompound.getConstructor()
+
+        parse = mojangsonParser.getMethod("func_150315_a", String::class.java)
+        save = nmsItemStack.getMethod("func_77955_b", nbtTagCompound)
+        getTag = nmsItemStack.getMethod("func_77978_p")
+        setTag = nmsItemStack.getMethod("func_77982_d", nbtTagCompound)
+        setString = nbtTagCompound.getMethod("func_74778_a",String::class.java, String::class.java)
+        getString = nbtTagCompound.getMethod("func_74779_i",String::class.java)
+        createStack = nmsItemStack.getMethod("func_77949_a", nbtTagCompound)
+        handle?.isAccessible = true
+    }
+    override fun toItem(nbtString: String):ItemStack {
+        val nbt = parse.invoke(mojangsonParser,nbtString) //(nbtTagCompound)
+        val item = createStack.invoke(nmsItemStack,nbt)
+        return asCraftMirror.invoke(craftItemStack,item) as ItemStack
+    }
+}
+
 object V1_16Below:NMSWrapper(){
     override lateinit var nbtTagCompound: Class<*>
     override lateinit var nmsItemStack: Class<*>
