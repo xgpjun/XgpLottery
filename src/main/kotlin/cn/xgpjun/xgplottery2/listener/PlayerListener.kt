@@ -25,7 +25,7 @@ object PlayerListener:Listener {
                 Message.VersionOutDate.get(pluginOutDate).send(e.player)
             }
         }
-        SchedulerManager.getScheduler().runTaskLaterAsynchronously(20L){
+        SchedulerManager.getScheduler().runTaskLaterAsynchronously(40L){
             e.player.uniqueId.let {
                 DatabaseManager.onlinePlayerData[it] = DatabaseManager.getPlayerData(it)
             }
@@ -34,9 +34,11 @@ object PlayerListener:Listener {
 
     @EventHandler
     fun quit(e:PlayerQuitEvent){
-        val uuid = e.player.uniqueId
-        DatabaseManager.onlinePlayerData[uuid]?.save()
-        DatabaseManager.onlinePlayerData.remove(uuid)
+        SchedulerManager.getScheduler().runTaskAsynchronously{
+            val uuid = e.player.uniqueId
+            DatabaseManager.onlinePlayerData[uuid]?.save()
+            DatabaseManager.onlinePlayerData.remove(uuid)
+        }
     }
 
 
