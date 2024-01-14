@@ -7,11 +7,20 @@ import cn.xgpjun.xgplottery2.lottery.anim.multiple.impl.SelectMultipleAnim
 import cn.xgpjun.xgplottery2.lottery.anim.multiple.impl.SimpleMultipleAnim
 import cn.xgpjun.xgplottery2.lottery.anim.single.SingleAnim
 import cn.xgpjun.xgplottery2.lottery.anim.single.impl.*
+import com.comphenix.protocol.PacketType
+import com.comphenix.protocol.ProtocolLibrary
+import com.comphenix.protocol.wrappers.BlockPosition
+import org.bukkit.Bukkit
+import org.bukkit.Location
+import org.bukkit.Material
+import org.bukkit.block.Lidded
+import org.bukkit.entity.Player
+
 
 object AnimManager {
     val singleAnim = HashMap<String,Class<out SingleAnim>>()
     val multipleAnim = HashMap<String,Class<out MultipleAnim>>()
-
+    var protocolLibSupport = false
     fun register(){
         DefaultAnim().register()
         ColorfulAnim().register()
@@ -23,6 +32,7 @@ object AnimManager {
         BoxMultipleAnim().register()
         SelectMultipleAnim().register()
         SimpleMultipleAnim().register()
+        protocolLibSupport = Bukkit.getPluginManager().isPluginEnabled("ProtocolLib")
     }
 
     fun getSingleI18Name(name:String):String{
@@ -40,3 +50,63 @@ object AnimManager {
 }
 
 fun Class<out SingleAnim>.new(): SingleAnim = this.getDeclaredConstructor().newInstance()
+
+fun Location?.openChest() {
+    this?.block?.let {
+        if (AnimManager.protocolLibSupport){
+            if (block.type == Material.CHEST||block.type == Material.ENDER_CHEST){
+                val pm = ProtocolLibrary.getProtocolManager()
+                val packet = pm.createPacket(PacketType.Play.Server.BLOCK_ACTION)
+                packet.blockPositionModifier.write(0, BlockPosition(it.x,it.y,it.z))
+                packet.integers.write(0,1)
+                packet.integers.write(1,1)
+                this.getNearbyPlayer(10).forEach{ player ->
+                    pm.sendServerPacket(player,packet)
+                }
+            }
+        }else{
+            //1.16+
+            try {
+                if(NMSManager.versionToInt>=16&&it.state is Lidded){
+                    (it.state as Lidded).open()
+                }
+            }catch (_:Exception){
+            }
+        }
+    }
+}
+
+fun Location?.closeChest() {
+    this?.block?.let {
+        if (AnimManager.protocolLibSupport){
+            if (block.type == Material.CHEST||block.type == Material.ENDER_CHEST){
+                val pm = ProtocolLibrary.getProtocolManager()
+                val packet = pm.createPacket(PacketType.Play.Server.BLOCK_ACTION)
+                packet.blockPositionModifier.write(0, BlockPosition(it.x,it.y,it.z))
+                packet.integers.write(0,1)
+                packet.integers.write(1,0)
+                this.getNearbyPlayer(10).forEach{ player ->
+                    pm.sendServerPacket(player,packet)
+                }
+            }
+        }else{
+            //1.16+
+            try {
+                if(NMSManager.versionToInt>=16&&it.state is Lidded){
+                    (it.state as Lidded).close()
+                }
+            }catch (_:Exception){
+            }
+        }
+    }
+}
+
+fun Location.getNearbyPlayer(paramDouble: Int): Set<Player> {
+    val hashSet: HashSet<Player> = HashSet()
+    for (player in Bukkit.getOnlinePlayers()) {
+        if (player.location.world !== this.world) continue
+        val d = this.distanceSquared(player.location)
+        if (d <= paramDouble) hashSet.add(player)
+    }
+    return hashSet
+}

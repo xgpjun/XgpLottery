@@ -8,6 +8,8 @@ import cn.xgpjun.xgplottery2.lottery.anim.single.SingleAnim
 import cn.xgpjun.xgplottery2.lottery.pojo.Lottery
 import cn.xgpjun.xgplottery2.manager.Message
 import cn.xgpjun.xgplottery2.manager.SchedulerManager
+import cn.xgpjun.xgplottery2.manager.closeChest
+import cn.xgpjun.xgplottery2.manager.openChest
 import cn.xgpjun.xgplottery2.utils.MyItemBuilder
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -31,7 +33,10 @@ class MarqueeAnim:SingleAnim() {
         get() = Message.MarqueeAnimName.get().color()
 
     override fun draw(player: Player, lottery: Lottery, crateLocation: Location?) {
-
+        crateLocation.openChest()
+        SchedulerManager.getScheduler().runTaskLater(100L){
+            crateLocation.closeChest()
+        }
         player.openInventory(inv)
         val awardSlot: Int = Random().nextInt(20)
 

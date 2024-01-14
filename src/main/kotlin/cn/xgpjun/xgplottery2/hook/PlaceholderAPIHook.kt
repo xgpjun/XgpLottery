@@ -21,6 +21,7 @@ object PlaceholderAPIHook {
             XLPlaceholder.subRequest["individual"] = Individual
             XLPlaceholder.subRequest["ngt"] = NGT
             XLPlaceholder.subRequest["lottery"] = LotteryInfo
+            XLPlaceholder.subRequest["key"] = Key
 
         }
     }
@@ -85,6 +86,16 @@ object LotteryInfo:SubRequest{
     override fun onRequest(p: OfflinePlayer?, args: Array<String>?): String? {
         return args?.getOrNull(1)?.let {
             LotteryManager.getLottery(it)?.customTags?.getOrDefault("guaranteedCount",0)?.toString()
+        }
+    }
+}
+
+object Key:SubRequest{
+    override fun onRequest(p: OfflinePlayer?, args: Array<String>?): String? {
+        return args?.getOrNull(1)?.let {
+            p?.uniqueId?.let {  uuid ->
+                DatabaseManager.getPlayerData(uuid).keyCount.getOrDefault(it,0).toString()
+            }
         }
     }
 }

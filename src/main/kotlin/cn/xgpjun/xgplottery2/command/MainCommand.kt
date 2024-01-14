@@ -20,6 +20,7 @@ object MainCommand :TabExecutor {
         registerSubCommand("give",Give)
         registerSubCommand("help",Help)
         registerSubCommand("key",Key)
+        registerSubCommand("paiddraw",PaidDraw)
         registerSubCommand("particle",Particle)
         registerSubCommand("preview",Preview)
         registerSubCommand("manage",Manage)

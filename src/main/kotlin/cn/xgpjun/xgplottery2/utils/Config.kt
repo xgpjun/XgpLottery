@@ -5,7 +5,10 @@ import cn.xgpjun.xgplottery2.color
 import cn.xgpjun.xgplottery2.send
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.TextComponent
+import org.bukkit.Bukkit
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
+import org.bukkit.plugin.PluginManager
 import java.util.*
 
 object Config {
@@ -13,6 +16,7 @@ object Config {
     var checkFullInventory = false
     var debug = false
     var nms:String? = ""
+    var displayItem = false
     private var uuid : UUID? = null
     private var read = false
     fun loadConfig(){
@@ -24,6 +28,7 @@ object Config {
             uuid = it.getString("uuid")?.let { string ->
                 UUID.fromString(string)
             }
+            displayItem = it.getBoolean("displayItem")
             nms = it.getString("nms","")
         }
     }
@@ -40,7 +45,11 @@ object Config {
                 "&cno-support".send(sender)
                 val text = TextComponent("&3Please READ: &7&l&n$url".color())
                 text.clickEvent = ClickEvent(ClickEvent.Action.OPEN_URL,url)
-                sender.spigot().sendMessage(text)
+                if (sender is Player){
+                    sender.spigot().sendMessage(text)
+                }else{
+                    sender.sendMessage("&3Please READ: &7&l&n$url".color())
+                }
             }catch (e:Throwable){
                 sender.sendMessage("&3Please READ: &7&l&n$url".color())
             }
@@ -49,5 +58,14 @@ object Config {
         }
 
         return read
+    }
+
+    fun updateConfig(){
+        val latest = XgpLottery.instance.description.version
+        if (version!=latest){
+            version = latest
+            XgpLottery.instance.config.set("version",latest)
+            XgpLottery.instance.saveConfig()
+        }
     }
 }

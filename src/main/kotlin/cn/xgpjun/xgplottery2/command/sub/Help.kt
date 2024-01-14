@@ -52,7 +52,11 @@ object Help :TabExecutor{
             }
         }
         try {
-            sender.spigot().sendMessage(message)
+            if (sender is Player){
+                sender.send(message)
+            }else{
+                sender.spigot().sendMessage(message)
+            }
         }catch (e:Throwable){
             val string = StringBuilder("\n")
             MainCommand.subCommands.keys.forEachIndexed{ index,it->

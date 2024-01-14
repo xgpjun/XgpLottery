@@ -8,13 +8,14 @@ plugins {
 }
 
 group = "cn.xgpjun"
-version = "2.0.0"
+version = "2.0.1"
 val nmsVersion = "1.20.1"
 
 repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://hub.spigotmc.org/nexus/content/repositories/public")
+    maven("https://repo.dmulloy2.net/repository/public/")
     maven("https://jitpack.io")
     maven("https://r.irepo.space/maven/")
     maven("https://repo.rosewooddev.io/repository/public/")
@@ -43,7 +44,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.9.0")
     compileOnly("me.clip:placeholderapi:2.9.2")
     compileOnly("com.github.602723113:ParticleLib:1.5.1")
-
+    compileOnly("com.comphenix.protocol:ProtocolLib:4.8.0")
     compileOnly("org.black_ixx:playerpoints:3.2.5")
     compileOnly("com.github.MilkBowl:VaultAPI:1.7")
     implementation("com.zaxxer:HikariCP:4.0.3")

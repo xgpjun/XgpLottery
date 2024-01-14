@@ -6,9 +6,7 @@ import cn.xgpjun.xgplottery2.enums.PresetItem
 import cn.xgpjun.xgplottery2.enums.Sounds
 import cn.xgpjun.xgplottery2.lottery.anim.multiple.MultipleAnim
 import cn.xgpjun.xgplottery2.lottery.pojo.Lottery
-import cn.xgpjun.xgplottery2.manager.Message
-import cn.xgpjun.xgplottery2.manager.MessageL
-import cn.xgpjun.xgplottery2.manager.SchedulerManager
+import cn.xgpjun.xgplottery2.manager.*
 import cn.xgpjun.xgplottery2.utils.MyItemBuilder
 import org.bukkit.Bukkit
 import org.bukkit.Location
@@ -31,6 +29,10 @@ class SimpleMultipleAnim:MultipleAnim() {
     var animTask1 :Task? = null
 
     override fun draw(player: Player, lottery: Lottery, crateLocation: Location?) {
+        crateLocation.openChest()
+        SchedulerManager.getScheduler().runTaskLater(100L){
+            crateLocation.closeChest()
+        }
         SchedulerManager.getScheduler().runTaskAsynchronously{
             IntStream.range(0, 27).forEach { i: Int ->
                 gui.setItem(i, MyItemBuilder(PresetItem.GRAY_STAINED_GLASS_PANE.getItem())

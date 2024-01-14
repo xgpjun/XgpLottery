@@ -104,22 +104,23 @@ object Crate :TabExecutor {
     }
 
     fun sendCrateInfo(player: Player){
-        try {
-            CrateManager.cratesList.forEach{
-                val message = TextComponent("${ChatColor.BLUE}${ChatColor.BOLD}${it.key}")
+        CrateManager.cratesList.forEach{
+            val message = TextComponent("${ChatColor.BLUE}${ChatColor.BOLD}${it.key}")
 
-                val temp = ArrayList<BaseComponent>()
-                MessageL.CrateListInfo.get(it.value.world,it.value.x.toString(),it.value.y.toString(),it.value.z.toString(),it.value.lotteryName)
-                    .forEach{ s->
-                        temp.add(TextComponent(s.color()))
-                    }
+            val temp = ArrayList<BaseComponent>()
+            MessageL.CrateListInfo.get(it.value.world,it.value.x.toString(),it.value.y.toString(),it.value.z.toString(),it.value.lotteryName)
+                .forEach{ s->
+                    temp.add(TextComponent(s.color()))
+                }
 
-                message.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, temp.toTypedArray())
-                message.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 crate list ${it.key}")
-                player.spigot().sendMessage(message)
+            message.hoverEvent = HoverEvent(HoverEvent.Action.SHOW_TEXT, temp.toTypedArray())
+            message.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 crate list ${it.key}")
+            try {
+                player.send(message)
+            }catch (e:NoSuchMethodError){
+                Message.NotSupport.get().send(player)
             }
-        }catch (e:NoSuchMethodError){
-            Message.NotSupport.get().send(player)
         }
+
     }
 }

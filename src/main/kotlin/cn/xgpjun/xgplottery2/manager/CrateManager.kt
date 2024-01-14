@@ -1,9 +1,11 @@
 package cn.xgpjun.xgplottery2.manager
 
 import cn.xgpjun.xgplottery2.XgpLottery
+import cn.xgpjun.xgplottery2.common.foliaSupport.wrapper.Task
 import cn.xgpjun.xgplottery2.crate.Crate
 import cn.xgpjun.xgplottery2.lottery.pojo.Lottery
 import cn.xgpjun.xgplottery2.send
+import cn.xgpjun.xgplottery2.utils.Config
 import cn.xgpjun.xgplottery2.utils.isMainHand
 
 import org.bukkit.Location
@@ -20,6 +22,7 @@ import kotlin.collections.HashMap
 
 object CrateManager {
     val cratesList = HashMap<UUID, Crate>()
+    val displayItems = HashMap<UUID, Task?>()
     private val file = File(XgpLottery.instance.dataFolder,"crates.yml")
 
     fun register(){

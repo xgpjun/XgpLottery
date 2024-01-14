@@ -9,6 +9,7 @@ import cn.xgpjun.xgplottery2.manager.Message
 import cn.xgpjun.xgplottery2.manager.MessageL
 import cn.xgpjun.xgplottery2.manager.getTag
 import cn.xgpjun.xgplottery2.manager.setTag
+import cn.xgpjun.xgplottery2.send
 import cn.xgpjun.xgplottery2.utils.MyItemBuilder
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.TextComponent
@@ -41,6 +42,14 @@ class AwardGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
             8 ->{
                 getPreviousInventory(player)
             }
+            45->{
+                page -= 1
+                reloadGui()
+            }
+            53->{
+                page +=1
+                reloadGui()
+            }
         }
         e.currentItem?.getTag("AwardName")?.let { name->
             lottery.awards[name]?.let { award ->
@@ -50,7 +59,7 @@ class AwardGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
                     val text = TextComponent(Message.ChangeAwardItem.get().color())
                     text.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit ${lottery.name} award ${award.name}")
                     message.addExtra(text)
-                    player.spigot().sendMessage(message)
+                    player.send(message)
                 }catch (_:Throwable){
                     player.sendMessage("&cThe server version is too low, please hold the item and manually enter /xgplottery2 edit ${lottery.name} award ${award.name}".color())
                 }

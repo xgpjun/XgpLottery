@@ -7,6 +7,7 @@ import cn.xgpjun.xgplottery2.enums.PresetItem
 import cn.xgpjun.xgplottery2.lottery.enums.SellType
 import cn.xgpjun.xgplottery2.lottery.pojo.Lottery
 import cn.xgpjun.xgplottery2.manager.*
+import cn.xgpjun.xgplottery2.send
 import cn.xgpjun.xgplottery2.utils.MyItemBuilder
 import net.md_5.bungee.api.chat.ClickEvent
 import net.md_5.bungee.api.chat.TextComponent
@@ -98,7 +99,7 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
             val information = TextComponent(Message.SingleAnimChange.get(it.new().i18nName).color())
             information.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit ${lottery.name} singleAnim ${it.newInstance().name}")
             try {
-                player.spigot().sendMessage(information)
+                player.send(information)
             }catch (_:NoSuchMethodError){
 
             }
@@ -115,7 +116,7 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
             val information = TextComponent(Message.MultipleAnimChange.get(it.getConstructor().newInstance().i18nName).color())
             information.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit ${lottery.name} multipleAnim ${it.newInstance().name}")
             try {
-                player.spigot().sendMessage(information)
+                player.send(information)
             }catch (_:NoSuchMethodError){
 
             }
@@ -160,7 +161,7 @@ class EditGui(per: InventoryHolder?, val lottery: Lottery) : LotteryGui(per) {
             val message = TextComponent(Message.SellTypeChange.get(it.getName()).color())
             message.clickEvent = ClickEvent(ClickEvent.Action.RUN_COMMAND,"/xgplottery2 edit ${lottery.name} sellType ${it.name}")
             try {
-                player.spigot().sendMessage(message)
+                player.send(message)
             }catch (_:NoSuchMethodError){
 
             }

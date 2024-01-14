@@ -188,6 +188,7 @@ enum class MessageL(val path: String){
     HelpMessage("help.help"),
     CrateHelp("help.crate"),
     DrawHelp("help.draw"),
+    PaidDrawHelp("help.paidDraw"),
     CountHelp("help.count"),
     KeyHelp("help.key"),
     GiveHelp("help.give"),

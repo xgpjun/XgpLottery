@@ -7,15 +7,15 @@ import cn.xgpjun.xgplottery2.enums.Sounds
 import cn.xgpjun.xgplottery2.lottery.anim.single.SingleAnim
 import cn.xgpjun.xgplottery2.lottery.pojo.Lottery
 import cn.xgpjun.xgplottery2.manager.Message
-import cn.xgpjun.xgplottery2.manager.NMSManager
 import cn.xgpjun.xgplottery2.manager.SchedulerManager
+import cn.xgpjun.xgplottery2.manager.closeChest
+import cn.xgpjun.xgplottery2.manager.openChest
 import cn.xgpjun.xgplottery2.send
 import cn.xgpjun.xgplottery2.utils.MyItemBuilder
 import org.bukkit.Bukkit
 import org.bukkit.Color
 import org.bukkit.FireworkEffect
 import org.bukkit.Location
-import org.bukkit.block.Lidded
 import org.bukkit.entity.Firework
 import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
@@ -37,25 +37,18 @@ class DefaultAnim:SingleAnim() {
 
     override fun draw(player: Player, lottery: Lottery, crateLocation: Location?) {
         crateLocation?.block?.let {
-            //1.16+
-            try {
-                if(NMSManager.versionToInt>=16&&it.state is Lidded){
-                    (it.state as Lidded).open()
-                    SchedulerManager.getScheduler(crateLocation).runTaskLater(100L){
-                        (it.state as Lidded).close()
-                        val firework: Firework = crateLocation.world.spawn(crateLocation, Firework::class.java)
-                        val fireworkMeta = firework.fireworkMeta
-                        val builder = FireworkEffect.builder()
-                        builder.withColor(Color.AQUA)
-                        builder.with(FireworkEffect.Type.BALL)
-                        fireworkMeta.addEffect(builder.build())
-                        fireworkMeta.power = 1 // 设置烟花弹的强度
-                        firework.fireworkMeta = fireworkMeta
-                    }
-                }
-            }catch (_:Exception){
+            crateLocation.openChest()
+            SchedulerManager.getScheduler().runTaskLater(100L){
+                crateLocation.closeChest()
             }
-
+            val firework: Firework = it.world.spawn(it.location, Firework::class.java)
+            val fireworkMeta = firework.fireworkMeta
+            val builder = FireworkEffect.builder()
+            builder.withColor(Color.AQUA)
+            builder.with(FireworkEffect.Type.BALL)
+            fireworkMeta.addEffect(builder.build())
+            fireworkMeta.power = 1 // 设置烟花弹的强度
+            firework.fireworkMeta = fireworkMeta
         }
         SchedulerManager.getScheduler().runTaskAsynchronously{
             val award = award

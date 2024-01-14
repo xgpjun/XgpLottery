@@ -11,6 +11,7 @@ import net.md_5.bungee.api.chat.TextComponent
 import org.bukkit.command.Command
 import org.bukkit.command.CommandSender
 import org.bukkit.command.TabExecutor
+import org.bukkit.entity.Player
 
 object Particle :TabExecutor{
     override fun onTabComplete(
@@ -36,7 +37,11 @@ object Particle :TabExecutor{
                 val text = TextComponent("&7&lhttps://github.com/602723113/ParticleLib/releases".color())
                 text.clickEvent = ClickEvent(ClickEvent.Action.OPEN_URL,"https://github.com/602723113/ParticleLib/releases")
                 message.addExtra(text)
-                sender.spigot().sendMessage(message)
+                if (sender is Player){
+                    sender.send(message)
+                }else{
+                    sender.spigot().sendMessage(message)
+                }
             }catch (_:NoSuchMethodError){
             }
             return true

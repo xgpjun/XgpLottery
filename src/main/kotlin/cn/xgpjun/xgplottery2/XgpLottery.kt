@@ -7,6 +7,7 @@ import cn.xgpjun.xgplottery2.bStats.Metrics
 import cn.xgpjun.xgplottery2.command.MainCommand
 import cn.xgpjun.xgplottery2.hook.PlaceholderAPIHook
 import cn.xgpjun.xgplottery2.listener.PlayerListener
+import cn.xgpjun.xgplottery2.lottery.calculator.impl.ClawCalculator
 import cn.xgpjun.xgplottery2.lottery.calculator.impl.GuaranteedCalculator
 import cn.xgpjun.xgplottery2.lottery.calculator.impl.NormalCalculator
 import cn.xgpjun.xgplottery2.lottery.pojo.CumulativeRewardManager
@@ -14,15 +15,21 @@ import cn.xgpjun.xgplottery2.manager.*
 import cn.xgpjun.xgplottery2.manager.DatabaseManager.save
 import cn.xgpjun.xgplottery2.utils.Config
 import com.google.gson.JsonParser
+import net.md_5.bungee.api.chat.BaseComponent
 import net.md_5.bungee.api.chat.TextComponent
+import net.md_5.bungee.chat.BaseComponentSerializer
+import net.md_5.bungee.chat.ComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
 import org.bukkit.command.CommandSender
+import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
+import pers.neige.neigeitems.utils.PlayerUtils.sendMessage
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
+import java.lang.Error
 import java.net.HttpURLConnection
 import java.net.URL
 import java.nio.charset.StandardCharsets
@@ -44,6 +51,7 @@ class XgpLottery : JavaPlugin() {
         //计算器注册
         NormalCalculator().register("Normal")
         GuaranteedCalculator().register("Guaranteed")
+        ClawCalculator().register("Claw")
         PlaceholderAPIHook.register()
         SchedulerManager.register(this)
 
@@ -67,6 +75,7 @@ class XgpLottery : JavaPlugin() {
         "&7loading additions...".log()
         AdditionLoader.loadAddition()
         Metrics.enable()
+        Config.updateConfig()
         checkUpdate()
     }
 
@@ -171,4 +180,12 @@ fun checkUpdate(){
 fun versionToInt(version: String): Int {
     val v = version.split(".")
     return v[0].toInt() * 100 + v[1].toInt() * 10 + v[2].toInt()
+}
+
+fun Player.send(component: BaseComponent){
+    try {
+        this.spigot().sendMessage(component)
+    }catch (e:Error){
+        XgpLottery.instance.server.dispatchCommand(XgpLottery.instance.server.consoleSender,"tellraw ${this.name} ${ComponentSerializer.toString(component)}")
+    }
 }
