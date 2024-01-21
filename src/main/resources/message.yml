@@ -39,6 +39,10 @@ message:
     - "&b所持钥匙数量:&f{amount}"
   changeAwardItem: "&3&l手持物品点击以更改"
   versionOutDate: "&c插件版本最新为{newVersion},您的版本过低.可能存在一些问题."
+  allItemGained: "&a你满足了保底次数，但你已经抽取到了所有保底物品，现在只会出普通物品了"
+  noFreeDraw: "&e你没有免费抽奖的权限"
+  freeDrawTip: "&a你下次免费抽奖时间是:{time}"
+  freeDraw: "&a现在可以免费抽奖！"
 
 help:
   help:

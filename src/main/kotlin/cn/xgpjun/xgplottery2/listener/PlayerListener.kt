@@ -1,19 +1,27 @@
 package cn.xgpjun.xgplottery2.listener
 
 import cn.xgpjun.xgplottery2.enums.Sounds
+import cn.xgpjun.xgplottery2.lottery.pojo.Lottery
 import cn.xgpjun.xgplottery2.manager.*
 import cn.xgpjun.xgplottery2.manager.DatabaseManager.save
 import cn.xgpjun.xgplottery2.send
 import cn.xgpjun.xgplottery2.utils.getItemInMainHand
 import cn.xgpjun.xgplottery2.utils.isMainHand
 import cn.xgpjun.xgplottery2.utils.setItemInMainHand
+import org.bukkit.entity.Player
 import org.bukkit.event.EventHandler
 import org.bukkit.event.Listener
 import org.bukkit.event.block.Action
 import org.bukkit.event.player.PlayerInteractEvent
 import org.bukkit.event.player.PlayerJoinEvent
 import org.bukkit.event.player.PlayerQuitEvent
+import org.bukkit.permissions.PermissionAttachmentInfo
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
+import java.util.regex.Pattern
+
 
 object PlayerListener:Listener {
 
@@ -92,13 +100,90 @@ object PlayerListener:Listener {
                     if (e.player.isSneaking){
                         DrawManager.draw(e.player, it, isConsumeKeys = true, isMultiple =  true, crateLocation = block.location)
                     }else{
+                        if (e.player.hasPermission("xl2.freedraw.${it.name}.*")){
+                            val permission = getFreePermission(it, e.player)
+                            if (permission!=0&&permission!=9999999){
+                                //得到上次免费抽奖时间。
+                                val playerData = DatabaseManager.getPlayerData(e.player.uniqueId)
+                                val last = playerData.customData.getOrDefault("freedraw-${it.name}","").toString()
+                                if (last==""){
+                                    //可抽奖 记录当前时间
+                                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                                    playerData.customData["freedraw-${it.name}"] = LocalDateTime.now().format(formatter)
+                                    DrawManager.draw(e.player, it, isConsumeKeys = false, crateLocation = block.location)
+                                    return
+                                }else{
+                                    val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                                    val date = LocalDateTime.parse(last,formatter)
+                                    val now = LocalDateTime.now()
+                                    val duration = Duration.between(date,now)
+                                    val minutesApart = duration.toMinutes()
+                                    if (minutesApart>permission){
+                                        //可抽奖 记录当前时间
+                                        playerData.customData["freedraw-${it.name}"] = LocalDateTime.now().format(formatter)
+                                        DrawManager.draw(e.player, it, isConsumeKeys = false, crateLocation = block.location)
+                                        return
+                                    }
+                                }
+                            }
+                        }
                         DrawManager.draw(e.player, it, isConsumeKeys = true, crateLocation = block.location)
                     }
                 }else{
                     MessageL.DrawTips.get(it.name, DatabaseManager.getPlayerData(e.player.uniqueId).keyCount.getOrDefault(it.virtualKeyName,0).toString()).send(e.player)
+                    if (e.player.hasPermission("xl2.freedraw.${it.name}.*")){
+                        //获取权限,时间。
+                        val permission = getFreePermission(it, e.player)
+
+                        if (permission==0||permission==9999999){
+                            return
+                        }
+                        //得到上次免费抽奖时间。
+                        val playerData = DatabaseManager.getPlayerData(e.player.uniqueId)
+                        val last = playerData.customData.getOrDefault("freedraw-${it.name}","").toString()
+                        if (last==""){
+                            Message.FreeDraw.get().send(e.player)
+                        }else{
+                            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+                            var date = LocalDateTime.parse(last,formatter)
+                            val now = LocalDateTime.now()
+                            var duration = Duration.between(date,now)
+                            val minutesApart = duration.toMinutes()
+
+                            if (minutesApart>permission){
+                                Message.FreeDraw.get().send(e.player)
+                            }else{
+                                date = date.plusMinutes(permission.toLong())
+                                duration = Duration.between(now,date)
+                                val hours = duration.toHours()
+                                val minutesInHour = duration.minusHours(hours).toMinutes()
+                                val time = String.format("%02d:%02d", hours, minutesInHour)
+                                Message.FreeDrawTip.get(time).send(e.player)
+                            }
+                        }
+                    }
                 }
             }
         }
     }
+
+    fun getFreePermission(lottery: Lottery,player: Player):Int{
+        return player.effectivePermissions
+            .filter { p: PermissionAttachmentInfo ->
+                p.permission.startsWith("xl2.freedraw.${lottery.name}.")
+            }
+            .mapNotNull { obj: PermissionAttachmentInfo ->
+                var result = 9999999
+                val regex = "xl2\\.freedraw\\.${lottery.name}\\.(\\d+)"
+                val pattern = Pattern.compile(regex)
+                val matcher = pattern.matcher(obj.permission)
+                if (matcher.find()) {
+                    result = matcher.group(1).toInt()
+                }
+                result
+            }
+            .minOrNull()?:0
+    }
 }
+
 

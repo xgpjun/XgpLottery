@@ -15,20 +15,26 @@ class NormalCalculator:Calculator() {
 
     companion object{
         fun onlyGetAward(lottery: Lottery):Award?{
-            //总权重
-            val totalWeight = lottery.getTotalWeight()
-            //生成一个随机数，范围从 1 到总权重
-            val randomWeight = (1..totalWeight).random()
-            // 遍历 Awards 并根据权重选择一个 Award
-            var cumulativeWeight = 0
-            for (award in lottery.awards.values) {
-                cumulativeWeight += award.weight
-                if (randomWeight <= cumulativeWeight) {
-                    return award
-                }
-            }
-            //这怎么可能到达呢= =
-            return null
+            return lottery.awards.values.getAward()
         }
     }
+
+}
+
+//根据权重获得一个随机奖品
+fun Iterable<Award>.getAward():Award?{
+    //总权重
+    val totalWeight = this.sumOf { it.weight }
+    //生成一个随机数，范围从 1 到总权重
+    val randomWeight = (1..totalWeight).random()
+    // 遍历 Awards 并根据权重选择一个 Award
+    var cumulativeWeight = 0
+    for (award in this){
+        cumulativeWeight += award.weight
+        if (randomWeight <= cumulativeWeight){
+            return award
+        }
+    }
+    //无法到达
+    return null
 }

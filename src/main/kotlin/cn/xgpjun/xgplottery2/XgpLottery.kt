@@ -7,17 +7,13 @@ import cn.xgpjun.xgplottery2.bStats.Metrics
 import cn.xgpjun.xgplottery2.command.MainCommand
 import cn.xgpjun.xgplottery2.hook.PlaceholderAPIHook
 import cn.xgpjun.xgplottery2.listener.PlayerListener
-import cn.xgpjun.xgplottery2.lottery.calculator.impl.ClawCalculator
-import cn.xgpjun.xgplottery2.lottery.calculator.impl.GuaranteedCalculator
-import cn.xgpjun.xgplottery2.lottery.calculator.impl.NormalCalculator
+import cn.xgpjun.xgplottery2.lottery.calculator.impl.*
 import cn.xgpjun.xgplottery2.lottery.pojo.CumulativeRewardManager
 import cn.xgpjun.xgplottery2.manager.*
 import cn.xgpjun.xgplottery2.manager.DatabaseManager.save
 import cn.xgpjun.xgplottery2.utils.Config
 import com.google.gson.JsonParser
 import net.md_5.bungee.api.chat.BaseComponent
-import net.md_5.bungee.api.chat.TextComponent
-import net.md_5.bungee.chat.BaseComponentSerializer
 import net.md_5.bungee.chat.ComponentSerializer
 import org.bukkit.Bukkit
 import org.bukkit.ChatColor
@@ -25,7 +21,6 @@ import org.bukkit.command.CommandSender
 import org.bukkit.entity.Player
 import org.bukkit.event.HandlerList
 import org.bukkit.plugin.java.JavaPlugin
-import pers.neige.neigeitems.utils.PlayerUtils.sendMessage
 import java.io.BufferedReader
 import java.io.File
 import java.io.InputStreamReader
@@ -51,7 +46,9 @@ class XgpLottery : JavaPlugin() {
         //计算器注册
         NormalCalculator().register("Normal")
         GuaranteedCalculator().register("Guaranteed")
+        AbsoluteGuarantee().register("AbsoluteGuaranteed")
         ClawCalculator().register("Claw")
+        SingleGuarantee().register("SingleGuaranteed")
         PlaceholderAPIHook.register()
         SchedulerManager.register(this)
 

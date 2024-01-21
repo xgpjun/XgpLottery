@@ -8,7 +8,7 @@ plugins {
 }
 
 group = "cn.xgpjun"
-version = "2.0.1"
+version = "2.0.2"
 val nmsVersion = "1.20.1"
 
 repositories {

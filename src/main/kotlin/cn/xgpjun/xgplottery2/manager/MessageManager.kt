@@ -26,8 +26,6 @@ object MessageManager {
     private fun loadMessageList(path:String):MutableList<String>{
         return config?.getStringList(path)?: arrayListOf("${ChatColor.RED}Missing Message:$path")
     }
-
-
 }
 
 enum class Message(val path: String){
@@ -99,6 +97,14 @@ enum class Message(val path: String){
             return string.replace("{key}",placeholders[0].toString()).replace("{count}",placeholders[1].toString())
         }
     },
+    AllItemGained("message.allItemGained"),
+    NoFreeDraw("message.noFreeDraw"),
+    FreeDrawTip("message.freeDrawTip"){
+        override fun get(vararg placeholders: String?): String {
+            return string.replace("{time}",placeholders[0].toString())
+        }
+                                      },
+    FreeDraw("message.freeDraw"),
     ManageTitle("gui.admin.manage.title"),
     PreviewTitle("gui.user.preview.title"){
         override fun get(vararg placeholders: String?): String {

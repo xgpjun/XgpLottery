@@ -1,12 +1,20 @@
 package cn.xgpjun.xgplottery2.hook
 
+import cn.xgpjun.xgplottery2.color
+import cn.xgpjun.xgplottery2.listener.PlayerListener
 import cn.xgpjun.xgplottery2.manager.DatabaseManager
+import cn.xgpjun.xgplottery2.manager.DrawManager
 import cn.xgpjun.xgplottery2.manager.LotteryManager
+import cn.xgpjun.xgplottery2.manager.Message
+import cn.xgpjun.xgplottery2.send
 import cn.xgpjun.xgplottery2.utils.Config
 import me.clip.placeholderapi.PlaceholderAPI
 import me.clip.placeholderapi.expansion.PlaceholderExpansion
 import org.bukkit.Bukkit
 import org.bukkit.OfflinePlayer
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.collections.HashMap
 
@@ -22,7 +30,7 @@ object PlaceholderAPIHook {
             XLPlaceholder.subRequest["ngt"] = NGT
             XLPlaceholder.subRequest["lottery"] = LotteryInfo
             XLPlaceholder.subRequest["key"] = Key
-
+            XLPlaceholder.subRequest["freedraw"] = FreeDraw
         }
     }
 }
@@ -95,6 +103,42 @@ object Key:SubRequest{
         return args?.getOrNull(1)?.let {
             p?.uniqueId?.let {  uuid ->
                 DatabaseManager.getPlayerData(uuid).keyCount.getOrDefault(it,0).toString()
+            }
+        }
+    }
+}
+
+object FreeDraw:SubRequest{
+    override fun onRequest(p: OfflinePlayer?, args: Array<String>?): String? {
+        if (p ==null)
+            return null
+        val lottery = args?.getOrNull(1)?.let {
+            LotteryManager.getLottery(it)
+        }?:return null
+        if (p.player?.hasPermission("xl2.freedraw.${lottery.name}.*")==false){
+            return Message.NoFreeDraw.get().color()
+        }
+        val playerData = DatabaseManager.getPlayerData(p.uniqueId)
+        val last = playerData.customData.getOrDefault("freedraw-${lottery.name}","").toString()
+        if (last==""){
+            //无记录
+            return Message.FreeDraw.get().color()
+        }else{
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")
+            var date = LocalDateTime.parse(last,formatter)
+            val now = LocalDateTime.now()
+            var duration = Duration.between(date,now)
+            val minutesApart = duration.toMinutes()
+            val permission = PlayerListener.getFreePermission(lottery, p.player!!)
+            return if (minutesApart>permission){
+                Message.FreeDraw.get().color()
+            }else{
+                date = date.plusMinutes(permission.toLong())
+                duration = Duration.between(now,date)
+                val hours = duration.toHours()
+                val minutesInHour = duration.minusHours(hours).toMinutes()
+                val time = String.format("%02d:%02d", hours, minutesInHour)
+                Message.FreeDrawTip.get(time).color()
             }
         }
     }

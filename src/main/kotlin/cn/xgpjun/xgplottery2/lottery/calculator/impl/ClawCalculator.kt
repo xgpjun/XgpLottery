@@ -21,15 +21,7 @@ class ClawCalculator: Calculator() {
             if (nonGuaranteedCount>=guaranteedCount){
                 nonGuaranteedCount = 0
                 val guaranteedList = lottery.awards.values.filter { it.isGuaranteed() }
-                val totalWeight = guaranteedList.sumOf { it.weight }
-                val randomWeight = (1..totalWeight).random()
-                var cumulativeWeight = 0
-                for (award in guaranteedList){
-                    cumulativeWeight += award.weight
-                    if (randomWeight <= cumulativeWeight){
-                        return award
-                    }
-                }
+                return guaranteedList.getAward()
             }
         }
         //其他情况、 提前出了
