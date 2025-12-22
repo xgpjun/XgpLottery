@@ -21,7 +21,7 @@ repositories {
     maven("https://r.irepo.space/maven/")
     maven("https://repo.rosewooddev.io/repository/public/")
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
-    maven("https://lss233.littleservice.cn/repositories/minecraft")
+    maven("https://crystal.app.lss233.com/minecraft")
     maven("https://hub.spigotmc.org/nexus/content/repositories/snapshots/")
     maven("https://oss.sonatype.org/content/groups/public/")
     maven("https://repo.codemc.io/repository/nms/")
@@ -41,10 +41,13 @@ dependencies {
 //    {
 //        targetConfiguration = "compile"
 //    }
-//    compileOnly("dev.folia:folia-api:1.20.1-R0.1-SNAPSHOT") {
-//        targetConfiguration = "compile"
-//    }
+    compileOnly("dev.folia:folia-api:1.20.1-R0.1-SNAPSHOT") {
+        targetConfiguration = "compile"
+    }
 //    compileOnly("org.spigotmc:spigot-api:1.20.1-R0.1-SNAPSHOT")
+
+//    compileOnly("org.spigotmc:spigot:1.12.2-R0.1-SNAPSHOT") // The full Spigot server with no shadowing. Requires mavenLocal.
+
     implementation("com.google.code.gson:gson:2.9.0")
     compileOnly("me.clip:placeholderapi:2.11.1")
     compileOnly("com.github.602723113:ParticleLib:1.5.1")

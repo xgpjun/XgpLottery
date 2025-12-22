@@ -2,7 +2,7 @@
   main: "cn.xgpjun.xgplottery2.XgpLottery"
   version: ${version}
   api-version: "1.13"
-  folia-supported: true
+  folia-supported: false
   authors: [ 1badsobig ]
   softdepend:
     - ParticleLib
