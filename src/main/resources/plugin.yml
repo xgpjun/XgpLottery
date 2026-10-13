@@ -4,6 +4,8 @@
   api-version: "1.13"
   folia-supported: false
   authors: [ 1badsobig ]
+  depend:
+    - NBTAPI
   softdepend:
     - ParticleLib
     - PlaceholderAPI

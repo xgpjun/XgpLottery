@@ -33,7 +33,9 @@ class XgpLottery : JavaPlugin() {
     override fun onEnable() {
         instance = this
         Config.loadConfig()
-        NMSManager.register()
+        if (!NMSManager.register()) {
+            return
+        }
         saveDefaultConfig()
         MessageManager.load()
         logo.send(Bukkit.getConsoleSender())

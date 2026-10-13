@@ -15,7 +15,6 @@ object Config {
     var version = "2.0.0"
     var checkFullInventory = false
     var debug = false
-    var nms:String? = ""
     var displayItem = false
     private var uuid : UUID? = null
     private var read = false
@@ -29,7 +28,6 @@ object Config {
                 UUID.fromString(string)
             }
             displayItem = it.getBoolean("displayItem")
-            nms = it.getString("nms","")
         }
     }
 
